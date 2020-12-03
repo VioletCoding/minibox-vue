@@ -2,7 +2,7 @@ module.exports = {
     // devServer用来配置服务器启动的方式
     lintOnSave: false,
     devServer: {
-        host: "localhost", //是你的地址
+        host: "192.168.0.105", //是你的地址
         // localhost:本机
         // 127.0.0.1：本机
         // 198.xx.xxx.xxx：真是地址，可以去CMD查

@@ -1,12 +1,13 @@
 <template>
-  <div id="app">
-    <router-view/>
-  </div>
+    <div id="app">
+        <router-view/>
+    </div>
 </template>
 
 <style lang="scss">
-  #app{
-    width: 100%;
-    height: 100%;
-  }
+    html, body, #app {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
 </style>

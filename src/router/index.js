@@ -5,14 +5,29 @@ Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/login',
-        name: 'Login',
-        component: () => import('../views/login.vue')
+        path: '/',
+        name: 'Home',
+        component: () => import('../views/Home.vue')
     },
     {
         path: '/',
-        name: 'Home',
-        component: () => import('../views/home.vue')
+        name: 'MyHeader',
+        component: () => import('../views/header/MyHeader.vue')
+    },
+    {
+        path: '/',
+        name: 'MyCarousel',
+        component: () => import('../views/mainBody/MyCarousel.vue')
+    },
+    {
+        path: '/',
+        name: 'MyMainBodyList',
+        component: () => import('../views/mainBody/MyMainBodyList.vue')
+    },
+    {
+        path: '/',
+        name: 'MyFooter',
+        component: () => import('../views/footer/MyFooter.vue')
     }
 ]
 

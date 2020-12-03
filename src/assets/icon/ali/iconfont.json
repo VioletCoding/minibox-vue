@@ -1,0 +1,72 @@
+{
+  "id": "2239259",
+  "name": "MiniBox",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "10797959",
+      "name": "邮箱",
+      "font_class": "youxiang",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
+      "icon_id": "16202576",
+      "name": "搜索",
+      "font_class": "sousuo",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "17337505",
+      "name": "手柄",
+      "font_class": "shoubing2",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "8573458",
+      "name": "叉",
+      "font_class": "cha",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "6143374",
+      "name": "空心圆",
+      "font_class": "kongxinyuan",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "9962635",
+      "name": "空心矩形",
+      "font_class": "kongxinjuxing",
+      "unicode": "e6ad",
+      "unicode_decimal": 59053
+    },
+    {
+      "icon_id": "9962674",
+      "name": "空心三角形",
+      "font_class": "kongxinsanjiaoxing",
+      "unicode": "e6af",
+      "unicode_decimal": 59055
+    },
+    {
+      "icon_id": "4767059",
+      "name": "menu",
+      "font_class": "menu",
+      "unicode": "e7f4",
+      "unicode_decimal": 59380
+    },
+    {
+      "icon_id": "7151940",
+      "name": "游戏",
+      "font_class": "youxi",
+      "unicode": "e674",
+      "unicode_decimal": 58996
+    }
+  ]
+}
