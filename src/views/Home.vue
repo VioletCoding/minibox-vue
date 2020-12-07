@@ -30,14 +30,7 @@
                 //是否正在加载
                 isLoading: false,
                 //图片list
-                pictureList:
-                    [
-                        {id: 1, imgSrc: 'http://qk8mtetqy.hn-bkt.clouddn.com/1588738681_329403.jpg'},
-                        {id: 2, imgSrc: 'http://qk8mtetqy.hn-bkt.clouddn.com/1588738620_510932.jpg'},
-                        {id: 3, imgSrc: 'http://qk8mtetqy.hn-bkt.clouddn.com/1588738688_956151.jpg'},
-                        {id: 4, imgSrc: 'http://qk8mtetqy.hn-bkt.clouddn.com/1588738681_329403.jpg'},
-                        {id: 5, imgSrc: 'http://qk8mtetqy.hn-bkt.clouddn.com/1588738688_956151.jpg'}
-                    ],
+                pictureList: [],
                 //版块list
                 gameList: [
                     {id: 10, name: '全部'},
@@ -89,7 +82,8 @@
                 }).then(res => {
                     console.log(res)
                     //把回调赋值给要传给子组件的值，这里只把数组传了过去
-                    this.mainBodyList = res.data.data;
+                    this.mainBodyList = res.data.data.list;
+                    this.pictureList = res.data.data.list;
                     this.code = res.data.code;
                 }).catch(err => {
                     this.$toast.fail('加载失败,请重试');

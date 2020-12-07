@@ -28,6 +28,11 @@ const routes = [
         path: '/',
         name: 'MyFooter',
         component: () => import('../views/footer/MyFooter.vue')
+    },
+    {
+        path: '/postDetail',
+        name: 'SinglePost',
+        component: () => import('../views/inPost/SinglePost.vue')
     }
 ]
 

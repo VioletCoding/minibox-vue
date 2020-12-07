@@ -9,7 +9,12 @@
                     <div class="leftContain">
                         <!-- 最多显示两行 -->
                         <div class="myTitle van-multi-ellipsis--l2">
-                            {{ item.title }}
+                            <!-- 使用 router-link 组件来导航. -->
+                            <!-- 通过传入 `to` 属性指定链接. -->
+                            <!-- <router-link> 默认会被渲染成一个 `<a>` 标签 -->
+                            <router-link to="/postDetail">
+                                {{ item.title }}
+                            </router-link>
                         </div>
                         <!-- 最多显示一行 -->
                         <div class="myTime van-ellipsis">
@@ -20,8 +25,7 @@
                         </div>
                         <div class="myComment van-ellipsis">
                             <van-icon name="comment-o"/>
-                            0
-                            <!--                            {{ item.commentCount }}-->
+                            {{ item.countComment }}
                         </div>
                     </div>
                     <div class="rightContain">
@@ -34,9 +38,11 @@
 </template>
 
 <script>
+    import SinglePost from "../inPost/SinglePost";
 
     export default {
         name: "MyMainBodyList",
+        components: {SinglePost},
         props: {
             //数据集合
             dataList: {
@@ -81,6 +87,9 @@
 </script>
 
 <style scoped lang="less">
+    .router-link-active {
+        color: red;
+    }
 
     .myContainer {
         margin-top: 5px;
@@ -91,6 +100,7 @@
             width: 100%;
             height: 70px;
             padding: 2%;
+            cursor: pointer;
 
             .leftContain {
                 width: 65%;
@@ -98,6 +108,8 @@
 
                 .myTitle {
                     width: 100%;
+                    text-decoration: none;
+
                 }
 
                 .myTime {
