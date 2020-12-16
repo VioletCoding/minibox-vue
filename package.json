@@ -1,6 +1,6 @@
 {
   "name": "minibox",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,6 +10,7 @@
     "@vant/touch-emulator": "^1.2.0",
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
+    "marked": "^1.2.6",
     "mavon-editor": "^2.9.0",
     "sass": "^1.26.5",
     "vant": "^2.11.1",
@@ -28,7 +29,8 @@
     "less-loader": "^7.1.0",
     "postcss-pxtorem": "^5.1.1",
     "sass-loader": "^8.0.2",
-    "vue-template-compiler": "^2.6.11"
+    "vue-loader": "^15.9.5",
+    "vue-template-compiler": "^2.6.12"
   },
   "browserslist": [
     "> 1%",

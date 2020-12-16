@@ -25,16 +25,25 @@ import { Button } from 'vant';
 import { Popup } from 'vant';
 import { Field } from 'vant';
 import { Card } from 'vant';
+import { Skeleton } from 'vant';
+import { Uploader } from 'vant';
+import { Collapse, CollapseItem } from 'vant';
+import { Divider } from 'vant';
 
 
 //MarkDown解析工具
 import mavonEditor from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
 
-Vue.use(mavonEditor)
+Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(Divider);
+Vue.use(Collapse);
+Vue.use(CollapseItem);
+Vue.use(Uploader);
+Vue.use(Skeleton);
 Vue.use(Card);
 Vue.use(Field);
 Vue.use(Popup);
