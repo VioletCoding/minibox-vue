@@ -15,12 +15,6 @@
           </van-col>
         </van-row>
       </div>
-      <!--引入vant的tabs标签-->
-      <div>
-        <van-tabs v-model="active">
-          <van-tab v-for="(item,index) in blockList" :key="index" :title="item.name"></van-tab>
-        </van-tabs>
-      </div>
     </div>
   </van-sticky>
 </template>
@@ -34,15 +28,7 @@ export default {
       active: 0
     }
   },
-  props: {
-    //版块信息，由父组件传入
-    blockList: {
-      type: Array,
-      default() {
-        return []
-      }
-    }
-  },
+  props: {},
 }
 </script>
 

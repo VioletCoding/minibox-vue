@@ -29,6 +29,7 @@ import { Skeleton } from 'vant';
 import { Uploader } from 'vant';
 import { Collapse, CollapseItem } from 'vant';
 import { Divider } from 'vant';
+import { Loading } from 'vant';
 
 
 //MarkDown解析工具
@@ -39,6 +40,7 @@ Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(Loading);
 Vue.use(Divider);
 Vue.use(Collapse);
 Vue.use(CollapseItem);

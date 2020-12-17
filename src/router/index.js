@@ -7,7 +7,7 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import('../views/Home.vue')
+        component: () => import('../views/Home.vue'),
     },
     {
         path: '/',
@@ -33,6 +33,11 @@ const routes = [
         path: '/postDetail',
         name: 'SinglePost',
         component: () => import('../views/inPost/SinglePost.vue')
+    },
+    {
+        path: '/game',
+        name: 'MyGameBodyList',
+        component: () => import('../views/mainBody/MyGameBodyList.vue')
     }
 ]
 

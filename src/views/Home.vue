@@ -2,13 +2,19 @@
 <template>
   <div class="container">
     <!--自定义头部组件，将版块信息传给子组件-->
-    <MyHeader :blockList="gameList"></MyHeader>
+    <MyHeader></MyHeader>
     <!--使用vant的下拉刷新功能-->
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+    <van-pull-refresh v-model="isLoading"
+                      @refresh="onRefresh"
+                      loosing-text="松手刷新..."
+                      loading-text="加载中..."
+                      success-text="加载成功"
+                      :disabled="disabledPullRefresh">
       <!--自定义轮播图组件，将图片信息传给子组件-->
       <MyCarousel :imgList="pictureList"></MyCarousel>
       <!--自定义首页数据集合，将数据传给子组件-->
-      <MyMainBodyList :dataList="mainBodyList"></MyMainBodyList>
+      <!--@disabledPullRefresh 子组件发射的事件，控制是否允许下拉刷新-->
+      <MyMainBodyList :dataList="mainBodyList" @disabledPullRefresh="pullRefreshStatus"></MyMainBodyList>
     </van-pull-refresh>
     <MyFooter></MyFooter>
   </div>
@@ -16,7 +22,6 @@
 
 <script>
 import Api from "../api/api";
-import '@/assets/icon/ali/iconfont.css';
 import MyHeader from "./header/MyHeader";
 import MyCarousel from "./mainBody/MyCarousel";
 import MyMainBodyList from "./mainBody/MyMainBodyList";
@@ -31,12 +36,12 @@ export default {
       isLoading: false,
       //图片list
       pictureList: [],
-      //版块list
-      gameList: [],
       //传给MyMainBodyList组件，类型是数组
       mainBodyList: [],
-      //
-      code: 0
+      //判定是否请求成功状态码标识
+      code: 0,
+      //是否禁止下拉刷新
+      disabledPullRefresh: false
     }
   },
   methods: {
@@ -47,7 +52,6 @@ export default {
       if (this.code == 200) {
         //设置正在加载为false
         this.isLoading = false;
-        this.$toast.success('刷新成功');
         this.code = 0;
       } else {
         this.$toast.fail('加载失败，请重试');
@@ -67,23 +71,14 @@ export default {
         this.$toast.fail('加载失败,请重试');
       });
     },
-    async getBlockList() {
-      await this.$http.get(Api.getBlockList).then(res => {
-        console.log("板块=>", res)
-        if (res.data.code = 200) {
-          this.gameList = res.data.data;
-          this.$toast.success("加载板块成功");
-        } else {
-          this.$toast.fail("加载板块失败");
-        }
-      })
+    pullRefreshStatus(v) {
+      console.log("是否允许下拉刷新=>", v);
+      this.disabledPullRefresh = v;
     }
   },
   mounted() {
-    //获取帖子列表
+    //进入主页就自动获取帖子列表
     this.getPostList();
-    //获取板块列表
-    this.getBlockList();
   }
 }
 </script>

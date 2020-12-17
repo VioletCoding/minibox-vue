@@ -1,4 +1,5 @@
 <template>
+
   <div class="myContainer" v-if="dataFlag">
     <!--顶部-->
     <div class="top">
@@ -19,7 +20,7 @@
     </div>
     <!--顶部end-->
     <div class="headPhoto">
-      <van-image :src="returnValue.headPhotoLink" fit="contain"/>
+      <van-image :src="returnValue.coverImg" fit="fill" height="200" width="100%"/>
     </div>
 
     <!-- 标题 最多显示三行 -->
@@ -214,10 +215,6 @@ export default {
 
   .top {
     height: 50px;
-    width: 100%;
-  }
-
-  .headPhoto {
     width: 100%;
   }
 

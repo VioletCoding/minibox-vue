@@ -5,71 +5,75 @@
     <van-list v-model="loading" :finished="finished" finished-text="暂时没有更多了喵" @load="onLoad" :error.sync="error"
               error-text="加载失败，点击重试">
       <div class="myContainer" v-for="(item,index) in dataList" :key="index">
+        <!--路由跳转方法，点击帖子跳转到帖子详情-->
         <div @click="toDetail(item)">
           <div class="mySingleGrid van-hairline--bottom">
             <div class="leftContain">
-              <!-- 最多显示两行 -->
+              <!-- 帖子标题 最多显示两行 -->
               <div class="myTitle van-multi-ellipsis--l2">
                 {{ item.title }}
               </div>
-              <!-- 最多显示一行 -->
+              <!-- 帖子发表时间 最多显示一行 -->
               <div class="myTime van-ellipsis">
                 {{ item.createDate }}
               </div>
+              <!--版块名称 最多显示一行-->
               <div class="myBlock van-ellipsis">
                 {{ item.mbBlock.name }}
               </div>
-              <div class="myComment van-ellipsis">
-                <van-icon name="comment-o"/>
-                {{ item.countComment }}
+              <!--评论数-->
+              <div class="myComment">
+                <van-icon name="chat-o" :badge="item.countComment" color="#808080"/>
               </div>
             </div>
+            <!--帖子封面图-->
             <div class="rightContain">
-              <van-image width="100%" height="100%" fit="scale-down" :src="item.headPhotoLink"/>
+              <van-image width="100%" height="100%" fit="fill" :src="item.coverImg"/>
             </div>
           </div>
         </div>
       </div>
     </van-list>
     <!--发布帖子按钮-->
-    <div class="publishButton">
-      <van-button round type="primary" icon="plus" size="small" color="black" @click="showPop"/>
-    </div>
+    <van-button round type="primary" icon="plus" size="normal" color="black" @click="showPop"
+                style="position: fixed;top: 300px;right: 0"/>
     <!--弹出层内容-->
-    <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}">
-      <!--导航栏-->
-      <van-nav-bar
-          title="帖子"
-          left-text="返回"
-          right-text="发送"
-          @click-left="onClickLeft"
-          @click-right="onClickRight"/>
-      <!--选择社区和标题-->
-      <van-cell-group>
-        <van-cell>
-          <van-button type="default" icon="plus" size="small">添加社区</van-button>
-        </van-cell>
-        <van-cell>
-          <van-field v-model="popTitle" placeholder="标题" required/>
-        </van-cell>
-        <!--MarkDown编辑区-->
-        <van-cell>
-          <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
-                        :scrollStyle="markDownConfig.scrollStyle"
-                        :subfield="markDownConfig.subfield"
-                        :placeholder="markDownConfig.placeholder"
-                        v-model="value"
-                        :editable="markDownConfig.editable"
-                        :boxShadow="markDownConfig.boxShadow"
-                        :ishljs="markDownConfig.ishljs"
-                        :shortCut="markDownConfig.shortCut"
-                        :defaultOpen="markDownConfig.defaultOpen"
-                        :toolbars="toolbars"
-                        :autofocus="markDownConfig.autofocus"
-                        ref=md @imgAdd="$imgAdd" @imgDel="$imgDel"/>
-        </van-cell>
-      </van-cell-group>
-    </van-popup>
+    <div>
+      <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
+        <!--导航栏-->
+        <van-nav-bar
+            title="帖子"
+            left-text="返回"
+            right-text="发送"
+            @click-left="onClickLeft"
+            @click-right="onClickRight"/>
+        <!--选择社区和标题-->
+        <van-cell-group>
+          <van-cell>
+            <van-button type="default" icon="plus" size="small">添加社区</van-button>
+          </van-cell>
+          <van-cell>
+            <van-field v-model="popTitle" placeholder="标题" required/>
+          </van-cell>
+          <!--MarkDown编辑区-->
+          <van-cell>
+            <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
+                          :scrollStyle="markDownConfig.scrollStyle"
+                          :subfield="markDownConfig.subfield"
+                          :placeholder="markDownConfig.placeholder"
+                          v-model="value"
+                          :editable="markDownConfig.editable"
+                          :boxShadow="markDownConfig.boxShadow"
+                          :ishljs="markDownConfig.ishljs"
+                          :shortCut="markDownConfig.shortCut"
+                          :defaultOpen="markDownConfig.defaultOpen"
+                          :toolbars="toolbars"
+                          :autofocus="markDownConfig.autofocus"
+                          ref=md @imgAdd="$imgAdd" @imgDel="$imgDel"/>
+          </van-cell>
+        </van-cell-group>
+      </van-popup>
+    </div>
     <!--弹出层内容-->
   </div>
 </template>
@@ -145,7 +149,8 @@ export default {
       popPostBackground: false,
       //弹出层-标题
       popTitle: '',
-      coverImage: []
+      //封面图
+      coverImage: ''
     }
   },
   methods: {
@@ -177,11 +182,13 @@ export default {
     //显示弹出层
     showPop() {
       this.popPostBackground = true;
+      this.$emit('disabledPullRefresh', true);
     },
     //弹出层-返回
     onClickLeft() {
       if (this.popPostBackground) {
         this.popPostBackground = false;
+        this.$emit('disabledPullRefresh', false);
       }
     },
     //弹出层-发送
@@ -192,10 +199,29 @@ export default {
         uid: 10032,
         //版块ID，暂时这么写，应该是选择那些版块自动获取的
         bid: 10002,
+        //图片ID，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
+        mbPhoto: {
+          pid: this.pid,
+        },
         //帖子标题
         title: this.popTitle,
         //帖子正文内容，是MD格式，图片的链接也包含在里面了，故上传图片接口无需再传tid字段
-        content: this.value
+        content: this.value,
+        //封面图链接，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
+        coverImg: this.coverImage
+      }).then(res => {
+        if (res.data.code == 200) {
+          console.log("发布帖子res=>", res);
+          this.$toast.success("发布成功");
+          this.popPostBackground = false;
+          this.onLoad();
+        }
+        if (res.data.code == 400) {
+          this.$toast.fail(res.data.message);
+        }
+      }).catch(err => {
+        console.log(err);
+        this.$toast.fail("发布失败");
       })
     },
     // 绑定@imgAdd event
@@ -206,9 +232,11 @@ export default {
       //new 一个formdata用来存储文件
       var multipartFiles = new FormData();
       //遍历缓存的图片信息，把图片流加入到formdata里
-      this.img_file.forEach(formData => {
-        multipartFiles.append('multipartFiles', formData);
-      });
+      //this.img_file.forEach(formData => {
+
+      multipartFiles.append('multipartFiles', $file);
+
+      //});
       //发送请求，注意headers
       axios({
         url: Api.uploadImg,
@@ -216,12 +244,14 @@ export default {
         data: multipartFiles,
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(res => {
+        console.log("图片上传回调=>", res);
         let link = res.data.data;
         //将回调的图片链接替换文本编辑器原来的链接
-        link.forEach(v => {
-          this.$refs.md.$img2Url(pos, v);
-        })
+        this.$refs.md.$img2Url(pos, link.photoImg);
+        this.coverImage = link.photoImg;
+        this.pid = link.photoId;
       }).catch(err => {
+        console.log(err);
         this.$toast.fail('图片上传失败');
       })
     },
@@ -242,6 +272,7 @@ export default {
   margin-top: 5px;
   width: 100%;
   height: 100%;
+  display: inline-block;
 
   .mySingleGrid {
     width: 100%;
@@ -274,11 +305,9 @@ export default {
 
       .myComment {
         display: inline-block;
-        font-size: 10px;
         float: right;
         margin-right: 5px;
         margin-top: 5px;
-        color: #D4D7DB;
       }
     }
 
@@ -288,9 +317,6 @@ export default {
       float: right;
       display: inline-block;
       z-index: 10;
-    }
-
-    .publishButton {
     }
   }
 }
