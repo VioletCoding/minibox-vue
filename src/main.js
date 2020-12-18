@@ -30,6 +30,7 @@ import { Uploader } from 'vant';
 import { Collapse, CollapseItem } from 'vant';
 import { Divider } from 'vant';
 import { Loading } from 'vant';
+import { Rate } from 'vant';
 
 
 //MarkDown解析工具
@@ -40,6 +41,7 @@ Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(Rate);
 Vue.use(Loading);
 Vue.use(Divider);
 Vue.use(Collapse);
@@ -72,8 +74,6 @@ Vue.use(Tab);
 Vue.use(Tabs);
 //Vant
 //===========================================Vant=========================================
-//将axios放到原型上，不懂这个有什么好处
-//Vue.prototype.$http = Axios
 Vue.use(VueAxios, axios)
 Vue.config.productionTip = false
 new Vue({

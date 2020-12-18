@@ -39,16 +39,11 @@
       </van-cell>
     </div>
     <!--正文 MarkDown渲染，包括图片的链接，必须符合MarkDown的语法才能被正确渲染-->
-    <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
-                  :scrollStyle="markDownConfig.scrollStyle"
-                  :subfield="markDownConfig.subfield"
-                  :placeholder="markDownConfig.placeholder"
-                  :value="value"
-                  :editable="markDownConfig.editable"
-                  :boxShadow="markDownConfig.boxShadow"
-                  :ishljs="markDownConfig.ishljs"
-                  :shortCut="markDownConfig.shortCut"
-                  :defaultOpen="markDownConfig.defaultOpen"/>
+    <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag" :scrollStyle="markDownConfig.scrollStyle"
+                  :subfield="markDownConfig.subfield" :placeholder="markDownConfig.placeholder"
+                  :value="value" :editable="markDownConfig.editable"
+                  :boxShadow="markDownConfig.boxShadow" :ishljs="markDownConfig.ishljs"
+                  :shortCut="markDownConfig.shortCut" :defaultOpen="markDownConfig.defaultOpen"/>
 
     <van-tabs v-model="active">
       <van-tab title="全部评论"/>
@@ -60,13 +55,10 @@
       <van-skeleton title avatar :row="3" :loading="loading">
         <van-cell/>
         <van-card
-            :price="item.content"
-            :desc="item.createDate"
-            :title="item.mbUser.nickname"
-            :tag="item.mbUser.level"
+            :price="item.content" :desc="item.createDate"
+            :title="item.mbUser.nickname" :tag="item.mbUser.level"
             :thumb="item.mbUser.mbPhoto.photoLink"
-            centered
-            currency="">
+            centered currency="">
         </van-card>
         <!--回复-->
         <div class="replyArea">
@@ -94,12 +86,9 @@
     <div class="commentField">
       <van-tabbar v-model="active">
         <van-field
-            v-model="commentValue"
-            center
-            clearable
-            placeholder="说点什么吧">
+            v-model="commentValue" center clearable placeholder="说点什么吧">
           <template #button>
-            <van-button size="small" type="primary" @click="publishComment()">发表</van-button>
+            <van-button size="small" type="primary" @click="publishComment">发表</van-button>
           </template>
         </van-field>
       </van-tabbar>
@@ -111,6 +100,7 @@
 <script>
 import marked from 'marked';
 import Api from "../../api/api";
+import axios from "axios";
 
 export default {
   name: "SinglePost",
@@ -167,7 +157,7 @@ export default {
   methods: {
     //加载
     onLoad() {
-      this.$http.get(Api.getPostDetail, {
+      axios.get(Api.getPostDetail, {
         params: {
           tid: this.tid
         }
@@ -187,7 +177,7 @@ export default {
     },
     //发表评论
     async publishComment() {
-      await this.$http.post(Api.publishComment, {
+      await axios.post(Api.publishComment, {
         tid: this.tid,
         uid: 10032,
         content: this.commentValue,
@@ -242,9 +232,7 @@ export default {
     width: 100%;
   }
 
-  .replyArea {
-    //text-align: center;
-  }
+  .replyArea {}
 
   .commentField {
     height: 50px;

@@ -193,7 +193,7 @@ export default {
     },
     //弹出层-发送
     onClickRight() {
-      this.$http.post(Api.publishPost, {
+      axios.post(Api.publishPost, {
         //TODO
         //用户ID，暂时这么写，以后后台是从token里面取的，就不用传这个了
         uid: 10032,
@@ -215,8 +215,7 @@ export default {
           this.$toast.success("发布成功");
           this.popPostBackground = false;
           this.onLoad();
-        }
-        if (res.data.code == 400) {
+        } else {
           this.$toast.fail(res.data.message);
         }
       }).catch(err => {
@@ -244,7 +243,6 @@ export default {
         data: multipartFiles,
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(res => {
-        console.log("图片上传回调=>", res);
         let link = res.data.data;
         //将回调的图片链接替换文本编辑器原来的链接
         this.$refs.md.$img2Url(pos, link.photoImg);

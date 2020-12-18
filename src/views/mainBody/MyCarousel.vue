@@ -2,9 +2,9 @@
 <template>
   <div class="myCarousel">
     <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-      <van-swipe-item v-for="(item,index) in imgList" :key="index">
-        <van-image lazy-render=true width="100%" height="200" fit="fill" :src="item.coverImg"
-                   @click="showPostDetail(item.tid)"/>
+      <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
+        <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
+                   @click="showDetail(item.tid)"/>
       </van-swipe-item>
     </van-swipe>
   </div>
@@ -12,7 +12,6 @@
 
 <script>
 import Api from "@/api/api";
-import axios from "axios";
 
 export default {
 
@@ -30,24 +29,9 @@ export default {
     return {}
   },
   methods: {
-    showPostDetail(v) {
-      axios.get(Api.getPostDetail, {
-        params: {
-          tid: v
-        }
-      }).then(res => {
-        console.log("点击轮播=>", res);
-        if (res.data.code == 200) {
-          this.$router.push({
-            path: '/postDetail',
-            query: {
-              tid: v
-            }
-          })
-        }
-      }).catch(err => {
-        console.log("点击轮播错误=>", err);
-      })
+    //发射一个事件
+    showDetail(v) {
+      this.$emit('getYouATid',v);
     }
   }
 }
@@ -56,5 +40,6 @@ export default {
 <style scoped lang="less">
 .myCarousel {
   width: 100%;
+  margin-top: 50px;
 }
 </style>

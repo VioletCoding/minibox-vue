@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-cloak>
     <transition name="slide-fade">
       <router-view/>
     </transition>
@@ -16,6 +16,10 @@ export default {
 </script>
 
 <style lang="scss">
+[v-cloak] {
+  display: none !important;
+}
+
 html, body, #app {
   height: 100%;
   margin: 0;

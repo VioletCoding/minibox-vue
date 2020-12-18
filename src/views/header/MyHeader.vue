@@ -1,22 +1,21 @@
 <!--头部组件-->
 <template>
-  <van-sticky>
-    <div class="Biggest">
-      <div class="myContainer">
-        <!--引入vant布局-->
-        <van-row type="flex" justify="start" class="myRow">
-          <van-col span="3" class="myFollow">关注</van-col>
-          <van-col span="3" class="myRecommend">推荐</van-col>
-          <van-col span="2" offset="12" class="mySearch">
-            <van-icon name="search"/>
-          </van-col>
-          <van-col span="2" offset="1" class="myMessage">
-            <van-icon name="envelop-o"/>
-          </van-col>
-        </van-row>
-      </div>
-    </div>
-  </van-sticky>
+
+  <van-nav-bar :fixed="isFixed">
+
+    <template #left>
+      <van-tabs v-model="active" swipeable animated color="black" line-width="20">
+        <van-tab title="推荐"/>
+        <van-tab title="关注"/>
+      </van-tabs>
+    </template>
+
+    <template #right>
+      <van-icon name="search" size="18" color="black" style="margin-right: 20px" @click="toSearch"/>
+      <van-icon name="envelop-o" size="18" color="black"/>
+    </template>
+  </van-nav-bar>
+
 </template>
 
 <script>
@@ -24,44 +23,20 @@ export default {
   name: "MyHeader",
   data() {
     return {
-      //tabs标签激活索引，默认是0，也就是第一个
+      //是否把导航栏固定在顶部
+      isFixed: true,
+      //van-tab当前激活的标签
       active: 0
     }
   },
-  props: {},
+  methods: {
+    toSearch() {
+      this.$toast.success("点击了搜索图标");
+    }
+  }
 }
 </script>
 
 <style scoped lang="less">
-.Biggest {
-  background-color: white;
 
-  .myContainer {
-    height: 50px;
-    font-size: 18px;
-    font-weight: bold;
-
-    .myRow {
-      height: 50px;
-      text-align: center;
-      line-height: 50px;
-
-    }
-
-    .myFollow {
-    }
-
-    .myRecommend {
-    }
-
-    .myGame {
-    }
-
-    .mySearch {
-    }
-
-    .myMessage {
-    }
-  }
-}
 </style>

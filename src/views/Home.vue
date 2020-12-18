@@ -2,21 +2,18 @@
 <template>
   <div class="container">
     <!--自定义头部组件，将版块信息传给子组件-->
-    <MyHeader></MyHeader>
+    <MyHeader/>
     <!--使用vant的下拉刷新功能-->
-    <van-pull-refresh v-model="isLoading"
-                      @refresh="onRefresh"
-                      loosing-text="松手刷新..."
-                      loading-text="加载中..."
-                      success-text="加载成功"
-                      :disabled="disabledPullRefresh">
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh"
+                      loosing-text="松手刷新..." loading-text="加载中..."
+                      success-text="加载成功" :disabled="disabledPullRefresh">
       <!--自定义轮播图组件，将图片信息传给子组件-->
-      <MyCarousel :imgList="pictureList"></MyCarousel>
+      <MyCarousel :imgList="pictureList" @getYouATid="showPostDetail"/>
       <!--自定义首页数据集合，将数据传给子组件-->
       <!--@disabledPullRefresh 子组件发射的事件，控制是否允许下拉刷新-->
-      <MyMainBodyList :dataList="mainBodyList" @disabledPullRefresh="pullRefreshStatus"></MyMainBodyList>
+      <MyMainBodyList :dataList="mainBodyList" @disabledPullRefresh="pullRefreshStatus"/>
     </van-pull-refresh>
-    <MyFooter></MyFooter>
+    <MyFooter/>
   </div>
 </template>
 
@@ -26,6 +23,7 @@ import MyHeader from "./header/MyHeader";
 import MyCarousel from "./mainBody/MyCarousel";
 import MyMainBodyList from "./mainBody/MyMainBodyList";
 import MyFooter from "./footer/MyFooter";
+import axios from "axios";
 
 export default {
   name: "Home",
@@ -61,8 +59,7 @@ export default {
     },
     //获取帖子列表
     async getPostList() {
-      await this.$http.get(Api.getPostList).then(res => {
-        console.log(res)
+      await axios.get(Api.getPostList).then(res => {
         //把回调赋值给要传给子组件的值，这里只把数组传了过去
         this.mainBodyList = res.data.data;
         this.pictureList = res.data.data;
@@ -71,9 +68,28 @@ export default {
         this.$toast.fail('加载失败,请重试');
       });
     },
+    //下拉刷新是否被禁止
     pullRefreshStatus(v) {
-      console.log("是否允许下拉刷新=>", v);
       this.disabledPullRefresh = v;
+    },
+    //显示帖子列表
+    showPostDetail(v) {
+      axios.get(Api.getPostDetail, {
+        params: {
+          tid: v
+        }
+      }).then(res => {
+        if (res.data.code == 200) {
+          this.$router.push({
+            path: '/postDetail',
+            query: {
+              tid: v
+            }
+          })
+        }
+      }).catch(err => {
+        console.log("点击轮播错误=>", err);
+      })
     }
   },
   mounted() {

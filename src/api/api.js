@@ -16,6 +16,10 @@ const publishPost = baseUrl + 'post/publish';
 //发表评论
 const publishComment = baseUrl + 'comment/post';
 
+//-----------------------------------------
+//游戏列表
+const getAllGame = baseUrl + 'game/all';
+
 //------------------------------------------
 const getBlockList = baseUrl + 'block/get';
 export default {
@@ -25,5 +29,6 @@ export default {
     uploadImg,
     publishComment,
     getBlockList,
-    publishPost
+    publishPost,
+    getAllGame
 }
