@@ -1,39 +1,71 @@
 <!--主显示区域-->
 <template>
   <div>
-    <!--引入vant的无限加载组件-->
-    <van-list v-model="loading" :finished="finished" finished-text="暂时没有更多了喵" @load="onLoad" :error.sync="error"
-              error-text="加载失败，点击重试">
-      <div class="myContainer" v-for="(item,index) in dataList" :key="index">
-        <!--路由跳转方法，点击帖子跳转到帖子详情-->
-        <div @click="toDetail(item)">
-          <div class="mySingleGrid van-hairline--bottom">
-            <div class="leftContain">
-              <!-- 帖子标题 最多显示两行 -->
-              <div class="myTitle van-multi-ellipsis--l2">
-                {{ item.title }}
+    <!--头部-->
+    <MyHeader>
+      <template #left>
+        <van-tabs v-model="active" swipeable animated color="black" line-width="20">
+          <van-tab title="推荐"/>
+          <van-tab title="关注"/>
+        </van-tabs>
+      </template>
+      <template #right>
+        <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
+        <van-icon name="envelop-o" size="18" color="black"/>
+      </template>
+    </MyHeader>
+    <!--头部end-->
+
+    <!--轮播图-->
+    <div>
+      <van-pull-refresh v-model="loading" @refresh="onLoad" success-text="刷新成功">
+        <div style="margin-top: 50px">
+          <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
+            <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
+              <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
+                         @click="toDetail(item)"/>
+            </van-swipe-item>
+          </van-swipe>
+        </div>
+        <!--轮播图-->
+
+        <!--帖子列表-->
+        <van-list v-model="loading" :finished="finished" finished-text="暂时没有更多了喵" @load="onLoad" :error.sync="error"
+                  error-text="加载失败，点击重试">
+          <div class="myContainer" v-for="(item,index) in dataList" :key="index">
+            <!--路由跳转方法，点击帖子跳转到帖子详情-->
+            <div @click="toDetail(item)">
+              <div class="mySingleGrid van-hairline--bottom">
+                <div class="leftContain">
+                  <!-- 帖子标题 最多显示两行 -->
+                  <div class="myTitle van-multi-ellipsis--l2">
+                    {{ item.title }}
+                  </div>
+                  <!-- 帖子发表时间 最多显示一行 -->
+                  <div class="myTime van-ellipsis">
+                    {{ item.createDate }}
+                  </div>
+                  <!--版块名称 最多显示一行-->
+                  <div class="myBlock van-ellipsis">
+                    {{ item.mbBlock.name }}
+                  </div>
+                  <!--评论数-->
+                  <div class="myComment">
+                    <van-icon name="chat-o" :badge="item.countComment" color="#808080"/>
+                  </div>
+                </div>
+                <!--帖子封面图-->
+                <div class="rightContain">
+                  <van-image width="100%" height="100%" fit="fill" :src="item.coverImg"/>
+                </div>
               </div>
-              <!-- 帖子发表时间 最多显示一行 -->
-              <div class="myTime van-ellipsis">
-                {{ item.createDate }}
-              </div>
-              <!--版块名称 最多显示一行-->
-              <div class="myBlock van-ellipsis">
-                {{ item.mbBlock.name }}
-              </div>
-              <!--评论数-->
-              <div class="myComment">
-                <van-icon name="chat-o" :badge="item.countComment" color="#808080"/>
-              </div>
-            </div>
-            <!--帖子封面图-->
-            <div class="rightContain">
-              <van-image width="100%" height="100%" fit="fill" :src="item.coverImg"/>
             </div>
           </div>
-        </div>
-      </div>
-    </van-list>
+        </van-list>
+      </van-pull-refresh>
+    </div>
+    <!--帖子列表-->
+
     <!--发布帖子按钮-->
     <van-button round type="primary" icon="plus" size="normal" color="black" @click="showPop"
                 style="position: fixed;top: 300px;right: 0"/>
@@ -42,11 +74,8 @@
       <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
         <!--导航栏-->
         <van-nav-bar
-            title="帖子"
-            left-text="返回"
-            right-text="发送"
-            @click-left="onClickLeft"
-            @click-right="onClickRight"/>
+            title="帖子" left-text="返回" right-text="发送"
+            @click-left="onClickLeft" @click-right="onClickRight"/>
         <!--选择社区和标题-->
         <van-cell-group>
           <van-cell>
@@ -79,20 +108,14 @@
 </template>
 
 <script>
-import SinglePost from "../inPost/SinglePost";
+import SinglePost from "../single/SinglePost";
+import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
 import axios from "axios";
 
 export default {
   name: "MyMainBodyList",
-  components: {SinglePost},
-  props: {
-    //数据集合
-    dataList: {
-      type: Array,
-      required: true
-    }
-  },
+  components: {SinglePost, MyHeader},
   data() {
     return {
       //MarkDown
@@ -150,16 +173,23 @@ export default {
       //弹出层-标题
       popTitle: '',
       //封面图
-      coverImage: ''
+      coverImage: '',
+      //轮播图
+      imgList: [],
+      //激活的tab
+      active: 0,
+      //帖子列表
+      dataList: []
     }
   },
   methods: {
     async onLoad() {
       // 异步更新数据
       // 如果请求失败，this.error = true;
-      if (this.refreshing) {
+      if (this.loading) {
         this.dataList = [];
-        this.refreshing = false;
+        //调用帖子方法
+        this.getPostList();
       }
       // 加载状态结束
       this.loading = false;
@@ -171,6 +201,7 @@ export default {
       }
       //超时时间
     },
+    //去帖子详情
     toDetail(value) {
       this.$router.push({
         path: '/postDetail',
@@ -214,7 +245,8 @@ export default {
           console.log("发布帖子res=>", res);
           this.$toast.success("发布成功");
           this.popPostBackground = false;
-          this.onLoad();
+          //调用帖子方法
+          this.getPostList();
         } else {
           this.$toast.fail(res.data.message);
         }
@@ -230,12 +262,8 @@ export default {
       this.img_file[pos] = $file;
       //new 一个formdata用来存储文件
       var multipartFiles = new FormData();
-      //遍历缓存的图片信息，把图片流加入到formdata里
-      //this.img_file.forEach(formData => {
-
+      //把文件加入到formdata里
       multipartFiles.append('multipartFiles', $file);
-
-      //});
       //发送请求，注意headers
       axios({
         url: Api.uploadImg,
@@ -249,14 +277,37 @@ export default {
         this.coverImage = link.photoImg;
         this.pid = link.photoId;
       }).catch(err => {
-        console.log(err);
-        this.$toast.fail('图片上传失败');
+        this.$toast.fail('图片上传失败', err);
       })
     },
+    //MD里删除图片
     $imgDel(pos) {
       //TODO
       delete this.img_file[pos];
     },
+    //获取帖子列表
+    async getPostList() {
+      await axios.get(Api.getPostList).then(res => {
+        this.dataList = res.data.data;
+        this.imgList = res.data.data;
+        this.code = res.data.code;
+      }).catch(err => {
+        this.$toast.fail('加载失败,请重试');
+      });
+    },
+    //展示帖子详情
+    showPostDetail(tid) {
+      axios.get(Api.getPostDetail, {
+        tid: tid
+      }).then(res => {
+        console.log("展示帖子详情=>", res);
+      }).catch(err => {
+        console.log("展示帖子详情err=>", err);
+      })
+    },
+  },
+  mounted() {
+    this.getPostList();
   }
 }
 </script>

@@ -7,37 +7,47 @@ const routes = [
     {
         path: '/',
         name: 'Home',
-        component: () => import('../views/Home.vue'),
+        component: () => import('@/views/Home'),
     },
     {
         path: '/',
         name: 'MyHeader',
-        component: () => import('../views/header/MyHeader.vue')
-    },
-    {
-        path: '/',
-        name: 'MyCarousel',
-        component: () => import('../views/mainBody/MyCarousel.vue')
+        component: () => import('@/views/header/MyHeader')
     },
     {
         path: '/',
         name: 'MyMainBodyList',
-        component: () => import('../views/mainBody/MyMainBodyList.vue')
+        component: () => import('@/views/mainBody/MyMainBodyList')
     },
     {
         path: '/',
         name: 'MyFooter',
-        component: () => import('../views/footer/MyFooter.vue')
+        component: () => import('@/views/footer/MyFooter')
     },
     {
         path: '/postDetail',
         name: 'SinglePost',
-        component: () => import('../views/inPost/SinglePost.vue')
+        component: () => import('@/views/single/SinglePost')
+    },
+    {
+        path: '/gameDetail',
+        name: 'SingleGame',
+        component: () => import('@/views/single/SingleGame')
     },
     {
         path: '/game',
         name: 'MyGameBodyList',
-        component: () => import('../views/mainBody/MyGameBodyList.vue')
+        component: () => import('@/views/mainBody/MyGameBodyList')
+    },
+    {
+        path: "/mine",
+        name: "MyMineBodyList",
+        component: () => import('@/views/mainBody/MyMineBodyList.vue')
+    },
+    {
+        path: "/community",
+        name: "MyCommunityBodyList",
+        component: () => import('@/views/mainBody/MyCommunityBodyList.vue')
     }
 ]
 

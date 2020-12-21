@@ -31,6 +31,8 @@ import { Collapse, CollapseItem } from 'vant';
 import { Divider } from 'vant';
 import { Loading } from 'vant';
 import { Rate } from 'vant';
+import { Tag } from 'vant';
+
 
 
 //MarkDown解析工具
@@ -41,6 +43,7 @@ Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(Tag);
 Vue.use(Rate);
 Vue.use(Loading);
 Vue.use(Divider);

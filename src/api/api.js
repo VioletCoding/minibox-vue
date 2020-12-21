@@ -19,6 +19,8 @@ const publishComment = baseUrl + 'comment/post';
 //-----------------------------------------
 //游戏列表
 const getAllGame = baseUrl + 'game/all';
+//游戏详情
+const getGameDetail = baseUrl + 'game/detail'
 
 //------------------------------------------
 const getBlockList = baseUrl + 'block/get';
@@ -30,5 +32,6 @@ export default {
     publishComment,
     getBlockList,
     publishPost,
-    getAllGame
+    getAllGame,
+    getGameDetail
 }

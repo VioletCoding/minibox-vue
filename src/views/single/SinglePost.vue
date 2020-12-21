@@ -99,7 +99,7 @@
 
 <script>
 import marked from 'marked';
-import Api from "../../api/api";
+import Api from "@/api/api";
 import axios from "axios";
 
 export default {
@@ -232,7 +232,8 @@ export default {
     width: 100%;
   }
 
-  .replyArea {}
+  .replyArea {
+  }
 
   .commentField {
     height: 50px;

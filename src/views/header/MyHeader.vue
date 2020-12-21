@@ -1,21 +1,18 @@
-<!--头部组件-->
+<!--头部组件，采用vant-navbar-->
 <template>
-
-  <van-nav-bar :fixed="isFixed">
-
-    <template #left>
-      <van-tabs v-model="active" swipeable animated color="black" line-width="20">
-        <van-tab title="推荐"/>
-        <van-tab title="关注"/>
-      </van-tabs>
-    </template>
-
-    <template #right>
-      <van-icon name="search" size="18" color="black" style="margin-right: 20px" @click="toSearch"/>
-      <van-icon name="envelop-o" size="18" color="black"/>
-    </template>
-  </van-nav-bar>
-
+  <div>
+    <van-nav-bar :fixed="isFixed">
+      <template #left>
+        <slot name="left"></slot>
+      </template>
+      <template #title>
+        <slot name="middle"></slot>
+      </template>
+      <template #right>
+        <slot name="right"></slot>
+      </template>
+    </van-nav-bar>
+  </div>
 </template>
 
 <script>
@@ -24,19 +21,8 @@ export default {
   data() {
     return {
       //是否把导航栏固定在顶部
-      isFixed: true,
-      //van-tab当前激活的标签
-      active: 0
-    }
-  },
-  methods: {
-    toSearch() {
-      this.$toast.success("点击了搜索图标");
+      isFixed: true
     }
   }
 }
 </script>
-
-<style scoped lang="less">
-
-</style>
