@@ -32,6 +32,8 @@ import { Divider } from 'vant';
 import { Loading } from 'vant';
 import { Rate } from 'vant';
 import { Tag } from 'vant';
+import { Progress } from 'vant';
+
 
 
 
@@ -43,6 +45,7 @@ Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(Progress);
 Vue.use(Tag);
 Vue.use(Rate);
 Vue.use(Loading);

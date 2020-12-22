@@ -1,33 +1,33 @@
 <!--游戏库页-->
 <template>
   <div class="container" v-if="dataFlag">
+    <!--头部和轮播图-->
+    <MyHeader>
+      <template #left>
+        <van-tabs v-model="active" swipeable animated color="black" line-width="20">
+          <van-tab title="推荐"/>
+        </van-tabs>
+      </template>
+
+      <template #right>
+        <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
+        <van-icon name="envelop-o" size="18" color="black"/>
+      </template>
+    </MyHeader>
     <!--使用vant的下拉刷新功能-->
     <van-pull-refresh v-model="isLoading" @refresh="showGameList"
                       loosing-text="松手刷新..." loading-text="加载中..."
                       success-text="加载成功" style="min-height: 100vh;">
-      <!--头部和轮播图-->
-      <MyHeader>
-        <template #left>
-          <van-tabs v-model="active" swipeable animated color="black" line-width="20">
-            <van-tab title="推荐"/>
-            <van-tab title="关注"/>
-          </van-tabs>
-        </template>
-
-        <template #right>
-          <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
-          <van-icon name="envelop-o" size="18" color="black"/>
-        </template>
-      </MyHeader>
-
       <div style="margin-top: 50px">
         <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
           <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
-            <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"/>
+            <p class="swipe-text van-multi-ellipsis--l2">{{ item.name }}</p>
+            <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
+                       @click="showGameDetail(item.gid)"/>
           </van-swipe-item>
         </van-swipe>
       </div>
-      <!--头部和轮播图-->
+      <!--头部和轮播图end-->
       <!--功能选项-->
       <van-grid :column-num="5">
         <van-grid-item icon="point-gift" text="赠送游戏"/>
@@ -41,7 +41,7 @@
       <!--安利墙-->
       <div>
         <van-cell title="安利墙" value="更多"/>
-        <div v-if="RecommendedGame.mbComment!=null">
+        <div v-if="RecommendedGame.mbComment!=null" @click="showGameDetail(RecommendedGame.gid)">
           <van-card :desc="RecommendedGame.mbComment.content" :title="RecommendedGame.name"
                     :thumb="RecommendedGame.coverImg">
             <template #price>
@@ -65,8 +65,7 @@
             currency="￥"
             :tag="item.discount" :price="item.price"
             :desc="item.description" :title="item.name"
-            :thumb="item.coverImg" :origin-price="item.originPrice"
-            @click="showGameDetail(item.gid)"/>
+            :thumb="item.coverImg" :origin-price="item.originPrice" @click="showGameDetail(item.gid)"/>
       </div>
     </van-pull-refresh>
     <!--游戏列表end-->
@@ -75,13 +74,12 @@
 
 <script>
 import MyHeader from "@/views/header/MyHeader";
-import MyFooter from "@/views/footer/MyFooter";
 import Api from "@/api/api";
 import axios from "axios";
 
 export default {
   name: "MyGameBodyList",
-  components: {MyHeader, MyFooter},
+  components: {MyHeader},
   data() {
     return {
       //数据是否加载完毕
@@ -97,7 +95,9 @@ export default {
       //游戏列表
       gameList: [],
       //激活的tab
-      active: 0
+      active: 0,
+      //从路由里获取gid，传给轮播图点击事件用
+      //gid: this.$route.query.gid
     }
   },
   methods: {
@@ -111,16 +111,10 @@ export default {
             v.originPrice = v.originPrice.toFixed(2);
             //这里是安利墙的展示，就展示最新的一条安利，所以取数组下标0
             this.RecommendedGame = res.data.data[0];
-          });
-          //游戏列表
-          res.data.data.forEach(v2 => {
-            //如果降价了，才计算折扣
-            if (v2.price < v2.originPrice) {
-              //计算折扣
-              let i = "-" + (v2.originPrice - v2.price) * 1 + "%";
-              //动态往对象里添加一个属性，也就是把计算完的折扣值放到对象里
-              v2[this.discount] = i;
-            }
+            //计算折扣
+            let i = ((v.price / v.originPrice) * 10).toFixed(1) + "折";
+            //动态往对象里添加一个属性，也就是把计算完的折扣值放到对象里
+            v[this.discount] = i;
           });
           //游戏列表
           this.gameList = res.data.data;
@@ -154,3 +148,13 @@ export default {
   }
 }
 </script>
+<style scoped lang="less">
+.swipe-text {
+  color: white;
+  bottom: 10px;
+  position: absolute;
+  left: 36%;
+  z-index: 10;
+  font-size: 20px;
+}
+</style>

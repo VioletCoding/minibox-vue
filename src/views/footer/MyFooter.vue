@@ -20,7 +20,7 @@ export default {
       //按钮菜单信息
       tabBarMenu: [
         {name: "home", path: "/", chineseName: "首页", icon: "home-o"},
-        {name: "community", path: "/community", chineseName: "社区", icon: "circle"},
+        //{name: "community", path: "/community", chineseName: "社区", icon: "circle"},
         {name: "game", path: "/game", chineseName: "游戏库", icon: "cross"},
         {name: "mine", path: "/mine", chineseName: "我", icon: "user-o"}
       ]

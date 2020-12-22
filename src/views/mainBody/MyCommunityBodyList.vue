@@ -7,7 +7,6 @@
         <template #left>
           <van-tabs v-model="active" swipeable animated color="black" line-width="20">
             <van-tab title="推荐"/>
-            <van-tab title="社区"/>
           </van-tabs>
         </template>
         <template #right>
@@ -23,13 +22,8 @@
       <van-tabs>
         <van-tab title="标签 1">
           <!--帖子列表-->
-          <div>
-            <van-card
-                num="2"
-                price="2.00"
-                desc="描述信息"
-                title="商品标题"
-                thumb="https://img.yzcdn.cn/vant/ipad.jpeg"/>
+          <div class="post-list">
+
           </div>
           <!--帖子列表end-->
         </van-tab>

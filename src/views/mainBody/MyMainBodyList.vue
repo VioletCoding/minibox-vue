@@ -6,10 +6,10 @@
       <template #left>
         <van-tabs v-model="active" swipeable animated color="black" line-width="20">
           <van-tab title="推荐"/>
-          <van-tab title="关注"/>
         </van-tabs>
       </template>
       <template #right>
+        <van-icon name="add-o" size="18" color="black" style="margin-right: 20px" @click="showPop"/>
         <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
         <van-icon name="envelop-o" size="18" color="black"/>
       </template>
@@ -22,6 +22,7 @@
         <div style="margin-top: 50px">
           <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
             <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
+              <p class="swipe-text van-multi-ellipsis--l2">{{ item.title }}</p>
               <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
                          @click="toDetail(item)"/>
             </van-swipe-item>
@@ -66,9 +67,6 @@
     </div>
     <!--帖子列表-->
 
-    <!--发布帖子按钮-->
-    <van-button round type="primary" icon="plus" size="normal" color="black" @click="showPop"
-                style="position: fixed;top: 300px;right: 0"/>
     <!--弹出层内容-->
     <div>
       <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
@@ -227,9 +225,9 @@ export default {
       axios.post(Api.publishPost, {
         //TODO
         //用户ID，暂时这么写，以后后台是从token里面取的，就不用传这个了
-        uid: 10032,
+        uid: 10000,
         //版块ID，暂时这么写，应该是选择那些版块自动获取的
-        bid: 10002,
+        bid: 10004,
         //图片ID，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
         mbPhoto: {
           pid: this.pid,
@@ -245,6 +243,8 @@ export default {
           console.log("发布帖子res=>", res);
           this.$toast.success("发布成功");
           this.popPostBackground = false;
+          this.value = '';
+          this.img_file = {};
           //调用帖子方法
           this.getPostList();
         } else {
@@ -313,8 +313,14 @@ export default {
 </script>
 
 <style scoped lang="less">
-.router-link-active {
-  color: red;
+
+.swipe-text {
+  color: white;
+  bottom: 10px;
+  position: absolute;
+  left: 30%;
+  z-index: 10;
+  font-size: 18px;
 }
 
 .myContainer {

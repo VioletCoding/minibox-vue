@@ -6,23 +6,8 @@ Vue.use(VueRouter)
 const routes = [
     {
         path: '/',
-        name: 'Home',
-        component: () => import('@/views/Home'),
-    },
-    {
-        path: '/',
-        name: 'MyHeader',
-        component: () => import('@/views/header/MyHeader')
-    },
-    {
-        path: '/',
         name: 'MyMainBodyList',
         component: () => import('@/views/mainBody/MyMainBodyList')
-    },
-    {
-        path: '/',
-        name: 'MyFooter',
-        component: () => import('@/views/footer/MyFooter')
     },
     {
         path: '/postDetail',
@@ -40,14 +25,19 @@ const routes = [
         component: () => import('@/views/mainBody/MyGameBodyList')
     },
     {
+        path: "/gameCommentPublish",
+        name: "MyGameCommentPublish",
+        component: () => import("@/views/single/MyGameCommentPublish")
+    },
+    {
         path: "/mine",
         name: "MyMineBodyList",
-        component: () => import('@/views/mainBody/MyMineBodyList.vue')
+        component: () => import('@/views/mainBody/MyMineBodyList')
     },
     {
         path: "/community",
         name: "MyCommunityBodyList",
-        component: () => import('@/views/mainBody/MyCommunityBodyList.vue')
+        component: () => import('@/views/mainBody/MyCommunityBodyList')
     }
 ]
 
@@ -55,6 +45,6 @@ const router = new VueRouter({
     mode: 'history',
     base: process.env.BASE_URL,
     routes
-})
+});
 
-export default router
+export default router;

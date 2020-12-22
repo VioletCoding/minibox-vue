@@ -179,7 +179,7 @@ export default {
     async publishComment() {
       await axios.post(Api.publishComment, {
         tid: this.tid,
-        uid: 10032,
+        uid: 10000,
         content: this.commentValue,
         type: 'TC'
       }).then(res => {

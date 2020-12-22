@@ -24,16 +24,14 @@
     <div style="margin-top: 50px">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" style="background-color:#363A3F">
         <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
-          <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.photoLink"/>
+          <van-image lazy-render width="100%" height="200" fit="cover" :src="item.photoLink"/>
         </van-swipe-item>
       </van-swipe>
       <!--子展示区-->
       <van-cell style="background-color: #363A3F">
         <template #title>
           <div>
-            <span class="game-price">
-              ￥{{ returnData.price }}
-            </span>
+            <span class="game-price">￥{{ returnData.price }}</span>
           </div>
         </template>
 
@@ -60,7 +58,7 @@
         </div>
         <!--标签分类-->
         <div class="tag-group">
-          {{ returnData.name }}
+          <span>{{ returnData.name }}</span>
         </div>
 
       </div>
@@ -124,10 +122,10 @@
         <div class="game-rating-overall-left inline-block">
           <span class="span-text">{{ returnData.score }}</span>
         </div>
-        <div class="game-rating-overall-right inline-block">
+        <div class="game-rating-overall-right inline-block" @click="toPublish">
           <div class="inline-block"><span class="touch-score">轻点评分</span></div>
           <div>
-            <van-rate v-model="score" allow-half void-icon="star" void-color="#eee" size="30"/>
+            <van-rate v-model="score" void-icon="star" void-color="#eee" size="30"/>
           </div>
         </div>
       </div>
@@ -138,12 +136,12 @@
 
 
     <!--评论列表-->
-    <div class="comment-list" v-for="(item,index) in returnData.commentList" :key="index">
+    <div class="comment-list">
       <!--标题-->
       <div class="comment-list-title">
         <van-tabs v-model="active">
           <van-tab title="最新">
-            <div class="comment-list-comment">
+            <div class="comment-list-comment" v-for="(item,index) in returnData.commentList" :key="index">
               <!--评论区域-标题-包含用户信息-->
 
               <div class="comment-list-comment-title">
@@ -154,7 +152,7 @@
                 <!--评论区域-标题-用户昵称-->
                 <div class="comment-list-comment-title-info inline-block">
                   <div class="comment-list-comment-title-info-nickname inline-block">
-                    {{ item.mbUser.nickname }}
+                    <span>{{ item.mbUser.nickname }}</span>
                   </div>
                   <!--用户的评分-->
                   <div class="comment-list-comment-title-info-score">
@@ -166,32 +164,37 @@
               </div>
               <!--评论内容-->
               <div class="comment-list-comment-text">
-                {{ item.content }}
+                <span>{{ item.content }}</span>
               </div>
               <!--评论日期-->
               <div class="comment-list-comment-date">
-                {{ item.createDate }}
+                <span>{{ item.createDate }}</span>
               </div>
+              <!--分隔线-->
+              <van-divider/>
             </div>
           </van-tab>
-          <!--          <van-tab title="最热">内容 2</van-tab>-->
         </van-tabs>
       </div>
     </div>
     <!--评论列表end-->
-
+    <!--弹出层-发表游戏评论-->
+    <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
+      <MyGameCommentPublish @close="close" :v="toSon"/>
+    </van-popup>
 
   </div>
 </template>
 
 <script>
 import MyHeader from "@/views/header/MyHeader";
+import MyGameCommentPublish from "@/views/single/MyGameCommentPublish";
 import Api from "@/api/api";
 import axios from "axios";
 
 export default {
   name: "SingleGame",
-  components: {MyHeader},
+  components: {MyHeader, MyGameCommentPublish},
   data() {
     return {
       //轮播图片列表
@@ -201,12 +204,26 @@ export default {
       //评分
       score: 0,
       //激活的标签页
-      active: 0
+      active: 0,
+      //是否弹出弹出层
+      popPostBackground: false,
+      //传给子组件
+      toSon: {
+        gid: 0,
+        name: "",
+        score: 1
+      }
     }
   },
   methods: {
+    //关闭弹出层
+    close(v) {
+      this.popPostBackground = v;
+      this.showGame();
+    },
     //显示游戏详情
-    showGame(v) {
+    showGame() {
+      console.log("执行了显示游戏详情方法");
       axios.get(Api.getGameDetail, {
         params: {
           gid: this.$route.query.gid
@@ -216,12 +233,20 @@ export default {
         this.imgList = res.data.data.photoList;
         this.returnData = res.data.data;
       }).catch(err => {
-        console.log("显示游戏详情错误=>", err);
+        //console.log("显示游戏详情错误=>", err);
       })
     },
     //返回
     back() {
       this.$router.go(-1);
+    },
+    //去游戏评分
+    toPublish() {
+      this.toSon.gid = this.returnData.gid;
+      this.toSon.name = this.returnData.name;
+      this.toSon.score = this.score;
+      console.log("打印一下要发给子组件的=>", this.toSon);
+      this.popPostBackground = true;
     }
   },
   mounted() {
