@@ -1,9 +1,9 @@
-import Vue from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import axios from 'axios'
-import VueAxios from 'vue-axios'
+import Vue from 'vue';
+import App from './App.vue';
+import router from './router';
+import store from './store';
+import axios from 'axios';
+import VueAxios from 'vue-axios';
 //===========================================Vant=========================================
 //Vant 是一个面向移动端的组件库，因此默认只适配了移动端设备，这意味着组件只监听了移动端的 touch 事件，没有监听桌面端的 mouse 事件。
 //如果你需要在桌面端使用 Vant，可以引入我们提供的 @vant/touch-emulator，这个库会在桌面端自动将 mouse 事件转换成对应的 touch 事件，使得组件能够在桌面端使用。
@@ -33,18 +33,26 @@ import { Loading } from 'vant';
 import { Rate } from 'vant';
 import { Tag } from 'vant';
 import { Progress } from 'vant';
+import { RadioGroup, Radio } from 'vant';
+import { Search } from 'vant';
+import { Form } from 'vant';
+
 
 
 
 
 //MarkDown解析工具
-import mavonEditor from 'mavon-editor'
-import 'mavon-editor/dist/css/index.css'
+import mavonEditor from 'mavon-editor';
+import 'mavon-editor/dist/css/index.css';
 
 Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(Form);
+Vue.use(Search);
+Vue.use(Radio);
+Vue.use(RadioGroup);
 Vue.use(Progress);
 Vue.use(Tag);
 Vue.use(Rate);
@@ -86,4 +94,4 @@ new Vue({
     router,
     store,
     render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

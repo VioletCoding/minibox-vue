@@ -27,7 +27,11 @@ export default {
       if (this.$route.path === "/" || this.$route.path === "/home") {
         this.showFooter = true;
       }
-      if (this.$route.path === "/postDetail" || this.$route.path === "/gameDetail") {
+      if (this.$route.path === "/postDetail"
+          ||
+          this.$route.path === "/gameDetail"
+          ||
+          this.$route.path === "/login") {
         this.showFooter = false;
       } else {
         this.showFooter = true;

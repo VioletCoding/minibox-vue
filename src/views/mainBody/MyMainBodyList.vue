@@ -77,7 +77,14 @@
         <!--选择社区和标题-->
         <van-cell-group>
           <van-cell>
-            <van-button type="default" icon="plus" size="small">添加社区</van-button>
+            <van-button type="default" icon="plus" size="small" @click="showBlock" style="margin-right: 10px">
+              <span>添加社区</span>
+            </van-button>
+            <!--选中的社区-->
+            <van-button type="default" color="linear-gradient(to right, #ff6034, #ee0a24)"
+                        size="small" @click="showBlock" v-if="radio!=''">
+              {{ blockName }}
+            </van-button>
           </van-cell>
           <van-cell>
             <van-field v-model="popTitle" placeholder="标题" required/>
@@ -100,6 +107,38 @@
           </van-cell>
         </van-cell-group>
       </van-popup>
+
+      <!--展示版块（社区）的弹出层-->
+      <van-popup v-model="showBlockPop" position="bottom" :style="{height: '100%'}" safe-area-inset-bottom>
+        <!--导航栏-->
+        <van-nav-bar title="请选择社区" left-arrow @click-left="close"/>
+        <!--搜索框-->
+        <van-search v-model="search" placeholder="输入搜索内容"/>
+        <van-cell title="推荐" style="margin-bottom: 10px;font-weight: bold"/>
+        <!--版块信息-->
+        <van-grid :column-num="2" direction="horizontal" clickable>
+          <van-grid-item v-for="(item,index) in blockList" :key="index" @click="label(item.bid,item.name)">
+            <div style="width: 160px">
+              <div class="inline-block"
+                   style="height: 100%;width: 30px">
+                <van-image width="30" height="30" src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+              </div>
+
+              <div class="inline-block van-ellipsis"
+                   style="font-size: 12px;vertical-align: top;padding-top: 10px;margin-left: 10px">
+                {{ item.name }}
+              </div>
+              <div class="inline-block" style="float: right;margin-top: 10px">
+                <van-radio-group v-model="radio">
+                  <van-radio :name="item.bid"/>
+                </van-radio-group>
+              </div>
+            </div>
+          </van-grid-item>
+        </van-grid>
+
+      </van-popup>
+      <!--展示版块（社区）的弹出层-->
     </div>
     <!--弹出层内容-->
   </div>
@@ -177,7 +216,17 @@ export default {
       //激活的tab
       active: 0,
       //帖子列表
-      dataList: []
+      dataList: [],
+      //展示版块（社区）的弹出层
+      showBlockPop: false,
+      //版块列表
+      blockList: [],
+      //单选框
+      radio: "",
+      //选中的社区名字
+      blockName: "",
+      //搜索内容
+      search: ""
     }
   },
   methods: {
@@ -222,12 +271,16 @@ export default {
     },
     //弹出层-发送
     onClickRight() {
+      if (this.radio == "" || this.radio == null || this.radio == undefined) {
+        this.$toast.fail("请选择社区哦~");
+        return;
+      }
       axios.post(Api.publishPost, {
         //TODO
         //用户ID，暂时这么写，以后后台是从token里面取的，就不用传这个了
         uid: 10000,
-        //版块ID，暂时这么写，应该是选择那些版块自动获取的
-        bid: 10004,
+        //版块ID
+        bid: this.radio,
         //图片ID，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
         mbPhoto: {
           pid: this.pid,
@@ -245,6 +298,8 @@ export default {
           this.popPostBackground = false;
           this.value = '';
           this.img_file = {};
+          this.radio = "";
+          this.blockName = "";
           //调用帖子方法
           this.getPostList();
         } else {
@@ -305,6 +360,30 @@ export default {
         console.log("展示帖子详情err=>", err);
       })
     },
+    //在发表帖子的时候显示社区（版块）弹出层
+    showBlock() {
+      if (this.popPostBackground) {
+        this.showBlockPop = true;
+        axios.get(Api.getBlockList)
+            .then(res => {
+              console.log("获取版块信息的回调=>", res);
+              this.blockList = res.data.data;
+            }).catch(err => {
+          console.log("获取版块信息的回调错误=>", err);
+        })
+      }
+    },
+    //在发表帖子的时候显示社区（版块）弹出层-关闭
+    close() {
+      if (this.showBlockPop) {
+        this.showBlockPop = false;
+      }
+    },
+    //点击宫格也能选中单选框
+    label(bid, name) {
+      this.radio = bid;
+      this.blockName = name;
+    }
   },
   mounted() {
     this.getPostList();
@@ -313,6 +392,14 @@ export default {
 </script>
 
 <style scoped lang="less">
+.inline-block {
+  display: inline-block;
+}
+
+.block {
+  display: block;
+}
+
 
 .swipe-text {
   color: white;

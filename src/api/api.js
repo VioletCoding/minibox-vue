@@ -1,6 +1,10 @@
 const baseUrl = "http://192.168.0.105:20002/";
+//登陆前校验接口
+const auth = baseUrl + "user/beforeLogin";
 //登陆接口
 const login = baseUrl + 'user/login';
+//查询「我」的个人信息查询接口
+const showUserInfo = baseUrl + 'user/show'
 
 //--------------------------------------
 //获取帖子列表
@@ -33,5 +37,7 @@ export default {
     getBlockList,
     publishPost,
     getAllGame,
-    getGameDetail
+    getGameDetail,
+    showUserInfo,
+    auth
 }

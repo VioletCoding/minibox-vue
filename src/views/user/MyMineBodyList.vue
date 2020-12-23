@@ -81,6 +81,7 @@
             <van-tab title="关注游戏"/>
           </van-tabs>
         </van-tab>
+
         <van-tab title="动态"></van-tab>
         <van-tab title="设置"></van-tab>
       </van-tabs>
@@ -90,13 +91,19 @@
 </template>
 
 <script>
-
+import axios from "axios";
+import Api from "@/api/api";
 export default {
   name: "MyMineBodyList",
   data() {
     return {
       //激活的tab
       active: 0
+    }
+  },
+  methods: {
+    showUserInfo() {
+
     }
   }
 }

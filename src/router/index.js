@@ -1,28 +1,28 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue"
+import VueRouter from "vue-router"
 
 Vue.use(VueRouter)
 
 const routes = [
     {
-        path: '/',
-        name: 'MyMainBodyList',
-        component: () => import('@/views/mainBody/MyMainBodyList')
+        path: "/",
+        name: "MyMainBodyList",
+        component: () => import("@/views/mainBody/MyMainBodyList")
     },
     {
-        path: '/postDetail',
-        name: 'SinglePost',
-        component: () => import('@/views/single/SinglePost')
+        path: "/postDetail",
+        name: "SinglePost",
+        component: () => import("@/views/single/SinglePost")
     },
     {
-        path: '/gameDetail',
-        name: 'SingleGame',
-        component: () => import('@/views/single/SingleGame')
+        path: "/gameDetail",
+        name: "SingleGame",
+        component: () => import("@/views/single/SingleGame")
     },
     {
-        path: '/game',
-        name: 'MyGameBodyList',
-        component: () => import('@/views/mainBody/MyGameBodyList')
+        path: "/game",
+        name: "MyGameBodyList",
+        component: () => import("@/views/mainBody/MyGameBodyList")
     },
     {
         path: "/gameCommentPublish",
@@ -32,17 +32,22 @@ const routes = [
     {
         path: "/mine",
         name: "MyMineBodyList",
-        component: () => import('@/views/mainBody/MyMineBodyList')
+        component: () => import("@/views/user/MyMineBodyList")
     },
     {
         path: "/community",
         name: "MyCommunityBodyList",
-        component: () => import('@/views/mainBody/MyCommunityBodyList')
+        component: () => import("@/views/mainBody/MyCommunityBodyList")
+    },
+    {
+        path: "/login",
+        name: "Login",
+        component: () => import("@/views/user/Login")
     }
 ]
 
 const router = new VueRouter({
-    mode: 'history',
+    mode: "history",
     base: process.env.BASE_URL,
     routes
 });
