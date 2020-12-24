@@ -148,7 +148,6 @@
 import SinglePost from "../single/SinglePost";
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
-import axios from "axios";
 
 export default {
   name: "MyMainBodyList",
@@ -275,7 +274,7 @@ export default {
         this.$toast.fail("请选择社区哦~");
         return;
       }
-      axios.post(Api.publishPost, {
+      this.$http.post(Api.publishPost, {
         //TODO
         //用户ID，暂时这么写，以后后台是从token里面取的，就不用传这个了
         uid: 10000,
@@ -320,7 +319,7 @@ export default {
       //把文件加入到formdata里
       multipartFiles.append('multipartFiles', $file);
       //发送请求，注意headers
-      axios({
+      this.$http({
         url: Api.uploadImg,
         method: 'post',
         data: multipartFiles,
@@ -342,7 +341,7 @@ export default {
     },
     //获取帖子列表
     async getPostList() {
-      await axios.get(Api.getPostList).then(res => {
+      await this.$http.get(Api.getPostList).then(res => {
         this.dataList = res.data.data;
         this.imgList = res.data.data;
         this.code = res.data.code;
@@ -352,7 +351,7 @@ export default {
     },
     //展示帖子详情
     showPostDetail(tid) {
-      axios.get(Api.getPostDetail, {
+      this.$http.get(Api.getPostDetail, {
         tid: tid
       }).then(res => {
         console.log("展示帖子详情=>", res);
@@ -364,7 +363,7 @@ export default {
     showBlock() {
       if (this.popPostBackground) {
         this.showBlockPop = true;
-        axios.get(Api.getBlockList)
+        this.$http.get(Api.getBlockList)
             .then(res => {
               console.log("获取版块信息的回调=>", res);
               this.blockList = res.data.data;

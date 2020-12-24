@@ -190,7 +190,6 @@
 import MyHeader from "@/views/header/MyHeader";
 import MyGameCommentPublish from "@/views/single/MyGameCommentPublish";
 import Api from "@/api/api";
-import axios from "axios";
 
 export default {
   name: "SingleGame",
@@ -224,7 +223,7 @@ export default {
     //显示游戏详情
     showGame() {
       console.log("执行了显示游戏详情方法");
-      axios.get(Api.getGameDetail, {
+       this.$http.get(Api.getGameDetail, {
         params: {
           gid: this.$route.query.gid
         }

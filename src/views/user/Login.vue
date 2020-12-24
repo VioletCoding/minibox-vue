@@ -1,46 +1,62 @@
 <template>
-    <div style="overflow: hidden">
-      <!--头部-->
-      <div>
-        <MyHeader>
-          <template #left>
-            <van-icon name="cross" color="black" size="30"/>
-          </template>
-        </MyHeader>
-      </div>
-      <!--头部end-->
-
-      <!--文字提示-->
-      <div class="text">验证码登陆</div>
-      <!--文字提示end-->
-
-      <!--输入框-->
-      <div class="input-field van-hairline--bottom">
-        <van-form>
-          <van-field v-model="input" placeholder="输入邮箱" input-align="center"
-                     clearable :right-icon="icon" @blur="validate" :error-message="errMsg"
-                     error-message-align="center"/>
-        </van-form>
-      </div>
-      <!--输入框end-->
-
-      <!--获取验证码按钮-->
-      <div class="btn">
-        <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="获取验证码" block :disabled="disabled"
-                    @click="auth(input)"/>
-      </div>
-      <!--获取验证码按钮end-->
-
-      <!--密码登陆-->
-      <div class="pwd-login">密码登录</div>
-      <!--密码登陆end-->
+  <div style="overflow: hidden">
+    <!--头部-->
+    <div>
+      <MyHeader>
+        <template #left>
+          <van-icon name="cross" color="black" size="30"/>
+        </template>
+      </MyHeader>
     </div>
+    <!--头部end-->
+    <!--文字提示-->
+    <div class="text">验证码登陆</div>
+    <!--文字提示end-->
+
+    <!--输入框-->
+    <div class="input-field van-hairline--bottom">
+      <van-form>
+        <van-field v-model="input" placeholder="输入邮箱" input-align="center"
+                   clearable :right-icon="icon" @blur="validate" :error-message="errMsg"
+                   error-message-align="center"/>
+      </van-form>
+      <!--输入验证码弹出层-->
+      <van-popup v-model="showAuth" position="right" closeable :style="{ width: '100%',height:'100%' }">
+        <div style="margin-top: 150px">
+          <van-password-input :value="authCode" :mask="false" :focused="showKeyboard" @focus="showKeyboard = true"/>
+
+          <div class="btn">
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="登录" block :disabled="disabled"
+                        @click="login(authCode)"/>
+          </div>
+          <!--TODO-->
+          <!-- 数字键盘 -->
+          <van-number-keyboard v-model="authCode" :show="showKeyboard" @blur="showKeyboard = false"
+                               safe-area-inset-bottom/>
+        </div>
+      </van-popup>
+      <!--输入验证码弹出层end-->
+    </div>
+    <!--输入框end-->
+
+    <!--获取验证码按钮-->
+    <div class="btn">
+      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="获取验证码" block :disabled="disabled"
+                  @blur="checkAuth" @click="auth(input)"/>
+    </div>
+    <!--获取验证码按钮end-->
+
+    <!--密码登陆-->
+    <div class="pwd-login">密码登录</div>
+    <!--密码登陆end-->
+
+
+  </div>
 </template>
 
 <script>
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
-import axios from "axios";
 
 export default {
   name: "Login",
@@ -54,10 +70,22 @@ export default {
       //图标
       icon: "",
       //是否禁用按钮
-      disabled: true
+      disabled: true,
+      //显示弹出层
+      showAuth: false,
+      //验证码
+      authCode: "",
+      //显示密码输入键盘
+      showKeyboard: true
     }
   },
   methods: {
+    //校验验证码
+    checkAuth() {
+      if (this.authCode.length == 6) {
+        this.disabled = false;
+      }
+    },
     //校验表单的值是否是邮箱
     validate() {
       let pattern = "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$";
@@ -78,13 +106,22 @@ export default {
     },
     //验证
     auth(email) {
-      axios.post(Api.auth, {
-        username: this.input
-      }).then(res => {
+      this.$http.post(Api.auth, {username: email}
+      ).then(res => {
         console.log("这是校验回调=>", res);
-      }).catch(err=>{
-        console.log("校验回调错误=>",err);
+        let code = res.data.code;
+        let msg = res.data.message;
+        if (code == 200) {
+          this.showAuth = true;
+          this.disabled = true;
+        }
+      }).catch(err => {
+        console.log("校验回调错误=>", err);
       })
+    },
+    //登陆
+    login(authCode) {
+
     }
   }
 }

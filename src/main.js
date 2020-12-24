@@ -2,7 +2,7 @@ import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
 import store from './store';
-import axios from 'axios';
+import Axios from 'axios';
 import VueAxios from 'vue-axios';
 //===========================================Vant=========================================
 //Vant 是一个面向移动端的组件库，因此默认只适配了移动端设备，这意味着组件只监听了移动端的 touch 事件，没有监听桌面端的 mouse 事件。
@@ -36,8 +36,7 @@ import { Progress } from 'vant';
 import { RadioGroup, Radio } from 'vant';
 import { Search } from 'vant';
 import { Form } from 'vant';
-
-
+import { PasswordInput, NumberKeyboard } from 'vant';
 
 
 
@@ -49,6 +48,8 @@ Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+Vue.use(PasswordInput);
+Vue.use(NumberKeyboard);
 Vue.use(Form);
 Vue.use(Search);
 Vue.use(Radio);
@@ -88,10 +89,51 @@ Vue.use(Tab);
 Vue.use(Tabs);
 //Vant
 //===========================================Vant=========================================
-Vue.use(VueAxios, axios)
+//Vue.use(VueAxios, Axios);
+Vue.prototype.$http = Axios;
 Vue.config.productionTip = false
 new Vue({
     router,
     store,
     render: h => h(App)
 }).$mount('#app');
+
+//设置URL，这样具体的接口地址就能写/post/all这样的相对路径了，会自动在前面加baseURL
+Axios.defaults.baseURL = "http://192.168.0.105:20001/";
+//请求超时时间3秒钟
+Axios.defaults.timeout = 3000;
+//请求拦截器，自动加请求头
+Axios.interceptors.request.use(
+    config => {
+        config.headers['Content-Type'] = 'application/json; charset=UTF-8'
+        let token = localStorage.getItem("accessToken");
+        if (token != null && token != "") {
+            config.headers["accessToken"] = token;
+        }
+        return config;
+    },
+    err => Promise.reject(err)
+);
+//响应拦截器
+Axios.interceptors.response.use(
+    resp => {
+        return resp;
+    },
+    error => {
+        let e = error.response.data.code;
+        if (e == 400) {
+            console.log("请求错误");
+            this.$toast.fail("请求错误");
+        }
+        if (e == 401) {
+            router.push("/login");
+        }
+        if (e == 404) {
+            router.push("/notFound");
+        }
+        if (e == 500) {
+            this.$toast.fail("服务器错误，请稍后再试！");
+        }
+
+    }
+)

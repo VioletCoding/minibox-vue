@@ -75,7 +75,6 @@
 <script>
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
-import axios from "axios";
 
 export default {
   name: "MyGameBodyList",
@@ -103,7 +102,7 @@ export default {
   methods: {
     //展示帖子列表
     showGameList() {
-      axios.get(Api.getAllGame).then(res => {
+       this.$http.get(Api.getAllGame).then(res => {
         if (res.data.code === 200 && res.data.data != null && res.data.data.length > 0) {
           res.data.data.forEach(v => {
             //将BigDecimal转成2位小数，不知道为什么本来后台是带.00的，传上来就不带.00了

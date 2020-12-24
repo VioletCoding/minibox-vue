@@ -43,9 +43,6 @@
 </template>
 
 <script>
-import MyHeader from "@/views/header/MyHeader";
-import Api from "@/api/api";
-import axios from "axios";
 
 export default {
   name: "MyGameCommentPublish",
@@ -81,7 +78,7 @@ export default {
         this.$toast.fail("说点什么吧");
         return;
       }
-      axios.post(Api.publishComment, {
+       this.$http.post(Api.publishComment, {
         //TODO 临时uid
         uid: 10000,
         gid: this.v.gid,

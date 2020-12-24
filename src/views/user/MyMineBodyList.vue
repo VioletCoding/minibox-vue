@@ -91,7 +91,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import Api from "@/api/api";
 export default {
   name: "MyMineBodyList",

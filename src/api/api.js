@@ -1,35 +1,35 @@
-const baseUrl = "http://192.168.0.105:20002/";
+//const baseUrl = "http://192.168.0.105:20001/";
 //登陆前校验接口
-const auth = baseUrl + "user/beforeLogin";
-//登陆接口
-const login = baseUrl + 'user/login';
+const auth = "user/before";
+//登陆注册复合接口
+const loginOrReg = "user/after";
 //查询「我」的个人信息查询接口
-const showUserInfo = baseUrl + 'user/show'
+const showUserInfo = "user/show"
 
 //--------------------------------------
 //获取帖子列表
-const getPostList = baseUrl + 'post/showAll';
+const getPostList = "post/showAll";
 //获取帖子详情
-const getPostDetail = baseUrl + 'post/detail';
+const getPostDetail = "post/detail";
 //帖子图片上传
-const uploadImg = baseUrl + 'post/upload';
+const uploadImg = "post/upload";
 //发布帖子
-const publishPost = baseUrl + 'post/publish';
+const publishPost = "post/publish";
 
 //-----------------------------------------
 //发表评论
-const publishComment = baseUrl + 'comment/post';
+const publishComment = "comment/post";
 
 //-----------------------------------------
 //游戏列表
-const getAllGame = baseUrl + 'game/all';
+const getAllGame = "game/all";
 //游戏详情
-const getGameDetail = baseUrl + 'game/detail'
+const getGameDetail = "game/detail"
 
 //------------------------------------------
-const getBlockList = baseUrl + 'block/get';
+const getBlockList = "block/get";
 export default {
-    login,
+    loginOrReg,
     getPostList,
     getPostDetail,
     uploadImg,

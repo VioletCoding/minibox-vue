@@ -100,7 +100,6 @@
 <script>
 import marked from 'marked';
 import Api from "@/api/api";
-import axios from "axios";
 
 export default {
   name: "SinglePost",
@@ -157,7 +156,7 @@ export default {
   methods: {
     //加载
     onLoad() {
-      axios.get(Api.getPostDetail, {
+       this.$http.get(Api.getPostDetail, {
         params: {
           tid: this.tid
         }
@@ -177,7 +176,7 @@ export default {
     },
     //发表评论
     async publishComment() {
-      await axios.post(Api.publishComment, {
+      await  this.$http.post(Api.publishComment, {
         tid: this.tid,
         uid: 10000,
         content: this.commentValue,
