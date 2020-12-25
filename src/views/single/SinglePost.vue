@@ -100,6 +100,7 @@
 <script>
 import marked from 'marked';
 import Api from "@/api/api";
+import { Notify } from "vant";
 
 export default {
   name: "SinglePost",
@@ -156,18 +157,17 @@ export default {
   methods: {
     //加载
     onLoad() {
-       this.$http.get(Api.getPostDetail, {
+      this.$http.get(Api.getPostDetail, {
         params: {
           tid: this.tid
         }
       }).then(res => {
-        console.log("帖子详情=>", res);
-        this.returnValue = res.data.data;
+        this.returnValue = res.data.data[0];
         this.value = this.returnValue.content;
         this.dataFlag = true;
         this.loading = false;
       }).catch(err => {
-        this.$toast("加载失败，请重试");
+        Notify({type: "danger", message: err.response.data.message});
       });
     },
     //返回上一个路由
@@ -176,17 +176,17 @@ export default {
     },
     //发表评论
     async publishComment() {
-      await  this.$http.post(Api.publishComment, {
+      await this.$http.post(Api.publishComment, {
         tid: this.tid,
-        uid: 10000,
+        uid: localStorage.getItem("userId"),
         content: this.commentValue,
         type: 'TC'
       }).then(res => {
-        this.$toast.success("发表成功");
+        Notify({type: "success", message: res.data.message});
         this.commentValue = '';
         this.onLoad();
       }).catch(err => {
-        this.$toast.fail("请求失败，请重试");
+        Notify({type: "danger", message: err.response.data.message});
       });
     }
   },

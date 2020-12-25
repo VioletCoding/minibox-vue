@@ -75,6 +75,7 @@
 <script>
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
+import { Notify } from "vant";
 
 export default {
   name: "MyGameBodyList",
@@ -94,15 +95,13 @@ export default {
       //游戏列表
       gameList: [],
       //激活的tab
-      active: 0,
-      //从路由里获取gid，传给轮播图点击事件用
-      //gid: this.$route.query.gid
+      active: 0
     }
   },
   methods: {
     //展示帖子列表
     showGameList() {
-       this.$http.get(Api.getAllGame).then(res => {
+      this.$http.get(Api.getAllGame).then(res => {
         if (res.data.code === 200 && res.data.data != null && res.data.data.length > 0) {
           res.data.data.forEach(v => {
             //将BigDecimal转成2位小数，不知道为什么本来后台是带.00的，传上来就不带.00了
@@ -120,10 +119,10 @@ export default {
           //给轮播图赋值
           this.imgList = res.data.data;
         } else {
-          this.$toast.fail(res.data.message);
+          Notify({type: 'danger', message: res.data.message});
         }
       }).catch(err => {
-        this.$toast.fail("加载失败", err);
+        Notify({type: 'danger', message: err.response.data.message});
       }).finally(f => {
         this.isLoading = false;
         this.dataFlag = true;
@@ -140,7 +139,6 @@ export default {
     },
   },
   mounted() {
-    //初始化工作
     this.dataFlag = false;
     this.isLoading = true;
     this.showGameList();

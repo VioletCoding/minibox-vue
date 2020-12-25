@@ -26,11 +26,9 @@
           <van-password-input :value="authCode" :mask="false" :focused="showKeyboard" @focus="showKeyboard = true"/>
 
           <div class="btn">
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="登录" block :disabled="disabled"
-                        @click="login(authCode)"/>
+            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="登录" block @click="login(authCode)"/>
           </div>
-          <!--TODO-->
-          <!-- 数字键盘 -->
+
           <van-number-keyboard v-model="authCode" :show="showKeyboard" @blur="showKeyboard = false"
                                safe-area-inset-bottom/>
         </div>
@@ -57,6 +55,7 @@
 <script>
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
+import { Notify } from "vant";
 
 export default {
   name: "Login",
@@ -106,22 +105,41 @@ export default {
     },
     //验证
     auth(email) {
-      this.$http.post(Api.auth, {username: email}
-      ).then(res => {
-        console.log("这是校验回调=>", res);
-        let code = res.data.code;
-        let msg = res.data.message;
-        if (code == 200) {
-          this.showAuth = true;
-          this.disabled = true;
-        }
-      }).catch(err => {
-        console.log("校验回调错误=>", err);
+      this.$http.post(Api.auth, {username: email})
+          .then(res => {
+            this.showAuth = true;
+            this.disabled = true;
+          }).catch(err => {
+        Notify({type: "danger", message: err.response.data.message});
       })
     },
     //登陆
     login(authCode) {
-
+      if (authCode.length < 6) {
+        Notify({type: "warning", message: "请输入6位数验证码"});
+        return;
+      }
+      if (this.input == null || this.input == "") {
+        Notify({type: "warning", message: "请输入邮箱"});
+        return;
+      }
+      this.$http.post(Api.loginOrReg, {
+        username: this.input,
+        authCode: authCode
+      }).then(resp => {
+        let code = resp.data.code;
+        let msg = resp.data.message;
+        if (code == 200) {
+          localStorage.setItem("accessToken", resp.data.data.token);
+          localStorage.setItem("userId", resp.data.data.uid);
+          this.$router.push("/");
+        }
+      }).catch(err => {
+        Notify({type: "danger", message: err.response.data.message});
+      }).finally(f => {
+        this.showAuth = false;
+        this.showKeyboard = false;
+      })
     }
   }
 }

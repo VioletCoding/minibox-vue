@@ -5,6 +5,8 @@ const auth = "user/before";
 const loginOrReg = "user/after";
 //查询「我」的个人信息查询接口
 const showUserInfo = "user/show"
+//查询「我」的评论列表
+const showUserComment = "user/userCommentShow";
 
 //--------------------------------------
 //获取帖子列表
@@ -39,5 +41,6 @@ export default {
     getAllGame,
     getGameDetail,
     showUserInfo,
-    auth
+    auth,
+    showUserComment
 }

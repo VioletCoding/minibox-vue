@@ -3,7 +3,6 @@ import App from './App.vue';
 import router from './router';
 import store from './store';
 import Axios from 'axios';
-import VueAxios from 'vue-axios';
 //===========================================Vant=========================================
 //Vant 是一个面向移动端的组件库，因此默认只适配了移动端设备，这意味着组件只监听了移动端的 touch 事件，没有监听桌面端的 mouse 事件。
 //如果你需要在桌面端使用 Vant，可以引入我们提供的 @vant/touch-emulator，这个库会在桌面端自动将 mouse 事件转换成对应的 touch 事件，使得组件能够在桌面端使用。
@@ -37,8 +36,7 @@ import { RadioGroup, Radio } from 'vant';
 import { Search } from 'vant';
 import { Form } from 'vant';
 import { PasswordInput, NumberKeyboard } from 'vant';
-
-
+import { Notify } from 'vant';
 
 //MarkDown解析工具
 import mavonEditor from 'mavon-editor';
@@ -48,6 +46,8 @@ Vue.use(mavonEditor);
 //MarkDown解析工具
 
 //Vant
+// 全局注册
+Vue.use(Notify);
 Vue.use(PasswordInput);
 Vue.use(NumberKeyboard);
 Vue.use(Form);
@@ -87,29 +87,22 @@ Vue.use(Col);
 Vue.use(Row);
 Vue.use(Tab);
 Vue.use(Tabs);
-//Vant
 //===========================================Vant=========================================
-//Vue.use(VueAxios, Axios);
+//这样 this.$http.post 就 = axios.post了，相当于赋值
 Vue.prototype.$http = Axios;
-Vue.config.productionTip = false
-new Vue({
-    router,
-    store,
-    render: h => h(App)
-}).$mount('#app');
+//关掉vue那个提示生产用压缩版的控制台提示
+Vue.config.productionTip = false;
+new Vue({router, store, render: h => h(App)}).$mount('#app');
 
-//设置URL，这样具体的接口地址就能写/post/all这样的相对路径了，会自动在前面加baseURL
+//设置URL，这样具体的接口地址就能写post/all这样的相对路径了，会自动在前面加baseURL
 Axios.defaults.baseURL = "http://192.168.0.105:20001/";
-//请求超时时间3秒钟
-Axios.defaults.timeout = 3000;
+//请求超时时间5秒钟
+Axios.defaults.timeout = 5000;
 //请求拦截器，自动加请求头
 Axios.interceptors.request.use(
     config => {
-        config.headers['Content-Type'] = 'application/json; charset=UTF-8'
-        let token = localStorage.getItem("accessToken");
-        if (token != null && token != "") {
-            config.headers["accessToken"] = token;
-        }
+        config.headers['Content-Type'] = 'application/json;charset=UTF-8';
+        config.headers["accessToken"] = localStorage.getItem("accessToken");
         return config;
     },
     err => Promise.reject(err)
@@ -120,20 +113,17 @@ Axios.interceptors.response.use(
         return resp;
     },
     error => {
-        let e = error.response.data.code;
-        if (e == 400) {
-            console.log("请求错误");
-            this.$toast.fail("请求错误");
-        }
-        if (e == 401) {
+        let status = error.response.status;
+        let message = error.response.data.message;
+        if (status == 401) {
+            localStorage.removeItem("accessToken");
+            localStorage.removeItem("userId");
+            Notify({type: "danger", message: message});
             router.push("/login");
         }
-        if (e == 404) {
-            router.push("/notFound");
+        if (status == 500) {
+            Notify({type: "danger", message: "服务器内部错误，请稍后再试"});
         }
-        if (e == 500) {
-            this.$toast.fail("服务器错误，请稍后再试！");
-        }
-
+        return Promise.reject(error);
     }
 )

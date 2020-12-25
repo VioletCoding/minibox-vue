@@ -148,6 +148,7 @@
 import SinglePost from "../single/SinglePost";
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
+import { Notify } from "vant";
 
 export default {
   name: "MyMainBodyList",
@@ -231,7 +232,6 @@ export default {
   methods: {
     async onLoad() {
       // 异步更新数据
-      // 如果请求失败，this.error = true;
       if (this.loading) {
         this.dataList = [];
         //调用帖子方法
@@ -245,7 +245,6 @@ export default {
       if (this.list.length >= this.dataList.length) {
         this.finished = true;
       }
-      //超时时间
     },
     //去帖子详情
     toDetail(value) {
@@ -271,13 +270,12 @@ export default {
     //弹出层-发送
     onClickRight() {
       if (this.radio == "" || this.radio == null || this.radio == undefined) {
-        this.$toast.fail("请选择社区哦~");
+        Notify({type: "warning", message: "请选择社区"});
         return;
       }
       this.$http.post(Api.publishPost, {
-        //TODO
-        //用户ID，暂时这么写，以后后台是从token里面取的，就不用传这个了
-        uid: 10000,
+        //用户ID
+        uid: localStorage.getItem("userId"),
         //版块ID
         bid: this.radio,
         //图片ID，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
@@ -292,8 +290,7 @@ export default {
         coverImg: this.coverImage
       }).then(res => {
         if (res.data.code == 200) {
-          console.log("发布帖子res=>", res);
-          this.$toast.success("发布成功");
+          Notify({type: "danger", message: "err.response"});
           this.popPostBackground = false;
           this.value = '';
           this.img_file = {};
@@ -302,11 +299,10 @@ export default {
           //调用帖子方法
           this.getPostList();
         } else {
-          this.$toast.fail(res.data.message);
+          Notify({type: "danger", message: res.data.message});
         }
       }).catch(err => {
-        console.log(err);
-        this.$toast.fail("发布失败");
+        Notify({type: "danger", message: err.response.data.message});
       })
     },
     // 绑定@imgAdd event
@@ -331,12 +327,11 @@ export default {
         this.coverImage = link.photoImg;
         this.pid = link.photoId;
       }).catch(err => {
-        this.$toast.fail('图片上传失败', err);
+        Notify({type: "danger", message: err.response.data.message});
       })
     },
     //MD里删除图片
     $imgDel(pos) {
-      //TODO
       delete this.img_file[pos];
     },
     //获取帖子列表
@@ -346,18 +341,8 @@ export default {
         this.imgList = res.data.data;
         this.code = res.data.code;
       }).catch(err => {
-        this.$toast.fail('加载失败,请重试');
+        Notify({type: "danger", message: err.response.data.message});
       });
-    },
-    //展示帖子详情
-    showPostDetail(tid) {
-      this.$http.get(Api.getPostDetail, {
-        tid: tid
-      }).then(res => {
-        console.log("展示帖子详情=>", res);
-      }).catch(err => {
-        console.log("展示帖子详情err=>", err);
-      })
     },
     //在发表帖子的时候显示社区（版块）弹出层
     showBlock() {
@@ -365,10 +350,9 @@ export default {
         this.showBlockPop = true;
         this.$http.get(Api.getBlockList)
             .then(res => {
-              console.log("获取版块信息的回调=>", res);
               this.blockList = res.data.data;
             }).catch(err => {
-          console.log("获取版块信息的回调错误=>", err);
+          Notify({type: "danger", message: err.response.data.message});
         })
       }
     },

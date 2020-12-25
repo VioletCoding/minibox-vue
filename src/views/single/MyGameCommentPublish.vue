@@ -43,15 +43,17 @@
 </template>
 
 <script>
+import MyHeader from "@/views/header/MyHeader";
+import Api from "@/api/api";
+import { Notify } from "vant";
 
 export default {
   name: "MyGameCommentPublish",
   components: {MyHeader},
   data() {
     return {
-      //用户id，到时候从sessionStorage取
-      //TODO
-      uid: 10000,
+      //用户id
+      uid: localStorage.getItem("userId"),
       //游戏评分下的文字
       text: "",
       //游戏评分下的文字-小字
@@ -75,26 +77,24 @@ export default {
     //发表评论
     publish() {
       if (this.message === null || this.message == "") {
-        this.$toast.fail("说点什么吧");
+        Notify({type: "warning", message: "说点什么吧"});
         return;
       }
-       this.$http.post(Api.publishComment, {
-        //TODO 临时uid
-        uid: 10000,
+      this.$http.post(Api.publishComment, {
+        uid: localStorage.getItem("userId"),
         gid: this.v.gid,
         content: this.message,
         type: "GC",
         score: this.v.score
       }).then(res => {
-        console.log("发表游戏评论回调=>", res);
         if (res.data.code == 200) {
           //关闭弹出层
           this.message = "";
           this.close();
-          this.$toast.success("发表成功");
+          Notify({type: "success", message: res.data.message});
         }
       }).catch(err => {
-        this.$toast.fail(err);
+        Notify({type: "danger", message: err.response.data.message});
       }).finally(f => {
         this.close();
       })

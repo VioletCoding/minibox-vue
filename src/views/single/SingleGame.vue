@@ -190,6 +190,7 @@
 import MyHeader from "@/views/header/MyHeader";
 import MyGameCommentPublish from "@/views/single/MyGameCommentPublish";
 import Api from "@/api/api";
+import { Notify } from "vant";
 
 export default {
   name: "SingleGame",
@@ -222,17 +223,15 @@ export default {
     },
     //显示游戏详情
     showGame() {
-      console.log("执行了显示游戏详情方法");
        this.$http.get(Api.getGameDetail, {
         params: {
           gid: this.$route.query.gid
         }
       }).then(res => {
-        console.log("显示游戏详情=>", res);
         this.imgList = res.data.data.photoList;
         this.returnData = res.data.data;
       }).catch(err => {
-        //console.log("显示游戏详情错误=>", err);
+         Notify({type: "danger", message: err.response.data.message});
       })
     },
     //返回
@@ -244,7 +243,6 @@ export default {
       this.toSon.gid = this.returnData.gid;
       this.toSon.name = this.returnData.name;
       this.toSon.score = this.score;
-      console.log("打印一下要发给子组件的=>", this.toSon);
       this.popPostBackground = true;
     }
   },
@@ -394,14 +392,10 @@ export default {
 
 
 .comment-list {
-  //background-color: #D52DF6;
 
   .comment-list-title {
     .comment-list-comment {
-      //height: 200px;
-
       .comment-list-comment-title {
-        //background-color: #3498db;
         height: 50px;
 
         .comment-list-comment-title-photo {
