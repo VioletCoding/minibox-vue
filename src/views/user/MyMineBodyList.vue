@@ -1,31 +1,10 @@
 <template>
   <div v-if="dataFlag">
     <!--头部-->
-    <div class="header">
-      <van-tabs v-model="active" swipeable animated sticky lazy-render @change="onTabChange">
+    <div>
+      <van-tabs v-model="active" swipeable animated sticky lazy-render>
         <van-tab title="数据">
-          <!--用户信息-->
-          <div class="user">
-            <!--用户头像-->
-            <div class="user-left inline-block">
-              <van-image round width="80" height="80" :src="userInfo.mbPhoto.photoLink"/>
-            </div>
-            <!--用户头像end-->
-            <!--用户昵称和签名-->
-            <div class="user-right inline-block">
-              <div class="user-right-nickname">{{ userInfo.nickname }}</div>
-              <div class="user-right-desc">{{ userInfo.description }}</div>
-            </div>
-            <!--等级-->
-            <div class="user-level inline-block">
-              <div>
-                <van-tag color="#7232dd">{{ userInfo.level }}</van-tag>
-              </div>
-            </div>
-            <!--等级end-->
-            <!--用户昵称和签名end-->
-          </div>
-          <!--用户信息end-->
+          <MyUserInfo :userInfo="userInfo"></MyUserInfo>
           <!--订阅信息-->
           <div>
             <van-grid :column-num="4" :border="false">
@@ -85,44 +64,28 @@
 
 
         <van-tab title="动态">
-          <!--用户信息-->
-          <div class="user">
-            <!--用户头像-->
-            <div class="user-left inline-block">
-              <van-image round width="80" height="80" :src="userInfo.mbPhoto.photoLink"/>
-            </div>
-            <!--用户头像end-->
-            <!--用户昵称和签名-->
-            <div class="user-right inline-block">
-              <div class="user-right-nickname">{{ userInfo.nickname }}</div>
-              <div class="user-right-desc">{{ userInfo.description }}</div>
-            </div>
-            <!--等级-->
-            <div class="user-level inline-block">
-              <div>
-                <van-tag color="#7232dd">{{ userInfo.level }}</van-tag>
-              </div>
-            </div>
-            <!--等级end-->
-            <!--用户昵称和签名end-->
-          </div>
-          <!--用户信息end-->
-
+          <MyUserInfo :userInfo="userInfo">
+            <template #photo>
+              <van-image round fit="cover" width="80" height="80" :src="userInfo.mbPhoto.photoLink"/>
+            </template>
+          </MyUserInfo>
           <!--用户动态分类-->
-          <van-tabs type="card">
-            <!--发帖-->
-            <van-tab title="帖子">
+          <van-tabs type="card" animated lazy-render>
+            <van-tab title="发帖">
               <UserNews></UserNews>
             </van-tab>
-            <van-tab title="评论">
 
+            <van-tab title="评论">
+              <MyNewsComment></MyNewsComment>
             </van-tab>
-            <!--发帖end-->
           </van-tabs>
         </van-tab>
+        <!--用户动态分类end-->
 
+        <van-tab title="设置">
+          <MySetting :userInfo="userInfo" @updateImg="updateImg"></MySetting>
+        </van-tab>
 
-        <van-tab title="设置"></van-tab>
       </van-tabs>
     </div>
     <!--头部end-->
@@ -132,10 +95,14 @@
 <script>
 import Api from "@/api/api";
 import UserNews from "@/views/user/UserNewsPost";
+import MyNewsComment from "@/views/user/MyNewsComment";
+import MySetting from "@/views/user/MySetting";
+import MyUserInfo from "@/views/user/MyUserInfo";
+import { Notify } from "vant";
 
 export default {
   name: "MyMineBodyList",
-  components: {UserNews},
+  components: {MySetting, UserNews, MyNewsComment, MyUserInfo},
   data() {
     return {
       //激活的tab
@@ -153,10 +120,6 @@ export default {
     }
   },
   methods: {
-    //切换标签页时
-    onTabChange(name, title) {
-      console.log(name, title);
-    },
     //显示用户信息
     async showUserInfo() {
       await this.$http.get(Api.showUserInfo, {
@@ -164,7 +127,6 @@ export default {
           uid: localStorage.getItem("userId")
         }
       }).then(resp => {
-        console.log("显示用户信息=>", resp);
         let v = resp.data.data;
         let gamePrice = 0;
         v["gamePrice"] = gamePrice;
@@ -177,9 +139,13 @@ export default {
         this.userInfo = v;
         this.dataFlag = true;
       }).catch(err => {
-        console.log("显示用户信息err=>", err);
+        Notify({type: "danger", message: "加载失败，请重试"})
       })
     },
+    //更换头像以后，把其他引用了MyUserInfo组件的图片也更新
+    updateImg(v) {
+      this.userInfo.mbPhoto.photoLink = v;
+    }
   },
   mounted() {
     this.showUserInfo();
@@ -190,42 +156,6 @@ export default {
 <style scoped lang="less">
 .inline-block {
   display: inline-block;
-}
-
-.block {
-  display: block;
-}
-
-.user {
-  margin-top: 10px;
-  height: 100px;
-
-  .user-left {
-    padding: 10px;
-  }
-
-  .user-right {
-    vertical-align: top;
-    padding: 10px;
-    margin-top: 19px;
-
-    .user-right-nickname {
-      height: 25px;
-      font-size: 14px;
-    }
-
-    .user-right-desc {
-      height: 20px;
-      font-size: 12px;
-    }
-  }
-
-  .user-level {
-    margin-top: 19px;
-    padding: 10px;
-    vertical-align: top;
-  }
-
 }
 
 .game-list {

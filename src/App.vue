@@ -3,34 +3,45 @@
     <transition name="slide-fade">
       <router-view/>
     </transition>
+
     <!-- 如果在 A 页面和 B 页面都渲染了一个 Tabbar 组件，这两个 Tabbar 的状态是不共享的，单页面应用可以把 Tabbar 放到 router-view 外面-->
-    <MyFooter v-if="showFooter"/>
+    <div>
+      <van-tabbar v-model="active" route>
+        <van-tabbar-item v-for="(item,index) in tabBarMenu" :key="index"
+                         :icon="item.icon" replace :to="item.path">
+          {{ item.chineseName }}
+        </van-tabbar-item>
+      </van-tabbar>
+    </div>
+
   </div>
 </template>
 
-
 <script>
 
-import MyFooter from "@/views/footer/MyFooter";
 
 export default {
-  components: {MyFooter},
   data() {
     return {
       //是否显示底部？
-      showFooter: true
+      showFooter: true,
+      active: 0,
+      //按钮菜单信息
+      tabBarMenu: [
+        {path: "/", chineseName: "首页", icon: "home-o"},
+        {path: "/game", chineseName: "游戏库", icon: "cross"},
+        {path: "/mine", chineseName: "我", icon: "user-o"}
+      ]
     }
   },
   //监听路由，什么时候显示底部tabbar
   watch: {
     $route(to, from) {
-      if (this.$route.path === "/" || this.$route.path === "/home") {
+      if (this.$route.path === "/") {
         this.showFooter = true;
       }
-      if (this.$route.path === "/postDetail"
-          ||
-          this.$route.path === "/gameDetail"
-          ||
+      if (this.$route.path === "/postDetail" ||
+          this.$route.path === "/gameDetail" ||
           this.$route.path === "/login") {
         this.showFooter = false;
       } else {
@@ -42,7 +53,7 @@ export default {
 </script>
 
 <style lang="scss">
-//解决调路由闪屏问题
+//解决跳路由闪屏问题
 [v-cloak] {
   display: none !important;
 }

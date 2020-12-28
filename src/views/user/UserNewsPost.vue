@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-for="(item,index) in dataList" :key="index" class="news-post">
+    <div v-for="(item,index) in dataList" :key="index" class="news-post" @click="toPost(item.tid)">
       <div class="new-post-title">
         {{ item.title }}
       </div>
@@ -34,11 +34,14 @@ export default {
           uid: localStorage.getItem("userId")
         }
       }).then(res => {
-        console.log("获取帖子列表", res);
         this.dataList = res.data.data;
       }).catch(err => {
         this.$toast.fail('加载失败,请重试');
       });
+    },
+    //点击去帖子详情
+    toPost(v) {
+      this.$router.push({path: "/postDetail", query: {tid: v}})
     }
   },
   mounted() {

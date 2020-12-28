@@ -37,6 +37,9 @@ import { Search } from 'vant';
 import { Form } from 'vant';
 import { PasswordInput, NumberKeyboard } from 'vant';
 import { Notify } from 'vant';
+import { Overlay } from 'vant';
+import { ImagePreview } from 'vant';
+
 
 //MarkDown解析工具
 import mavonEditor from 'mavon-editor';
@@ -47,6 +50,8 @@ Vue.use(mavonEditor);
 
 //Vant
 // 全局注册
+Vue.use(ImagePreview);
+Vue.use(Overlay);
 Vue.use(Notify);
 Vue.use(PasswordInput);
 Vue.use(NumberKeyboard);
@@ -124,6 +129,7 @@ Axios.interceptors.response.use(
         if (status == 500) {
             Notify({type: "danger", message: "服务器内部错误，请稍后再试"});
         }
+        Notify({type: "danger", message: "请求失败，请重试"});
         return Promise.reject(error);
     }
 )

@@ -1,13 +1,11 @@
-//const baseUrl = "http://192.168.0.105:20001/";
 //登陆前校验接口
 const auth = "user/before";
 //登陆注册复合接口
 const loginOrReg = "user/after";
 //查询「我」的个人信息查询接口
 const showUserInfo = "user/show"
-//查询「我」的评论列表
-const showUserComment = "user/userCommentShow";
-
+//更新用户个人信息
+const updateUserInfo = "user/update";
 //--------------------------------------
 //获取帖子列表
 const getPostList = "post/showAll";
@@ -17,7 +15,8 @@ const getPostDetail = "post/detail";
 const uploadImg = "post/upload";
 //发布帖子
 const publishPost = "post/publish";
-
+//查询「我」的评论列表-包括帖子部分信息
+const showUserComment = "post/userCommentShow";
 //-----------------------------------------
 //发表评论
 const publishComment = "comment/post";
@@ -29,7 +28,12 @@ const getAllGame = "game/all";
 const getGameDetail = "game/detail"
 
 //------------------------------------------
+//版块
 const getBlockList = "block/get";
+
+//------------------------------------------
+//更新用户头像
+const modifyUserImg = "photo/updateImg"
 export default {
     loginOrReg,
     getPostList,
@@ -42,5 +46,7 @@ export default {
     getGameDetail,
     showUserInfo,
     auth,
-    showUserComment
+    showUserComment,
+    modifyUserImg,
+    updateUserInfo
 }

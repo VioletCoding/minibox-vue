@@ -290,7 +290,7 @@ export default {
         coverImg: this.coverImage
       }).then(res => {
         if (res.data.code == 200) {
-          Notify({type: "danger", message: "err.response"});
+          Notify({type: "success", message: res.data.message});
           this.popPostBackground = false;
           this.value = '';
           this.img_file = {};
