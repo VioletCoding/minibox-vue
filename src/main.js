@@ -39,7 +39,7 @@ import { PasswordInput, NumberKeyboard } from 'vant';
 import { Notify } from 'vant';
 import { Overlay } from 'vant';
 import { ImagePreview } from 'vant';
-
+import { Dialog } from 'vant';
 
 //MarkDown解析工具
 import mavonEditor from 'mavon-editor';
@@ -50,6 +50,7 @@ Vue.use(mavonEditor);
 
 //Vant
 // 全局注册
+Vue.use(Dialog);
 Vue.use(ImagePreview);
 Vue.use(Overlay);
 Vue.use(Notify);
@@ -124,7 +125,7 @@ Axios.interceptors.response.use(
             localStorage.removeItem("accessToken");
             localStorage.removeItem("userId");
             Notify({type: "danger", message: message});
-            router.push("/login");
+            router.replace("/login");
         }
         if (status == 500) {
             Notify({type: "danger", message: "服务器内部错误，请稍后再试"});

@@ -56,7 +56,7 @@
         <van-cell/>
         <van-card
             :price="item.content" :desc="item.createDate"
-            :title="item.mbUser.nickname" :tag="item.mbUser.level"
+            :title="item.mbUser.nickname" :tag="'LV '+item.mbUser.level"
             :thumb="item.mbUser.mbPhoto.photoLink"
             centered currency="">
         </van-card>

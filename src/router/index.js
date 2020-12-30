@@ -48,6 +48,11 @@ const routes = [
         path: "/login",
         name: "Login",
         component: () => import("@/views/user/Login")
+    },
+    {
+        path: "/modifyPassword",
+        name: "MyModifyPassword",
+        component: () => import("@/views/user/MyModifyPassword")
     }
 ]
 

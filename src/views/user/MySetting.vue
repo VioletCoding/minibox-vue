@@ -10,7 +10,6 @@
               <van-image :src="userInfo.mbPhoto.photoLink" :alt="userInfo.mbPhoto.photoLink" height="200" fit="cover"/>
             </van-uploader>
           </template>
-
         </MyUserInfo>
       </div>
 
@@ -27,18 +26,18 @@
     </div>
 
     <div class="modify-password">
-      <van-button type="primary" text="修改密码" block/>
+      <van-button type="primary" text="修改密码" block @click="toUpdatePassword"/>
     </div>
 
     <div class="logout">
-      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="退出登录" block/>
+      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="退出登录" block @click="logout"/>
     </div>
 
   </div>
 </template>
 
 <script>
-import { Notify } from 'vant';
+import { Dialog, Notify } from 'vant';
 import Api from "@/api/api";
 import MyUserInfo from "@/views/user/MyUserInfo";
 
@@ -111,6 +110,47 @@ export default {
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
       })
+    },
+    //修改密码
+    toUpdatePassword() {
+      Dialog.confirm({
+        title: "修改密码",
+        message: "确定要修改密码吗？",
+        confirmButtonText: "是的",
+        cancelButtonText: "我手滑了"
+      }).then(() => {
+        this.$http.get(Api.beforeUpdatePassword).then(resp => {
+          if (resp.data.code == 200) {
+            Notify({type: "success", message: resp.data.message});
+            this.$router.push("/modifyPassword");
+          }
+        }).catch(err => {
+          Notify({type: "danger", message: err.response.data.message});
+          return;
+        })
+      }).catch(() => {
+        return;
+      });
+    },
+    //退出登录
+    logout() {
+      Dialog.confirm({
+        title: "退出登录",
+        message: "确定要退出登录吗？"
+      }).then(() => {
+        this.$http.get(Api.logout).then(resp => {
+          console.log(resp);
+          if (resp.data.code == 200) {
+            localStorage.removeItem("userId");
+            localStorage.removeItem("accessToken");
+            this.$router.replace("/login");
+          }
+        }).catch(err => {
+          console.log(err);
+        })
+      }).catch(() => {
+        return;
+      })
     }
   },
   mounted() {
@@ -138,7 +178,7 @@ export default {
   }
 
   .logout {
-    //margin-top: 30px;
+
   }
 }
 

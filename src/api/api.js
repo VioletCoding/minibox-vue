@@ -6,6 +6,14 @@ const loginOrReg = "user/after";
 const showUserInfo = "user/show"
 //更新用户个人信息
 const updateUserInfo = "user/update";
+//发送验证码邮件
+const beforeUpdatePassword = "user/beforeModify";
+//校验验证码
+const check = "user/check";
+//登出
+const logout = "user/logout";
+//更新密码
+const doUpdatePassword = "user/modify";
 //--------------------------------------
 //获取帖子列表
 const getPostList = "post/showAll";
@@ -48,5 +56,9 @@ export default {
     auth,
     showUserComment,
     modifyUserImg,
-    updateUserInfo
+    updateUserInfo,
+    beforeUpdatePassword,
+    doUpdatePassword,
+    check,
+    logout
 }
