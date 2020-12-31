@@ -28,7 +28,8 @@ const showUserComment = "post/userCommentShow";
 //-----------------------------------------
 //发表评论
 const publishComment = "comment/post";
-
+//发表回复
+const publishReply = "comment/reply"
 //-----------------------------------------
 //游戏列表
 const getAllGame = "game/all";
@@ -60,5 +61,6 @@ export default {
     beforeUpdatePassword,
     doUpdatePassword,
     check,
-    logout
+    logout,
+    publishReply
 }

@@ -58,23 +58,27 @@
             :price="item.content" :desc="item.createDate"
             :title="item.mbUser.nickname" :tag="'LV '+item.mbUser.level"
             :thumb="item.mbUser.mbPhoto.photoLink"
-            centered currency="">
+            centered currency="" @click="reply(item.mbUser.nickname,item.mbUser.uid,item.cid)">
         </van-card>
         <!--回复-->
         <div class="replyArea">
           <van-collapse v-model="activeName">
             <van-collapse-item title="查看回复" :name="index" v-if="item.replyList.length > 0">
-              <div v-for="(reply,replyIndex) in item.replyList" :key="replyIndex">
+              <div v-for="(reply1,replyIndex) in item.replyList" :key="replyIndex"
+                   @click="reply(reply1.mbUser.nickname,reply1.mbUser.uid,item.cid)">
                 <div>
-                  <span style="color: deepskyblue">{{ reply.mbUser.nickname }}</span>
-                  <span><strong>&nbsp;回复&nbsp;</strong></span>
+                  <span style="color: deepskyblue">{{ reply1.mbUser.nickname }}</span>
+                  <span>
+                    <strong>&nbsp;回复&nbsp;</strong>
+                  </span>
                   {{ item.mbUser.nickname }}
                   <strong>&nbsp;:&nbsp; </strong>
-                  <span style="color: black">{{ reply.replyContent }}</span>
-                  <small>&nbsp;{{ reply.replyDate }}</small>
+                  <span style="color: black">{{ reply1.replyContent }}</span>
+                  <small>&nbsp;{{ reply1.replyDate }}</small>
                 </div>
                 <van-divider/>
               </div>
+
             </van-collapse-item>
           </van-collapse>
         </div>
@@ -94,6 +98,19 @@
       </van-tabbar>
     </div>
     <!--评论框end-->
+
+    <!--回复框-->
+    <div class="replyArea">
+      <van-popup v-model="showReplyPop" position="bottom" :style="{width:'100%',height:'35%'}">
+        <van-field v-model="replyMessage" rows="2" type="textarea" maxlength="300"
+                   :placeholder="'回复 '+replyWho" show-word-limit>
+          <template #button>
+            <van-button size="small" type="primary" @click="doReply">回复</van-button>
+          </template>
+        </van-field>
+      </van-popup>
+    </div>
+    <!--回复框end-->
   </div>
 </template>
 
@@ -151,7 +168,17 @@ export default {
       //手风琴
       activeName: [],
       //评论框输入的内容
-      commentValue: ''
+      commentValue: '',
+      //显示回复框
+      showReplyPop: false,
+      //回复内容
+      replyMessage: "",
+      //回复人nickname
+      replyWho: "",
+      //要回复的人的uid
+      replyUid: 0,
+      //评论cid
+      commentCid: 0
     }
   },
   methods: {
@@ -162,6 +189,7 @@ export default {
           tid: this.tid
         }
       }).then(res => {
+        console.log("详情=>", res)
         this.returnValue = res.data.data[0];
         this.value = this.returnValue.content;
         this.dataFlag = true;
@@ -188,6 +216,37 @@ export default {
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
       });
+    },
+    //回复弹出框
+    reply(nickname, uid, cid) {
+      this.showReplyPop = true;
+      this.replyWho = nickname;
+      this.replyUid = uid;
+      this.commentCid = cid;
+    },
+    //发表回复
+    doReply() {
+      if (this.replyMessage.length < 10) {
+        Notify({type: "warning", message: "内容最少10个字哦~"});
+        return;
+      }
+      this.$http.post(Api.publishReply, {
+        type: "TR",
+        replyWho: this.replyUid,
+        replyInPost: Number(this.tid),
+        replyContent: this.replyMessage,
+        replyInComment: this.commentCid,
+        replyUid: this.replyUid
+      }).then(resp => {
+        if (resp.data.code == 200) {
+          Notify({type: "success", message: resp.data.message});
+          this.showReplyPop = false;
+          this.replyMessage = "";
+          this.onLoad();
+        }
+      }).catch(err => {
+        Notify({type: "danger", message: err.response.data.message});
+      })
     }
   },
   mounted() {

@@ -26,10 +26,10 @@
           <van-form @submit="onSubmit" submit-on-enter :scroll-to-error=true>
             <van-field
                 v-model="password" type="text" name="新密码" label="新密码" placeholder="新密码"
-                :rules="[{ required: true, message: '请填写新密码' }]" clearable autofocus/>
+                :rules="[{ required: true, message: '请填写新密码' }]" clearable autofocus autocomplete="off"/>
             <van-field
                 v-model="confirmPwd" type="text" name="确认密码" label="确认密码" placeholder="确认密码"
-                :rules="[{ required: true, message: '请确认新密码' }]" clearable/>
+                :rules="[{ required: true, message: '请确认新密码' }]" clearable autocomplete="off"/>
 
             <div style="margin: 16px;">
               <van-button round block type="info" native-type="submit">提交</van-button>
