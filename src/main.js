@@ -40,6 +40,11 @@ import { Notify } from 'vant';
 import { Overlay } from 'vant';
 import { ImagePreview } from 'vant';
 import { Dialog } from 'vant';
+import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant';
+import { SubmitBar } from 'vant';
+
+
+
 
 //MarkDown解析工具
 import mavonEditor from 'mavon-editor';
@@ -50,6 +55,10 @@ Vue.use(mavonEditor);
 
 //Vant
 // 全局注册
+Vue.use(SubmitBar);
+Vue.use(GoodsAction);
+Vue.use(GoodsActionButton);
+Vue.use(GoodsActionIcon);
 Vue.use(Dialog);
 Vue.use(ImagePreview);
 Vue.use(Overlay);

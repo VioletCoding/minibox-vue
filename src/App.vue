@@ -42,8 +42,9 @@ export default {
       }
       if (this.$route.path === "/postDetail" ||
           this.$route.path === "/gameDetail" ||
-          this.$route.path === "/login"      ||
-          this.$route.path === "/modifyPassword") {
+          this.$route.path === "/login" ||
+          this.$route.path === "/modifyPassword" ||
+          this.$route.path === "/order") {
         this.showFooter = false;
 
       } else {

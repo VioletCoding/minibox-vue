@@ -42,7 +42,16 @@ const getBlockList = "block/get";
 
 //------------------------------------------
 //更新用户头像
-const modifyUserImg = "photo/updateImg"
+const modifyUserImg = "photo/updateImg";
+
+//--------------------------------------
+//生成订单
+const order_generate = "order/generateOrder";
+//确认订单
+const order_confirm = "order/confirm";
+//取消订单
+const order_cancel = "order/cancel";
+
 export default {
     loginOrReg,
     getPostList,
@@ -62,5 +71,8 @@ export default {
     doUpdatePassword,
     check,
     logout,
-    publishReply
+    publishReply,
+    order_generate,
+    order_confirm,
+    order_cancel
 }

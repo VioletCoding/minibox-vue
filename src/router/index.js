@@ -53,6 +53,11 @@ const routes = [
         path: "/modifyPassword",
         name: "MyModifyPassword",
         component: () => import("@/views/user/MyModifyPassword")
+    },
+    {
+        path: "/order",
+        name: "MyGameOrder",
+        component:() => import("@/views/order/MyGameOrder")
     }
 ]
 

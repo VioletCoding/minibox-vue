@@ -139,7 +139,7 @@
     <div class="comment-list">
       <!--标题-->
       <div class="comment-list-title">
-        <van-tabs v-model="active">
+        <van-tabs>
           <van-tab title="最新">
             <div class="comment-list-comment" v-for="(item,index) in returnData.commentList" :key="index">
               <!--评论区域-标题-包含用户信息-->
@@ -177,6 +177,14 @@
         </van-tabs>
       </div>
     </div>
+
+    <div class="buy">
+      <van-goods-action>
+        <van-goods-action-button type="warning" text="关注"/>
+        <van-goods-action-button type="danger" text="立即购买" @click="generateOrder"/>
+      </van-goods-action>
+    </div>
+
     <!--评论列表end-->
     <!--弹出层-发表游戏评论-->
     <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
@@ -223,7 +231,7 @@ export default {
     },
     //显示游戏详情
     showGame() {
-       this.$http.get(Api.getGameDetail, {
+      this.$http.get(Api.getGameDetail, {
         params: {
           gid: this.$route.query.gid
         }
@@ -231,7 +239,7 @@ export default {
         this.imgList = res.data.data.photoList;
         this.returnData = res.data.data;
       }).catch(err => {
-         Notify({type: "danger", message: err.response.data.message});
+        Notify({type: "danger", message: err.response.data.message});
       })
     },
     //返回
@@ -244,6 +252,23 @@ export default {
       this.toSon.name = this.returnData.name;
       this.toSon.score = this.score;
       this.popPostBackground = true;
+    },
+    //生成订单
+    generateOrder() {
+      this.$http.post(Api.order_generate, {
+        orderGameId: this.$route.query.gid,
+        orderCost: this.returnData.price,
+        uid: localStorage.getItem("userId")
+      }).then(resp => {
+        console.log("订单信息=>", resp);
+        if (resp.data.code == 200) {
+          this.$router.push({name: "MyGameOrder", params: resp.data.data});
+          return;
+        }
+        Notify({type: "warning", message: resp.data.message});
+      }).catch(err => {
+        Notify({type: "danger", message: err.response.data.message});
+      })
     }
   },
   mounted() {
@@ -432,6 +457,11 @@ export default {
       }
     }
   }
+}
+
+.buy {
+  height: 35px;
+  z-index: 100;
 }
 
 </style>
