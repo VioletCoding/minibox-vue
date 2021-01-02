@@ -100,7 +100,7 @@
     <!--评论框end-->
 
     <!--回复框-->
-    <div class="replyArea">
+    <div>
       <van-popup v-model="showReplyPop" position="bottom" :style="{width:'100%',height:'35%'}">
         <van-field v-model="replyMessage" rows="2" type="textarea" maxlength="300"
                    :placeholder="'回复 '+replyWho" show-word-limit>
@@ -288,9 +288,6 @@ export default {
 
   .mainContent {
     width: 100%;
-  }
-
-  .replyArea {
   }
 
   .commentField {

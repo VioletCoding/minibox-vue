@@ -40,11 +40,6 @@ const routes = [
         component: () => import("@/views/user/MyMineBodyList")
     },
     {
-        path: "/community",
-        name: "MyCommunityBodyList",
-        component: () => import("@/views/mainBody/MyCommunityBodyList")
-    },
-    {
         path: "/login",
         name: "Login",
         component: () => import("@/views/user/Login")

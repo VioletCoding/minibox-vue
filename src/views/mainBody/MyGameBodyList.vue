@@ -15,9 +15,9 @@
       </template>
     </MyHeader>
     <!--使用vant的下拉刷新功能-->
-    <van-pull-refresh v-model="isLoading" @refresh="showGameList"
-                      loosing-text="松手刷新..." loading-text="加载中..."
+    <van-pull-refresh v-model="isLoading" @refresh="showGameList" loosing-text="松手刷新..." loading-text="加载中..."
                       success-text="加载成功" style="min-height: 100vh;">
+
       <div style="margin-top: 50px">
         <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
           <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
@@ -27,6 +27,7 @@
           </van-swipe-item>
         </van-swipe>
       </div>
+
       <!--头部和轮播图end-->
       <!--功能选项-->
       <van-grid :column-num="5">
@@ -130,12 +131,7 @@ export default {
     },
     //显示游戏详情
     showGameDetail(v) {
-      this.$router.push({
-        path: '/gameDetail',
-        query: {
-          gid: v
-        }
-      })
+      this.$router.push({path: '/gameDetail', query: {gid: v}})
     },
   },
   mounted() {

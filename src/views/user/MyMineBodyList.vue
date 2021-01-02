@@ -49,11 +49,15 @@
               <div v-if="userInfo.gameList!=null && userInfo.gameList.length > 0" class="game-list"
                    v-for="(item,index) in userInfo.gameList" :key="index">
                 <div class="game-list-left inline-block">
-                  <van-image width="120" height="90" :src="item.coverImg"/>
+                  <van-image width="120" height="70" :src="item.coverImg" radius="5px"/>
                 </div>
                 <div class="game-list-right inline-block">
-                  <div class="game-list-right-game-name">{{ item.name }}</div>
-                  <div class="game-list-right-game-desc">{{ item.description }}</div>
+                  <div class="game-list-right-game-name">
+                    {{ item.name }}
+                  </div>
+                  <div class="game-list-right-game-desc van-ellipsis">
+                    {{ item.description }}
+                  </div>
                 </div>
               </div>
               <!--游戏列表end-->
@@ -160,7 +164,7 @@ export default {
 
 .game-list {
   height: 100px;
-  margin-bottom: 5px;
+  margin-bottom: 30px;
   margin-top: 10px;
 
   .game-list-left {
@@ -170,15 +174,16 @@ export default {
   .game-list-right {
     vertical-align: top;
     padding: 10px;
-    border-bottom: 1px solid #363A3F;
 
     .game-list-right-game-name {
-      font-size: 18px;
+      width: 220px;
+      font-size: 16px;
     }
 
     .game-list-right-game-desc {
-      margin-top: 25px;
-      font-size: 14px;
+      color: #969799;
+      width: 220px;
+      font-size: 10px;
     }
   }
 }

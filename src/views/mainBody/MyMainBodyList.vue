@@ -279,9 +279,7 @@ export default {
         //版块ID
         bid: this.radio,
         //图片ID，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
-        mbPhoto: {
-          pid: this.pid,
-        },
+        mbPhoto: {pid: this.pid,},
         //帖子标题
         title: this.popTitle,
         //帖子正文内容，是MD格式，图片的链接也包含在里面了，故上传图片接口无需再传tid字段
@@ -337,6 +335,7 @@ export default {
     //获取帖子列表
     async getPostList() {
       await this.$http.get(Api.getPostList).then(res => {
+        console.log(res)
         this.dataList = res.data.data;
         this.imgList = res.data.data;
         this.code = res.data.code;
@@ -348,10 +347,9 @@ export default {
     showBlock() {
       if (this.popPostBackground) {
         this.showBlockPop = true;
-        this.$http.get(Api.getBlockList)
-            .then(res => {
-              this.blockList = res.data.data;
-            }).catch(err => {
+        this.$http.get(Api.getBlockList).then(res => {
+          this.blockList = res.data.data;
+        }).catch(err => {
           Notify({type: "danger", message: err.response.data.message});
         })
       }

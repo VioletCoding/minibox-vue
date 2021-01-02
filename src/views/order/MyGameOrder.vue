@@ -71,7 +71,7 @@ export default {
     },
     //取消订单
     cancelOrder() {
-      Dialog({
+      Dialog.confirm({
         title: "取消订单",
         message: "确定取消订单吗？"
       }).then(() => {

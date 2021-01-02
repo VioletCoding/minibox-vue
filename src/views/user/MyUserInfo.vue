@@ -22,7 +22,9 @@
       <!--等级-->
       <div class="user-level inline-block">
         <slot name="level">
-          <van-tag color="#7232dd">{{ userInfo.level }}</van-tag>
+          <van-tag color="#7232dd" v-if="userInfo.level!=undefined">
+            {{ 'LV ' + userInfo.level }}
+          </van-tag>
         </slot>
       </div>
       <!--等级end-->
