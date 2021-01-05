@@ -40,9 +40,10 @@ export default {
     showComments() {
       this.$http.get(Api.showUserComment, {
         params: {
-          id: localStorage.getItem("userId")
+          uid: localStorage.getItem("userId")
         }
       }).then(resp => {
+        console.log("「个人信息」->「个人评论」->", resp);
         this.dataList = resp.data.data;
         this.dataFlag = true;
       }).catch(err => {
