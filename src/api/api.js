@@ -16,7 +16,7 @@ const logout = "user/logout";
 const doUpdatePassword = "user/modify";
 //--------------------------------------
 //获取帖子列表
-const getPostList = "post/showAll";
+const getPostList = "post/all";
 //获取帖子详情
 const getPostDetail = "post/detail";
 //帖子图片上传
@@ -38,7 +38,7 @@ const getGameDetail = "game/detail"
 
 //------------------------------------------
 //版块
-const getBlockList = "block/get";
+const getBlockList = "block/all";
 
 //------------------------------------------
 //更新用户头像

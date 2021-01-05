@@ -100,7 +100,7 @@ export default {
     }
   },
   methods: {
-    //展示帖子列表
+    //展示游戏列表
     showGameList() {
       this.$http.get(Api.getAllGame).then(res => {
         if (res.data.code === 200 && res.data.data != null && res.data.data.length > 0) {
@@ -131,7 +131,7 @@ export default {
     },
     //显示游戏详情
     showGameDetail(v) {
-      this.$router.push({path: '/gameDetail', query: {gid: v}})
+      this.$router.push({path: '/gameDetail', query: {id: v}})
     },
   },
   mounted() {

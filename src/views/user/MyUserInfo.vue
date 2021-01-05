@@ -5,8 +5,8 @@
       <!--用户头像-->
       <div class="user-left inline-block">
         <slot name="photo">
-          <van-image round fit="cover" width="80" height="80" :src="userInfo.mbPhoto.photoLink"
-                     @click="show(userInfo.mbPhoto.photoLink)"/>
+          <van-image round fit="cover" width="80" height="80" :src="userInfo.userImg"
+                     @click="show(userInfo.userImg)"/>
         </slot>
       </div>
       <!--用户昵称和签名-->

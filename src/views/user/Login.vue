@@ -127,11 +127,12 @@ export default {
         username: this.input,
         authCode: authCode
       }).then(resp => {
+        console.log("login -> ",resp);
         let code = resp.data.code;
         let msg = resp.data.message;
         if (code == 200) {
-          localStorage.setItem("accessToken", resp.data.data.data.token);
-          localStorage.setItem("userId", resp.data.data.data.uid);
+          localStorage.setItem("accessToken", resp.data.data.token);
+          localStorage.setItem("userId", resp.data.data.id);
           this.$router.push("/");
         }
       }).catch(err => {

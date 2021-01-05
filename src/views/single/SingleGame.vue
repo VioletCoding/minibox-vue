@@ -217,7 +217,7 @@ export default {
       popPostBackground: false,
       //传给子组件
       toSon: {
-        gid: 0,
+        id: 0,
         name: "",
         score: 1
       }
@@ -233,7 +233,7 @@ export default {
     showGame() {
       this.$http.get(Api.getGameDetail, {
         params: {
-          gid: this.$route.query.gid
+          id: this.$route.query.id
         }
       }).then(res => {
         this.imgList = res.data.data.photoList;
@@ -248,7 +248,7 @@ export default {
     },
     //去游戏评分
     toPublish() {
-      this.toSon.gid = this.returnData.gid;
+      this.toSon.id = this.returnData.id;
       this.toSon.name = this.returnData.name;
       this.toSon.score = this.score;
       this.popPostBackground = true;
@@ -256,9 +256,9 @@ export default {
     //生成订单
     generateOrder() {
       this.$http.post(Api.order_generate, {
-        orderGameId: this.$route.query.gid,
+        orderGameId: this.$route.query.id,
         orderCost: this.returnData.price,
-        uid: localStorage.getItem("userId")
+        id: localStorage.getItem("userId")
       }).then(resp => {
         console.log("订单信息=>", resp);
         if (resp.data.code == 200) {

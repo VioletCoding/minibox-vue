@@ -21,10 +21,10 @@
       <van-pull-refresh v-model="loading" @refresh="onLoad" success-text="刷新成功">
         <div style="margin-top: 50px">
           <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-            <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
+            <van-swipe-item v-for="(item,index) in dataList" :key="index" v-if="index < 5">
               <p class="swipe-text van-multi-ellipsis--l2">{{ item.title }}</p>
               <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
-                         @click="toDetail(item)"/>
+                         @click="toDetail(item.id)"/>
             </van-swipe-item>
           </van-swipe>
         </div>
@@ -35,7 +35,7 @@
                   error-text="加载失败，点击重试">
           <div class="myContainer" v-for="(item,index) in dataList" :key="index">
             <!--路由跳转方法，点击帖子跳转到帖子详情-->
-            <div @click="toDetail(item)">
+            <div @click="toDetail(item.id)">
               <div class="mySingleGrid van-hairline--bottom">
                 <div class="leftContain">
                   <!-- 帖子标题 最多显示两行 -->
@@ -117,7 +117,7 @@
         <van-cell title="推荐" style="margin-bottom: 10px;font-weight: bold"/>
         <!--版块信息-->
         <van-grid :column-num="2" direction="horizontal" clickable>
-          <van-grid-item v-for="(item,index) in blockList" :key="index" @click="label(item.bid,item.name)">
+          <van-grid-item v-for="(item,index) in blockList" :key="index" @click="label(item.id,item.name)">
             <div style="width: 160px">
               <div class="inline-block"
                    style="height: 100%;width: 30px">
@@ -130,7 +130,7 @@
               </div>
               <div class="inline-block" style="float: right;margin-top: 10px">
                 <van-radio-group v-model="radio">
-                  <van-radio :name="item.bid"/>
+                  <van-radio :name="item.id"/>
                 </van-radio-group>
               </div>
             </div>
@@ -211,8 +211,6 @@ export default {
       popTitle: '',
       //封面图
       coverImage: '',
-      //轮播图
-      imgList: [],
       //激活的tab
       active: 0,
       //帖子列表
@@ -246,13 +244,11 @@ export default {
         this.finished = true;
       }
     },
-    //去帖子详情
-    toDetail(value) {
+    //去帖子详情，参数为帖子的id
+    toDetail(id) {
       this.$router.push({
         path: '/postDetail',
-        query: {
-          tid: value.tid
-        },
+        query: {id: id},
       })
     },
     //显示弹出层
@@ -278,8 +274,6 @@ export default {
         uid: localStorage.getItem("userId"),
         //版块ID
         bid: this.radio,
-        //图片ID，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
-        mbPhoto: {pid: this.pid,},
         //帖子标题
         title: this.popTitle,
         //帖子正文内容，是MD格式，图片的链接也包含在里面了，故上传图片接口无需再传tid字段
@@ -294,6 +288,7 @@ export default {
           this.img_file = {};
           this.radio = "";
           this.blockName = "";
+          this.title = "";
           //调用帖子方法
           this.getPostList();
         } else {
@@ -319,11 +314,13 @@ export default {
         data: multipartFiles,
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(res => {
-        let link = res.data.data;
-        //将回调的图片链接替换文本编辑器原来的链接
-        this.$refs.md.$img2Url(pos, link.photoImg);
-        this.coverImage = link.photoImg;
-        this.pid = link.photoId;
+        let link = [];
+        link = res.data.data.images;
+        link.forEach(v => {
+          //将回调的图片链接替换文本编辑器原来的链接
+          this.$refs.md.$img2Url(pos, v);
+          this.coverImage = v;
+        })
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
       })
@@ -337,7 +334,6 @@ export default {
       await this.$http.get(Api.getPostList).then(res => {
         console.log(res)
         this.dataList = res.data.data;
-        this.imgList = res.data.data;
         this.code = res.data.code;
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
@@ -348,6 +344,7 @@ export default {
       if (this.popPostBackground) {
         this.showBlockPop = true;
         this.$http.get(Api.getBlockList).then(res => {
+          console.log("版块------>", res);
           this.blockList = res.data.data;
         }).catch(err => {
           Notify({type: "danger", message: err.response.data.message});

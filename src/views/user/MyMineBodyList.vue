@@ -36,7 +36,7 @@
                 <div>账号价值￥</div>
               </van-grid-item>
               <van-grid-item>
-                <div>{{ userInfo.gameNumber }}</div>
+                <div>{{ userInfo.gameList[0].game_num }}</div>
                 <div>游戏数量</div>
               </van-grid-item>
             </van-grid>
@@ -49,7 +49,7 @@
               <div v-if="userInfo.gameList!=null && userInfo.gameList.length > 0" class="game-list"
                    v-for="(item,index) in userInfo.gameList" :key="index">
                 <div class="game-list-left inline-block">
-                  <van-image width="120" height="70" :src="item.coverImg" radius="5px"/>
+                  <van-image width="120" height="70" :src="item.cover_img" radius="5px"/>
                 </div>
                 <div class="game-list-right inline-block">
                   <div class="game-list-right-game-name">
@@ -70,7 +70,7 @@
         <van-tab title="动态">
           <MyUserInfo :userInfo="userInfo">
             <template #photo>
-              <van-image round fit="cover" width="80" height="80" :src="userInfo.mbPhoto.photoLink"/>
+              <van-image round fit="cover" width="80" height="80" :src="userInfo.userImg"/>
             </template>
           </MyUserInfo>
           <!--用户动态分类-->
@@ -128,15 +128,17 @@ export default {
     async showUserInfo() {
       await this.$http.get(Api.showUserInfo, {
         params: {
-          uid: localStorage.getItem("userId")
+          id: localStorage.getItem("userId")
         }
       }).then(resp => {
+        console.log("个人详情->", resp);
         let v = resp.data.data;
+        console.log("个人详情->gameList", v.gameList);
         let gamePrice = 0;
-        v["gamePrice"] = gamePrice;
-        if (v.gameList != null && v.gameList.length > 0) {
-          v.gameList.forEach(v => {
-            gamePrice = gamePrice + v.price;
+        //计算游戏总价格，并加到对象里
+        if (v.gameList.length > 0) {
+          v.gameList.forEach(value => {
+            gamePrice = gamePrice + value.price;
           })
           v["gamePrice"] = gamePrice;
         }

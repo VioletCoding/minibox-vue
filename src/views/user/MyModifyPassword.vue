@@ -89,7 +89,7 @@ export default {
         return;
       }
       this.$http.post(Api.doUpdatePassword, {
-        uid: localStorage.getItem("userId"),
+        id: localStorage.getItem("userId"),
         password: this.password
       }).then(resp => {
         console.log(resp);

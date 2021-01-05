@@ -58,9 +58,9 @@ export default {
       this.$http.post(Api.order_confirm, {
         orderGameId: this.returnData.mbGame.gid,
         orderCost: this.returnData.mbGame.price,
-        uid: localStorage.getItem("userId"),
-        orderId: this.returnData.orderId,
-        id: this.returnData.id
+        id: localStorage.getItem("userId"),
+        orderId: this.returnData.orderId
+        //id: this.returnData.id
       }).then(resp => {
         console.log("提交订单=>", resp);
         if (resp.data.code == 200) {
@@ -78,8 +78,8 @@ export default {
         this.$http.post(Api.order_cancel, {
           orderGameId: this.returnData.mbGame.gid,
           orderCost: this.returnData.mbGame.price,
-          id: this.returnData.id,
-          uid: localStorage.getItem("userId"),
+          //id: this.returnData.id,
+          id: localStorage.getItem("userId"),
           orderId: this.returnData.orderId
         }).then(resp => {
           console.log("取消订单=>", resp);

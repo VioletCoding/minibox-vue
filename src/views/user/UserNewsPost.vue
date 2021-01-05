@@ -34,6 +34,7 @@ export default {
           uid: localStorage.getItem("userId")
         }
       }).then(res => {
+        console.log("获取个人的帖子列表->",res);
         this.dataList = res.data.data;
       }).catch(err => {
         this.$toast.fail('加载失败,请重试');

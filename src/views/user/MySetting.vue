@@ -54,7 +54,7 @@ export default {
   data() {
     return {
       //用户信息
-      uid: "",
+      id: "",
       description: "",
       nickname: "",
       userImg: "",
@@ -72,7 +72,7 @@ export default {
     //保存更新的个人信息
     save() {
       this.$http.post(Api.updateUserInfo, {
-        uid: localStorage.getItem("userId"),
+        id: localStorage.getItem("userId"),
         description: this.description,
         nickname: this.nickname
       }).then(resp => {
@@ -86,7 +86,7 @@ export default {
     },
     //初始化页面数据
     onLoad() {
-      this.uid = localStorage.getItem("userId");
+      this.id = localStorage.getItem("userId");
       this.description = this.userInfo.description;
       this.nickname = this.userInfo.nickname;
       this.transfer.mbPhoto.photoLink = this.userInfo.mbPhoto.photoLink;

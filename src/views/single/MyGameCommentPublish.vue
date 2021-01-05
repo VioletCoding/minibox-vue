@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       //用户id
-      uid: localStorage.getItem("userId"),
+      id: localStorage.getItem("userId"),
       //游戏评分下的文字
       text: "",
       //游戏评分下的文字-小字
@@ -81,7 +81,7 @@ export default {
         return;
       }
       this.$http.post(Api.publishComment, {
-        uid: localStorage.getItem("userId"),
+        id: localStorage.getItem("userId"),
         gid: this.v.gid,
         content: this.message,
         type: "GC",

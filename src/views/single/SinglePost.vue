@@ -157,8 +157,8 @@ export default {
       finished: false,
       //错误信息
       error: '',
-      //帖子ID，通过上一页（首页列表）传入，通过此ID查找对应的文章
-      tid: this.$route.query.tid,
+      //帖子ID，通过上一页（首页列表）传入，通过此ID查找对应的帖子
+      id: this.$route.query.id,
       //请求的返回值
       returnValue: {},
       //数据是否加载完
@@ -186,11 +186,11 @@ export default {
     onLoad() {
       this.$http.get(Api.getPostDetail, {
         params: {
-          tid: this.tid
+          id: this.id
         }
       }).then(res => {
         console.log("详情=>", res)
-        this.returnValue = res.data.data[0];
+        this.returnValue = res.data.data;
         this.value = this.returnValue.content;
         this.dataFlag = true;
         this.loading = false;
@@ -205,7 +205,7 @@ export default {
     //发表评论
     async publishComment() {
       await this.$http.post(Api.publishComment, {
-        tid: this.tid,
+        id: this.id,
         uid: localStorage.getItem("userId"),
         content: this.commentValue,
         type: 'TC'
@@ -233,7 +233,7 @@ export default {
       this.$http.post(Api.publishReply, {
         type: "TR",
         replyWho: this.replyUid,
-        replyInPost: Number(this.tid),
+        replyInPost: Number(this.id),
         replyContent: this.replyMessage,
         replyInComment: this.commentCid,
         replyUid: this.replyUid

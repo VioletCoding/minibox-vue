@@ -40,7 +40,7 @@ export default {
     showComments() {
       this.$http.get(Api.showUserComment, {
         params: {
-          uid: localStorage.getItem("userId")
+          id: localStorage.getItem("userId")
         }
       }).then(resp => {
         this.dataList = resp.data.data;
