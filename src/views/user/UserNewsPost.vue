@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div v-for="(item,index) in dataList" :key="index" class="news-post" @click="toPost(item.tid)">
+    <div v-for="(item,index) in dataList" :key="index" class="news-post" @click="toPost(item.id)">
       <div class="new-post-title">
         {{ item.title }}
       </div>
@@ -42,7 +42,7 @@ export default {
     },
     //点击去帖子详情
     toPost(v) {
-      this.$router.push({path: "/postDetail", query: {tid: v}})
+      this.$router.push({path: "/postDetail", query: {id: v}})
     }
   },
   mounted() {

@@ -1,6 +1,6 @@
 <template>
   <div class="container" v-if="dataFlag">
-    <div v-for="(item,index) in dataList" :key="index" @click="toPost(item.tid)">
+    <div v-for="(item,index) in dataList" :key="index" @click="toPost(item.id)">
       <div class="com-and-date" v-for="(com,cIndex) in item.commentList" :key="cIndex">
         <div>{{ com.content }}</div>
         <div>{{ com.createDate }}</div>
@@ -51,7 +51,7 @@ export default {
       })
     },
     toPost(v) {
-      this.$router.push({path: "/postDetail", query: {tid: v}})
+      this.$router.push({path: "/postDetail", query: {id: v}})
     }
   },
   mounted() {

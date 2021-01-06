@@ -3,13 +3,17 @@
     <div>
       <!--头像大图-->
       <div class="photo">
-        <MyUserInfo :userInfo="transfer">
+        <MyUserInfo :userInfo="userInfo">
 
           <template #photo>
             <van-uploader :after-read="afterRead">
-              <van-image :src="userInfo.mbPhoto.photoLink" :alt="userInfo.mbPhoto.photoLink" height="200" fit="cover"/>
+              <van-image :src="userInfo.userImg" :alt="userInfo.userImg" height="200" fit="cover"/>
             </van-uploader>
           </template>
+          <!--留空插槽，这个页面不显示这些信息在这个位置-->
+          <template #nickname><span></span></template>
+          <template #desc><span></span></template>
+          <template #level><span></span></template>
         </MyUserInfo>
       </div>
 
@@ -17,9 +21,9 @@
       <!--个人信息-->
       <div class="information">
         <van-form>
-          <van-field clickable label="用户ID" :placeholder="uid" readonly/>
-          <van-field clickable v-model="nickname" label="昵称" :placeholder="nickname"/>
-          <van-field clickable v-model="description" label="签名" :placeholder="description"/>
+          <van-field clickable label="用户ID" :placeholder="id" readonly/>
+          <van-field clickable v-model="userInfo.nickname" label="昵称" :placeholder="userInfo.nickname"/>
+          <van-field clickable v-model="userInfo.description" label="签名" :placeholder="userInfo.description"/>
           <van-button type="info" text="保存" block @click="save"/>
         </van-form>
       </div>
@@ -54,31 +58,25 @@ export default {
   data() {
     return {
       //用户信息
-      id: "",
-      description: "",
-      nickname: "",
-      userImg: "",
+      id: localStorage.getItem("userId"),
+      //返回数据
+      returnData:{},
       //数据标识
-      dataFlag: false,
-      //传递给子组件的对象
-      transfer: {
-        mbPhoto: {
-          photoLink: ""
-        }
-      }
+      dataFlag: false
     }
   },
   methods: {
     //保存更新的个人信息
     save() {
       this.$http.post(Api.updateUserInfo, {
-        id: localStorage.getItem("userId"),
-        description: this.description,
-        nickname: this.nickname
+        id: this.id,
+        description: this.userInfo.description,
+        nickname: this.userInfo.nickname
       }).then(resp => {
+        console.log("修改个人信息 -> ", resp);
         let v = resp.data.data;
-        this.nickname = v.nickname;
-        this.description = v.description;
+        this.userInfo.nickname = v.nickname;
+        this.userInfo.description = v.description;
         Notify({type: "success", message: resp.data.message});
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
@@ -86,10 +84,8 @@ export default {
     },
     //初始化页面数据
     onLoad() {
-      this.id = localStorage.getItem("userId");
-      this.description = this.userInfo.description;
-      this.nickname = this.userInfo.nickname;
-      this.transfer.mbPhoto.photoLink = this.userInfo.mbPhoto.photoLink;
+      console.log("初始化「设置」->", this.userInfo);
+      this.returnData = this.userInfo;
       this.dataFlag = true;
     },
     //修改头像
@@ -103,10 +99,11 @@ export default {
         method: 'post',
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(resp => {
-        this.userImg = resp.data.data.photoLink;
+        console.log("修改头像返回 ->", resp);
+        this.returnData = resp.data.data;
         Notify({type: "success", message: resp.data.message});
         //发射事件，通知父组件更新数据（图片链接）
-        this.$emit("updateImg", resp.data.data.photoLink);
+        this.$emit("updateImg", this.returnData);
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
       })
@@ -115,9 +112,7 @@ export default {
     toUpdatePassword() {
       Dialog.confirm({
         title: "修改密码",
-        message: "确定要修改密码吗？",
-        confirmButtonText: "是的",
-        cancelButtonText: "我手滑了"
+        message: "确定要修改密码吗？"
       }).then(() => {
         this.$http.get(Api.beforeUpdatePassword).then(resp => {
           if (resp.data.code == 200) {

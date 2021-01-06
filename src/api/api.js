@@ -42,7 +42,7 @@ const getBlockList = "block/all";
 
 //------------------------------------------
 //更新用户头像
-const modifyUserImg = "photo/updateImg";
+const modifyUserImg = "user/updateImg";
 
 //--------------------------------------
 //生成订单

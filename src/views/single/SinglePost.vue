@@ -31,7 +31,7 @@
     <div class="authorInfo">
       <van-cell center>
         <div class="authorImg">
-          <van-image round width="80" height="80" :src="returnValue.mbUser.mbPhoto.photoLink"/>
+          <van-image round width="80" height="80" :src="returnValue.mbUser.userImg"/>
         </div>
         <div class="authorNickName van-ellipsis">
           <van-cell center :title="returnValue.mbUser.nickname" :label="returnValue.createDate"/>
@@ -57,15 +57,15 @@
         <van-card
             :price="item.content" :desc="item.createDate"
             :title="item.mbUser.nickname" :tag="'LV '+item.mbUser.level"
-            :thumb="item.mbUser.mbPhoto.photoLink"
-            centered currency="" @click="reply(item.mbUser.nickname,item.mbUser.uid,item.cid)">
+            :thumb="item.mbUser.userImg"
+            centered currency="" @click="reply(item.mbUser.nickname,item.mbUser.id,item.id)">
         </van-card>
         <!--回复-->
         <div class="replyArea">
           <van-collapse v-model="activeName">
             <van-collapse-item title="查看回复" :name="index" v-if="item.replyList.length > 0">
               <div v-for="(reply1,replyIndex) in item.replyList" :key="replyIndex"
-                   @click="reply(reply1.mbUser.nickname,reply1.mbUser.uid,item.cid)">
+                   @click="reply(reply1.mbUser.nickname,reply1.mbUser.id,item.id)">
                 <div>
                   <span style="color: deepskyblue">{{ reply1.mbUser.nickname }}</span>
                   <span>
@@ -185,9 +185,7 @@ export default {
     //加载
     onLoad() {
       this.$http.get(Api.getPostDetail, {
-        params: {
-          id: this.id
-        }
+        params: {id: this.id}
       }).then(res => {
         console.log("详情=>", res)
         this.returnValue = res.data.data;
@@ -205,7 +203,7 @@ export default {
     //发表评论
     async publishComment() {
       await this.$http.post(Api.publishComment, {
-        id: this.id,
+        tid: this.id,
         uid: localStorage.getItem("userId"),
         content: this.commentValue,
         type: 'TC'
@@ -239,9 +237,9 @@ export default {
         replyUid: this.replyUid
       }).then(resp => {
         if (resp.data.code == 200) {
-          Notify({type: "success", message: resp.data.message});
           this.showReplyPop = false;
           this.replyMessage = "";
+          Notify({type: "success", message: resp.data.message});
           this.onLoad();
         }
       }).catch(err => {

@@ -133,7 +133,6 @@ export default {
       }).then(resp => {
         console.log("个人详情->", resp);
         let v = resp.data.data;
-        console.log("个人详情->gameList", v.gameList);
         let gamePrice = 0;
         //计算游戏总价格，并加到对象里
         if (v.gameList.length > 0) {
@@ -145,12 +144,12 @@ export default {
         this.userInfo = v;
         this.dataFlag = true;
       }).catch(err => {
-        Notify({type: "danger", message: "加载失败，请重试"})
+        Notify({type: "danger", message: "加载失败，请重试"});
       })
     },
     //更换头像以后，把其他引用了MyUserInfo组件的图片也更新
     updateImg(v) {
-      this.userInfo.mbPhoto.photoLink = v;
+      this.showUserInfo();
     }
   },
   mounted() {
