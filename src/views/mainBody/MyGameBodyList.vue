@@ -4,7 +4,7 @@
     <!--头部和轮播图-->
     <MyHeader>
       <template #left>
-        <van-tabs v-model="active" swipeable animated color="black" line-width="20">
+        <van-tabs v-model="active" color="black" line-width="20">
           <van-tab title="推荐"/>
         </van-tabs>
       </template>
@@ -23,7 +23,7 @@
           <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
             <p class="swipe-text van-multi-ellipsis--l2">{{ item.name }}</p>
             <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
-                       @click="showGameDetail(item.gid)"/>
+                       @click="showGameDetail(item.id)"/>
           </van-swipe-item>
         </van-swipe>
       </div>
@@ -39,25 +39,6 @@
       </van-grid>
       <!--功能选项end-->
 
-      <!--安利墙-->
-      <div>
-        <van-cell title="安利墙" value="更多"/>
-        <div v-if="RecommendedGame.mbComment!=null" @click="showGameDetail(RecommendedGame.gid)">
-          <van-card :desc="RecommendedGame.mbComment.content" :title="RecommendedGame.name"
-                    :thumb="RecommendedGame.coverImg">
-            <template #price>
-              <van-rate allow-half readonly size="10" v-model="RecommendedGame.mbComment.score"/>
-            </template>
-            <template #footer>
-              {{ RecommendedGame.mbComment.mbUser.nickname }}
-              <br/>
-              {{ RecommendedGame.mbComment.createDate }}
-            </template>
-          </van-card>
-        </div>
-      </div>
-      <!--安利墙end-->
-
       <!--游戏列表-->
       <div style="margin-bottom: 50px">
         <van-cell title="为您推荐" value="更多"/>
@@ -66,7 +47,7 @@
             currency="￥"
             :tag="item.discount" :price="item.price"
             :desc="item.description" :title="item.name"
-            :thumb="item.coverImg" :origin-price="item.originPrice" @click="showGameDetail(item.gid)"/>
+            :thumb="item.coverImg" :origin-price="item.originPrice" @click="showGameDetail(item.id)"/>
       </div>
     </van-pull-refresh>
     <!--游戏列表end-->
@@ -87,8 +68,6 @@ export default {
       dataFlag: false,
       //轮播图，传递给子组件
       imgList: [],
-      //安利墙
-      RecommendedGame: {},
       //下拉刷新-是否正在刷新
       isLoading: false,
       //折扣
@@ -103,13 +82,13 @@ export default {
     //展示游戏列表
     showGameList() {
       this.$http.get(Api.getAllGame).then(res => {
+        console.log("游戏列表->", res);
         if (res.data.code === 200 && res.data.data != null && res.data.data.length > 0) {
           res.data.data.forEach(v => {
             //将BigDecimal转成2位小数，不知道为什么本来后台是带.00的，传上来就不带.00了
             v.price = v.price.toFixed(2);
             v.originPrice = v.originPrice.toFixed(2);
-            //这里是安利墙的展示，就展示最新的一条安利，所以取数组下标0
-            this.RecommendedGame = res.data.data[0];
+            console.log("安利墙-> ", this.RecommendedGame);
             //计算折扣
             let i = ((v.price / v.originPrice) * 10).toFixed(1) + "折";
             //动态往对象里添加一个属性，也就是把计算完的折扣值放到对象里

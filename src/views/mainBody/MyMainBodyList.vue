@@ -52,7 +52,8 @@
                   </div>
                   <!--评论数-->
                   <div class="myComment">
-                    <van-icon name="chat-o" :badge="item.countComment" color="#808080"/>
+                    <van-icon name="chat-o" :badge="item.countComment == null ? 0 : item.countComment "
+                              color="#808080"/>
                   </div>
                 </div>
                 <!--帖子封面图-->
@@ -138,7 +139,7 @@
         </van-grid>
 
       </van-popup>
-      <!--展示版块（社区）的弹出层-->
+      <!--展示版块（社区）的弹出层 end-->
     </div>
     <!--弹出层内容-->
   </div>
@@ -291,10 +292,11 @@ export default {
           this.title = "";
           //调用帖子方法
           this.getPostList();
-        } else {
-          Notify({type: "danger", message: res.data.message});
+          return;
         }
+        this.$toast.fail(res.data.message);
       }).catch(err => {
+        console.log(err);
         Notify({type: "danger", message: err.response.data.message});
       })
     },

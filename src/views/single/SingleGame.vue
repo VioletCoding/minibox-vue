@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="dataFlag">
     <div>
       <!--头部-->
       <MyHeader>
@@ -23,7 +23,7 @@
     <!--轮播图-游戏图片展示区-->
     <div style="margin-top: 50px">
       <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" style="background-color:#363A3F">
-        <van-swipe-item v-for="(item,index) in imgList" :key="index" v-if="index < 5">
+        <van-swipe-item v-for="(item,index) in returnData.photoList" :key="index" v-if="index < 5">
           <van-image lazy-render width="100%" height="200" fit="cover" :src="item.photoLink"/>
         </van-swipe-item>
       </van-swipe>
@@ -147,7 +147,7 @@
               <div class="comment-list-comment-title">
                 <!--评论区域-标题-用户头像-->
                 <div class="comment-list-comment-title-photo inline-block">
-                  <van-image round width="2.5rem" height="2.5rem" :src="item.mbUser.mbPhoto.photoLink"/>
+                  <van-image round width="2.5rem" height="2.5rem" :src="item.mbUser.userImg"/>
                 </div>
                 <!--评论区域-标题-用户昵称-->
                 <div class="comment-list-comment-title-info inline-block">
@@ -205,8 +205,6 @@ export default {
   components: {MyHeader, MyGameCommentPublish},
   data() {
     return {
-      //轮播图片列表
-      imgList: [],
       //返回的数据
       returnData: {},
       //评分
@@ -215,6 +213,7 @@ export default {
       active: 0,
       //是否弹出弹出层
       popPostBackground: false,
+      dataFlag: false,
       //传给子组件
       toSon: {
         id: 0,
@@ -231,13 +230,13 @@ export default {
     },
     //显示游戏详情
     showGame() {
+      console.log("游戏id -> ", this.$route.query.id)
       this.$http.get(Api.getGameDetail, {
-        params: {
-          id: this.$route.query.id
-        }
+        params: {id: this.$route.query.id}
       }).then(res => {
-        this.imgList = res.data.data.photoList;
+        console.log("游戏详情 -> ", res);
         this.returnData = res.data.data;
+        this.dataFlag = true;
       }).catch(err => {
         Notify({type: "danger", message: err.response.data.message});
       })

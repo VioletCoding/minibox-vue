@@ -66,7 +66,7 @@ export default {
     //用于父子传值
     v: {
       //游戏gid
-      gid: 0,
+      id: 0,
       //游戏名
       name: "",
       //评分
@@ -81,8 +81,8 @@ export default {
         return;
       }
       this.$http.post(Api.publishComment, {
-        id: localStorage.getItem("userId"),
-        gid: this.v.gid,
+        uid: localStorage.getItem("userId"),
+        gid: this.v.id,
         content: this.message,
         type: "GC",
         score: this.v.score

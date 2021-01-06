@@ -12,7 +12,9 @@
         </div>
 
         <div class="inline-block nickname-and-title van-ellipsis">
-          <div class="van-ellipsis">{{ item.mbUser.nickname }} :</div>
+          <div class="van-ellipsis">
+            {{ item.mbUser.nickname + ' :'}}
+          </div>
           <div class="van-ellipsis">{{ item.title }}</div>
         </div>
 
