@@ -10,10 +10,17 @@
       </template>
       <template #right>
         <van-icon name="add-o" size="18" color="black" style="margin-right: 20px" @click="showPop"/>
-        <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
+        <van-icon name="search" size="18" color="black" style="margin-right: 20px" @click="showSearch=true"/>
         <van-icon name="envelop-o" size="18" color="black"/>
       </template>
     </MyHeader>
+
+    <!--搜索框弹出层-->
+    <van-popup v-model="showSearch" position="right" :style="{ height: '100%',width:'100%' }">
+      <MySearch @back="listenMySearch"></MySearch>
+    </van-popup>
+    <!--搜索框弹出层end-->
+
     <!--头部end-->
 
     <!--轮播图-->
@@ -93,7 +100,6 @@
           <!--MarkDown编辑区-->
           <van-cell>
             <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
-                          :scrollStyle="markDownConfig.scrollStyle"
                           :subfield="markDownConfig.subfield"
                           :placeholder="markDownConfig.placeholder"
                           v-model="value"
@@ -114,7 +120,7 @@
         <!--导航栏-->
         <van-nav-bar title="请选择社区" left-arrow @click-left="close"/>
         <!--搜索框-->
-        <van-search v-model="search" placeholder="输入搜索内容"/>
+        <van-search v-model="blockSearch" placeholder="输入搜索内容"/>
         <van-cell title="推荐" style="margin-bottom: 10px;font-weight: bold"/>
         <!--版块信息-->
         <van-grid :column-num="2" direction="horizontal" clickable>
@@ -122,7 +128,8 @@
             <div style="width: 160px">
               <div class="inline-block"
                    style="height: 100%;width: 30px">
-                <van-image width="30" height="30" src="https://img.yzcdn.cn/vant/cat.jpeg"/>
+                <van-image width="30" height="30"
+                           :src="item.mbGame != null ? item.mbGame.coverImg:defaultBlockImg"/>
               </div>
 
               <div class="inline-block van-ellipsis"
@@ -150,10 +157,11 @@ import SinglePost from "../single/SinglePost";
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
 import { Notify } from "vant";
+import MySearch from "@/views/mainBody/search/MySearch";
 
 export default {
   name: "MyMainBodyList",
-  components: {SinglePost, MyHeader},
+  components: {MySearch, SinglePost, MyHeader},
   data() {
     return {
       //MarkDown
@@ -220,12 +228,16 @@ export default {
       showBlockPop: false,
       //版块列表
       blockList: [],
+      //默认版块图片
+      defaultBlockImg: "http://qlscbsxf3.hn-bkt.clouddn.com/f1015ca0b02e476f90a4c4b23616abde",
       //单选框
       radio: "",
       //选中的社区名字
       blockName: "",
       //搜索内容
-      search: ""
+      blockSearch: "",
+      //显示搜索内容
+      showSearch: false
     }
   },
   methods: {
@@ -243,6 +255,7 @@ export default {
       // 数据全部加载完成
       if (this.list.length >= this.dataList.length) {
         this.finished = true;
+        console.log(this.finished)
       }
     },
     //去帖子详情，参数为帖子的id
@@ -363,6 +376,10 @@ export default {
     label(bid, name) {
       this.radio = bid;
       this.blockName = name;
+    },
+    //搜索框监听事件
+    listenMySearch(v) {
+      this.showSearch = v;
     }
   },
   mounted() {
