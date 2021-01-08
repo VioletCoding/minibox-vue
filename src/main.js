@@ -43,11 +43,7 @@ import { Dialog } from 'vant';
 import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant';
 import { SubmitBar } from 'vant';
 import { Badge } from 'vant';
-
 import { Empty } from 'vant';
-
-
-
 
 
 //MarkDown解析工具
