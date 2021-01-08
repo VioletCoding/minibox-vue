@@ -44,6 +44,9 @@ const getBlockList = "block/all";
 //更新用户头像
 const modifyUserImg = "user/updateImg";
 
+//搜索模块
+const simpleSearch = "search/simple";
+
 //--------------------------------------
 //生成订单
 const order_generate = "order/generateOrder";
@@ -74,5 +77,6 @@ export default {
     publishReply,
     order_generate,
     order_confirm,
-    order_cancel
+    order_cancel,
+    simpleSearch
 }

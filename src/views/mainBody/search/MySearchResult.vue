@@ -25,40 +25,39 @@
     <div class="divider"></div>
     <!--分割线end-->
 
+    <!-- 搜索提示 -->
+    <van-empty image="search" description="没有找到结果" v-if="returnData.length == 0"/>
+
     <!--帖子结果-->
-    <div class="post-result">
+    <div class="post-result" v-for="(item,index) in returnData" :key="index" v-if="returnData.length!=0">
       <p><strong>社区</strong></p>
       <div class="inline-block">
-        <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" width="50" height="50" radius="5" fit="cover"/>
+        <van-image :src="item.mbUser.userImg" width="50" height="50" radius="5" fit="cover"/>
       </div>
       <div class="inline-block author-info">
         <div>
-          <div class="van-ellipsis nickname inline-block">Violetaaaaaaaaaaaaaaaaaaaaaa</div>
+          <div class="van-ellipsis nickname inline-block">{{ item.mbUser.nickname }}</div>
           <div class="inline-block level">
-            <van-tag type="warning">Lv 14</van-tag>
+            <van-tag type="warning">{{ 'Lv ' + item.mbUser.level }}</van-tag>
           </div>
         </div>
-        <div class="small-text">5小时前 Apex 英雄</div>
+        <div class="small-text">{{ item.createDate }} {{ item.mbBlock.name }}</div>
       </div>
       <div class="inline-block comment-count">
-        <van-icon name="comment-o" color="#C9CDD1"><span class="comment-number">260</span></van-icon>
+        <van-icon name="comment-o" color="#C9CDD1"><span class="comment-number">{{ item.commentList.length }}</span>
+        </van-icon>
       </div>
 
       <div class="post-info">
         <!--帖子标题-->
         <p class="van-multi-ellipsis--l2">
-          「Apex英雄」职业哥吐槽Apex逐渐“守望先锋化”
+          {{ item.title }}
         </p>
         <!--帖子正文 最多显示3行-->
-        <p class="van-multi-ellipsis--l3">
-          原报道发布于2021.1.3撰写者:Julian Young授权译制:
-          Melancholy苏戈外媒报道链接:https:// www.dexerto.com/apex-legends/apex-legends-pros-complain-that-the-g
-        </p>
+        <p class="van-multi-ellipsis--l3">{{ item.content }}</p>
 
         <div>
-          <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" width="30%" height="80" fit="cover"/>&nbsp;
-          <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" width="30%" height="80" fit="cover"/>&nbsp;
-          <van-image src="https://img.yzcdn.cn/vant/cat.jpeg" width="30%" height="80" fit="cover"/>
+          <van-image :src="item.coverImg" width="80%" height="150" radius="5" fit="cover"/>
         </div>
       </div>
       <van-divider/>
@@ -69,13 +68,25 @@
 </template>
 
 <script>
+import Api from "@/api/api";
 
 export default {
   name: "MySearchResult",
   data() {
     return {
-      dataFlag: true
+      dataFlag: false,
     }
+  },
+  props: {
+    returnData: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
+  },
+  mounted() {
+    this.dataFlag = true;
   }
 }
 </script>
@@ -122,7 +133,7 @@ export default {
     }
 
     .small-text {
-      margin-top: 15px;
+      margin-top: 10px;
       font-size: 12px;
       color: #C9CDD1;
     }

@@ -44,6 +44,8 @@ import { GoodsAction, GoodsActionIcon, GoodsActionButton } from 'vant';
 import { SubmitBar } from 'vant';
 import { Badge } from 'vant';
 
+import { Empty } from 'vant';
+
 
 
 
@@ -57,6 +59,7 @@ Vue.use(mavonEditor);
 
 //Vant
 // 全局注册
+Vue.use(Empty);
 Vue.use(Badge);
 Vue.use(SubmitBar);
 Vue.use(GoodsAction);
