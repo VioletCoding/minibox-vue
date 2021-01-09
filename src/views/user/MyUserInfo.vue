@@ -9,6 +9,7 @@
                      @click="show(userInfo.userImg)"/>
         </slot>
       </div>
+
       <!--用户昵称和签名-->
       <div class="user-right inline-block">
         <slot name="nickname">
@@ -17,13 +18,13 @@
         <slot name="desc">
           <div class="user-right-desc">{{ userInfo.description }}</div>
         </slot>
-
       </div>
+
       <!--等级-->
       <div class="user-level inline-block">
         <slot name="level">
           <van-tag color="#7232dd">
-            {{ 'LV ' + userInfo.level }}
+            {{ 'Lv ' + userInfo.level }}
           </van-tag>
         </slot>
       </div>
@@ -40,11 +41,7 @@ import { ImagePreview } from "vant";
 export default {
   name: "MyUserInfo",
   props: {
-    userInfo: {
-      type: Object, default() {
-        return {}
-      }
-    }
+    userInfo: Object
   },
   methods: {
     //图片预览

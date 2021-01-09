@@ -32,11 +32,11 @@
           <div>
             <van-grid :column-num="2">
               <van-grid-item>
-                <div>{{ userInfo.gamePrice }}</div>
+                <div>{{ userInfo.gamePrice == null ? 0 : userInfo.gamePrice }}</div>
                 <div>账号价值￥</div>
               </van-grid-item>
               <van-grid-item>
-                <div>{{ userInfo.gameList[0].game_num }}</div>
+                <div>{{ userInfo.gameList.length > 0 ? userInfo.gameList[0].game_num : 0 }}</div>
                 <div>游戏数量</div>
               </van-grid-item>
             </van-grid>
@@ -45,9 +45,15 @@
           <van-divider/>
           <van-tabs animated swipeable lazy-render>
             <van-tab title="拥有游戏">
+              <!--空状态-->
+              <div v-if="userInfo.gameList.length == 0">
+                <van-empty description="你好像没有购买游戏哦" />
+              </div>
+
               <!--游戏列表-->
               <div v-if="userInfo.gameList!=null && userInfo.gameList.length > 0" class="game-list"
                    v-for="(item,index) in userInfo.gameList" :key="index">
+
                 <div class="game-list-left inline-block">
                   <van-image width="120" height="70" fit="cover" :src="item.cover_img" radius="5px"/>
                 </div>

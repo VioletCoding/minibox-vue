@@ -257,7 +257,7 @@ export default {
       this.$http.post(Api.order_generate, {
         orderGameId: this.$route.query.id,
         orderCost: this.returnData.price,
-        id: localStorage.getItem("userId")
+        uid: localStorage.getItem("userId")
       }).then(resp => {
         console.log("订单信息=>", resp);
         if (resp.data.code == 200) {

@@ -142,6 +142,8 @@ export default {
         this.showKeyboard = false;
       })
     }
+  },mounted() {
+    console.log(navigator.userAgent);
   }
 }
 </script>

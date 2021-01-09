@@ -10,8 +10,7 @@
       </template>
       <template #right>
         <van-icon name="add-o" size="18" color="black" style="margin-right: 20px" @click="showPop"/>
-        <van-icon name="search" size="18" color="black" style="margin-right: 20px" @click="showSearch=true"/>
-        <van-icon name="envelop-o" size="18" color="black"/>
+        <van-icon name="search" size="18" color="black" @click="showSearch=true"/>
       </template>
     </MyHeader>
 
@@ -36,7 +35,6 @@
           </van-swipe>
         </div>
         <!--轮播图-->
-
         <!--帖子列表-->
         <van-list v-model="loading" :finished="finished" finished-text="暂时没有更多了喵" @load="onLoad" :error.sync="error"
                   error-text="加载失败，点击重试">

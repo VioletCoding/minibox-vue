@@ -11,7 +11,6 @@
 
       <template #right>
         <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
-        <van-icon name="envelop-o" size="18" color="black"/>
       </template>
     </MyHeader>
     <!--使用vant的下拉刷新功能-->
@@ -31,22 +30,20 @@
       <!--头部和轮播图end-->
       <!--功能选项-->
       <van-grid :column-num="5">
-        <van-grid-item icon="point-gift" text="赠送游戏"/>
-        <van-grid-item icon="clock" text="即将发售"/>
-        <van-grid-item icon="shop" text="游戏中心"/>
-        <van-grid-item icon="cluster" text="游戏厂商"/>
-        <van-grid-item icon="shopping-cart" text="M币商城"/>
+        <van-grid-item icon="point-gift" text="赠送游戏" @click="developing"/>
+        <van-grid-item icon="clock" text="即将发售" @click="developing"/>
+        <van-grid-item icon="shop" text="游戏中心" @click="developing"/>
+        <van-grid-item icon="cluster" text="游戏厂商" @click="developing"/>
+        <van-grid-item icon="shopping-cart" text="M币商城" @click="developing"/>
       </van-grid>
       <!--功能选项end-->
 
       <!--游戏列表-->
       <div style="margin-bottom: 50px">
-        <van-cell title="为您推荐" value="更多"/>
+        <van-cell title="为您推荐" value="更多" @click="developing"/>
         <van-card
-            v-for="(item,index) in gameList" :key="index"
-            currency="￥"
-            :tag="item.discount" :price="item.price"
-            :desc="item.description" :title="item.name"
+            v-for="(item,index) in gameList" :key="index" currency="￥"
+            :tag="item.discount" :price="item.price" :desc="item.description" :title="item.name"
             :thumb="item.coverImg" :origin-price="item.originPrice" @click="showGameDetail(item.id)"/>
       </div>
     </van-pull-refresh>
@@ -88,7 +85,6 @@ export default {
             //将BigDecimal转成2位小数，不知道为什么本来后台是带.00的，传上来就不带.00了
             v.price = v.price.toFixed(2);
             v.originPrice = v.originPrice.toFixed(2);
-            console.log("安利墙-> ", this.RecommendedGame);
             //计算折扣
             let i = ((v.price / v.originPrice) * 10).toFixed(1) + "折";
             //动态往对象里添加一个属性，也就是把计算完的折扣值放到对象里
@@ -112,6 +108,10 @@ export default {
     showGameDetail(v) {
       this.$router.push({path: '/gameDetail', query: {id: v}})
     },
+    //正在开发中提示
+    developing() {
+      this.$toast.fail("该功能正在开发中~");
+    }
   },
   mounted() {
     this.dataFlag = false;
