@@ -82,7 +82,7 @@ export default {
           orderId: this.returnData.orderId
         }).then(resp => {
           console.log("取消订单=>", resp);
-          if (resp.data.code == 1003) {
+          if (resp.data.code == 200) {
             this.$router.go(-1);
           }
         }).catch(err => {

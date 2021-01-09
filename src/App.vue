@@ -1,9 +1,7 @@
 <template>
   <div id="app" v-cloak>
     <transition name="slide-fade">
-      <keep-alive>
         <router-view/>
-      </keep-alive>
     </transition>
 
     <!-- 如果在 A 页面和 B 页面都渲染了一个 Tabbar 组件，这两个 Tabbar 的状态是不共享的，单页面应用可以把 Tabbar 放到 router-view 外面-->
@@ -52,14 +50,6 @@ export default {
       } else {
         this.showFooter = true;
       }
-    }
-  },
-  methods: {
-    checkUserAgent() {
-      let flag =
-          navigator.userAgent.match(
-              /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-      return flag;
     }
   }
 }

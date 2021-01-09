@@ -180,7 +180,7 @@
 
     <div class="buy">
       <van-goods-action>
-        <van-goods-action-button type="warning" text="关注"/>
+        <van-goods-action-button type="warning" text="关注" @click="()=>{this.$toast.fail('功能正在开发中')}"/>
         <van-goods-action-button type="danger" text="立即购买" @click="generateOrder"/>
       </van-goods-action>
     </div>
