@@ -49,7 +49,7 @@
               <div v-if="userInfo.gameList!=null && userInfo.gameList.length > 0" class="game-list"
                    v-for="(item,index) in userInfo.gameList" :key="index">
                 <div class="game-list-left inline-block">
-                  <van-image width="120" height="70" :src="item.cover_img" radius="5px"/>
+                  <van-image width="120" height="70" fit="cover" :src="item.cover_img" radius="5px"/>
                 </div>
                 <div class="game-list-right inline-block">
                   <div class="game-list-right-game-name">

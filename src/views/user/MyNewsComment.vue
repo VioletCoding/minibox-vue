@@ -8,12 +8,12 @@
 
       <div>
         <div class="inline-block pic">
-          <van-image :src="item.coverImg" fit="fill" width="50" height="50"/>
+          <van-image :src="item.coverImg" fit="cover" width="50" height="50"/>
         </div>
 
         <div class="inline-block nickname-and-title van-ellipsis">
           <div class="van-ellipsis">
-            {{ item.mbUser.nickname + ' :'}}
+            {{ item.mbUser.nickname + ' :' }}
           </div>
           <div class="van-ellipsis">{{ item.title }}</div>
         </div>

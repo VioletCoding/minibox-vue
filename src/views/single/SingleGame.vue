@@ -147,7 +147,7 @@
               <div class="comment-list-comment-title">
                 <!--评论区域-标题-用户头像-->
                 <div class="comment-list-comment-title-photo inline-block">
-                  <van-image round width="2.5rem" height="2.5rem" :src="item.mbUser.userImg"/>
+                  <van-image round width="2.5rem" fit="cover" height="2.5rem" :src="item.mbUser.userImg"/>
                 </div>
                 <!--评论区域-标题-用户昵称-->
                 <div class="comment-list-comment-title-info inline-block">

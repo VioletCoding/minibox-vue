@@ -8,7 +8,7 @@
         {{ item.createDate }} - {{ item.mbBlock.name }}
       </div>
       <div>
-        <van-image :src="item.coverImg" width="150" height="100" fit="fill"/>
+        <van-image :src="item.coverImg" width="150" height="100" fit="cover"/>
       </div>
       <van-divider/>
     </div>

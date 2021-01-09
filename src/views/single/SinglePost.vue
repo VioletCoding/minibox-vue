@@ -20,7 +20,7 @@
     </div>
     <!--顶部end-->
     <div class="headPhoto">
-      <van-image :src="returnValue.coverImg" fit="fill" height="200" width="100%"/>
+      <van-image :src="returnValue.coverImg" fit="cover" height="200" width="100%"/>
     </div>
 
     <!-- 标题 最多显示三行 -->
@@ -31,7 +31,7 @@
     <div class="authorInfo">
       <van-cell center>
         <div class="authorImg">
-          <van-image round width="80" height="80" :src="returnValue.mbUser.userImg"/>
+          <van-image round width="80" height="80" fit="cover" :src="returnValue.mbUser.userImg"/>
         </div>
         <div class="authorNickName van-ellipsis">
           <van-cell center :title="returnValue.mbUser.nickname" :label="returnValue.createDate"/>

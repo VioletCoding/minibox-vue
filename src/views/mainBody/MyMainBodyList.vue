@@ -65,7 +65,7 @@
                 </div>
                 <!--帖子封面图-->
                 <div class="rightContain">
-                  <van-image width="100%" height="100%" fit="fill" :src="item.coverImg"/>
+                  <van-image width="100%" height="100%" fit="cover" :src="item.coverImg"/>
                 </div>
               </div>
             </div>
