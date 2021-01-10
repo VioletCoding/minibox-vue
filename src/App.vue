@@ -1,7 +1,7 @@
 <template>
   <div id="app" v-cloak>
     <transition name="slide-fade">
-        <router-view/>
+      <router-view/>
     </transition>
 
     <!-- 如果在 A 页面和 B 页面都渲染了一个 Tabbar 组件，这两个 Tabbar 的状态是不共享的，单页面应用可以把 Tabbar 放到 router-view 外面-->
@@ -44,7 +44,8 @@ export default {
           this.$route.path === "/gameDetail" ||
           this.$route.path === "/login" ||
           this.$route.path === "/modifyPassword" ||
-          this.$route.path === "/order") {
+          this.$route.path === "/order" ||
+          this.$route.path === "/admin") {
         this.showFooter = false;
 
       } else {

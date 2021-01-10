@@ -52,7 +52,12 @@ const routes = [
     {
         path: "/order",
         name: "MyGameOrder",
-        component:() => import("@/views/order/MyGameOrder")
+        component: () => import("@/views/order/MyGameOrder")
+    },
+    {
+        path: "/admin",
+        name: "MyAdmin",
+        component: () => import("@/views/admin/MyAdminLogin")
     }
 ]
 

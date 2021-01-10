@@ -5,27 +5,27 @@
       <van-tabs v-model="active" swipeable animated sticky lazy-render>
         <van-tab title="数据">
           <MyUserInfo :userInfo="userInfo"></MyUserInfo>
-          <!--订阅信息-->
-          <div>
-            <van-grid :column-num="4" :border="false">
-              <van-grid-item>
-                <div>6</div>
-                <div style="font-size: 10px">关注</div>
-              </van-grid-item>
-              <van-grid-item>
-                <div>5</div>
-                <div style="font-size: 10px">粉丝</div>
-              </van-grid-item>
-              <van-grid-item>
-                <div>16</div>
-                <div style="font-size: 10px">收藏</div>
-              </van-grid-item>
-              <van-grid-item>
-                <div>9</div>
-                <div style="font-size: 10px">最近浏览</div>
-              </van-grid-item>
-            </van-grid>
-          </div>
+          <!--订阅信息 TODO 还没有实际功能-->
+<!--          <div>-->
+<!--            <van-grid :column-num="4" :border="false">-->
+<!--              <van-grid-item>-->
+<!--                <div>6</div>-->
+<!--                <div style="font-size: 10px">关注</div>-->
+<!--              </van-grid-item>-->
+<!--              <van-grid-item>-->
+<!--                <div>5</div>-->
+<!--                <div style="font-size: 10px">粉丝</div>-->
+<!--              </van-grid-item>-->
+<!--              <van-grid-item>-->
+<!--                <div>16</div>-->
+<!--                <div style="font-size: 10px">收藏</div>-->
+<!--              </van-grid-item>-->
+<!--              <van-grid-item>-->
+<!--                <div>9</div>-->
+<!--                <div style="font-size: 10px">最近浏览</div>-->
+<!--              </van-grid-item>-->
+<!--            </van-grid>-->
+<!--          </div>-->
           <van-divider/>
           <!--订阅信息end-->
           <!--游戏统计信息-->

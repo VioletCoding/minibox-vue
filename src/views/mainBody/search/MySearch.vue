@@ -16,15 +16,15 @@
 
     <!--热门搜索 这个功能待定，我再想想ES怎么弄-->
     <MySearchResult v-if="showResult" :returnData="returnData"></MySearchResult>
-    <!--还没有搜索结果的时候，显示一些推荐搜索的内容-->
-    <div class="searchContent" v-if="searchContent==''">
-      <p><strong>热门搜索</strong></p>
-      <div class="inline-block van-ellipsis"><span>1 apex</span></div>
-      <div class="inline-block van-ellipsis"><span>2 epic</span></div>
-      <p><Strong>热议中</Strong></p>
-      <div class="inline-block van-ellipsis"><span>1 #盒友杂谈# </span></div>
-      <div class="inline-block van-ellipsis"><span>2 #再见2020# </span></div>
-    </div>
+    <!--还没有搜索结果的时候，显示一些推荐搜索的内容 TODO还没有实际功能-->
+    <!--    <div class="searchContent" v-if="searchContent==''">-->
+    <!--      <p><strong>热门搜索</strong></p>-->
+    <!--      <div class="inline-block van-ellipsis"><span>1 apex</span></div>-->
+    <!--      <div class="inline-block van-ellipsis"><span>2 epic</span></div>-->
+    <!--      <p><Strong>热议中</Strong></p>-->
+    <!--      <div class="inline-block van-ellipsis"><span>1 #盒友杂谈# </span></div>-->
+    <!--      <div class="inline-block van-ellipsis"><span>2 #再见2020# </span></div>-->
+    <!--    </div>-->
     <!--热门搜索 end-->
 
   </div>
