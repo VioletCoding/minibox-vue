@@ -1,12 +1,8 @@
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
-import store from './store';
 import Axios from 'axios';
-//引入Ant样式，用于PC端，全局引入
-import Antd from 'ant-design-vue';
-import 'ant-design-vue/dist/antd.css';
-Vue.use(Antd);
+import utils from "@/api/utils";
 //===========================================Vant=========================================
 //Vant 是一个面向移动端的组件库，因此默认只适配了移动端设备，这意味着组件只监听了移动端的 touch 事件，没有监听桌面端的 mouse 事件。
 //如果你需要在桌面端使用 Vant，可以引入我们提供的 @vant/touch-emulator，这个库会在桌面端自动将 mouse 事件转换成对应的 touch 事件，使得组件能够在桌面端使用。
@@ -113,7 +109,7 @@ Vue.use(Tabs);
 Vue.prototype.$http = Axios;
 //关掉vue那个提示生产用压缩版的控制台提示
 Vue.config.productionTip = false;
-new Vue({router, store, render: h => h(App)}).$mount('#app');
+new Vue({router, render: h => h(App)}).$mount('#app');
 
 //设置URL，这样具体的接口地址就能写post/all这样的相对路径了，会自动在前面加baseURL
 Axios.defaults.baseURL = "http://192.168.0.105:20001/";
@@ -140,13 +136,13 @@ Axios.interceptors.response.use(
         if (status == 401) {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("userId");
-            Notify({type: "danger", message: message});
+            this.$toast.fail(message);
             router.replace("/login");
         }
         if (status == 500) {
-            Notify({type: "danger", message: "服务器内部错误，请稍后再试"});
+            this.$toast.fail("服务器繁忙，请稍后再试");
         }
-        Notify({type: "danger", message: "请求失败，请重试"});
+        this.$toast.fail("服务器繁忙，请稍后再试");
         return Promise.reject(error);
     }
 )

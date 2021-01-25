@@ -11,7 +11,7 @@ module.exports = {
         proxy: {
             // 可以给你跨域的服务器起名字
             "/api": {
-                target: "http://192.168.0.105:20002", // 跨域的服务器地址
+                target: "http://192.168.0.105:20001", // 跨域的服务器地址
                 changeOrigin: true,
                 pathRewrite: {
                     "^/api": "" // 去掉接口地址中的api字符串

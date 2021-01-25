@@ -5,10 +5,13 @@
     </transition>
 
     <!-- 如果在 A 页面和 B 页面都渲染了一个 Tabbar 组件，这两个 Tabbar 的状态是不共享的，单页面应用可以把 Tabbar 放到 router-view 外面-->
-    <div v-if="showFooter">
+    <div v-if="$route.meta.showFooter">
       <van-tabbar v-model="active" route>
-        <van-tabbar-item v-for="(item,index) in tabBarMenu" :key="index"
-                         :icon="item.icon" replace :to="item.path">
+        <van-tabbar-item v-for="(item,index) in tabBarMenu"
+                         :key="index"
+                         :icon="item.icon"
+                         replace
+                         :to="item.path">
           {{ item.chineseName }}
         </van-tabbar-item>
       </van-tabbar>
@@ -23,8 +26,6 @@
 export default {
   data() {
     return {
-      //是否显示底部？
-      showFooter: true,
       active: 0,
       //按钮菜单信息
       tabBarMenu: [
@@ -32,25 +33,6 @@ export default {
         {path: "/game", chineseName: "游戏库", icon: "cross"},
         {path: "/mine", chineseName: "我", icon: "user-o"}
       ]
-    }
-  },
-  //监听路由，什么时候显示底部tabbar
-  watch: {
-    $route(to, from) {
-      if (this.$route.path === "/") {
-        this.showFooter = true;
-      }
-      if (this.$route.path === "/postDetail" ||
-          this.$route.path === "/gameDetail" ||
-          this.$route.path === "/login" ||
-          this.$route.path === "/modifyPassword" ||
-          this.$route.path === "/order" ||
-          this.$route.path === "/admin") {
-        this.showFooter = false;
-
-      } else {
-        this.showFooter = true;
-      }
     }
   }
 }

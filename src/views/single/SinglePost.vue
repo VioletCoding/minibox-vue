@@ -8,13 +8,10 @@
           <van-icon name="arrow-left" color="black" @click="back"/>
         </template>
         <template #right>
-          <van-icon name="share-o" style="margin-right: 1rem" color="black"/>
           <van-icon name="ellipsis" color="black"/>
         </template>
         <template #title>
-          <van-tabs v-model="active" color="black">
-            <van-tab title="正文" name="1"/>
-          </van-tabs>
+          <span>正文</span>
         </template>
       </van-nav-bar>
     </div>
@@ -28,53 +25,79 @@
       <van-cell :value="returnValue.title" style="font-size: 22px" size="large"/>
     </div>
     <!--作者信息-->
-    <div class="authorInfo">
-      <van-cell center>
-        <div class="authorImg">
-          <van-image round width="80" height="80" fit="cover" :src="returnValue.mbUser.userImg"/>
-        </div>
-        <div class="authorNickName van-ellipsis">
-          <van-cell center :title="returnValue.mbUser.nickname" :label="returnValue.createDate"/>
-        </div>
-      </van-cell>
+    <div style="padding: 20px">
+
+      <div style="float: left;width: 30%">
+        <van-image round width="50" height="50" fit="cover" :src="returnValue.mbUser.userImg"/>
+      </div>
+
+      <div style="float: right;width: 70%;margin:20px 0 5px 0">
+        <span>{{ returnValue.mbUser.nickname }}</span>
+        <span style="margin-left: 10px;">
+          <van-tag color="#7232dd">{{ 'Lv ' + returnValue.mbUser.level }}</van-tag>
+        </span>
+      </div>
+
+      <p style="font-size: 10px;color: #808080">
+        {{ returnValue.createDate }}
+      </p>
     </div>
     <!--正文 MarkDown渲染，包括图片的链接，必须符合MarkDown的语法才能被正确渲染-->
-    <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag" :scrollStyle="markDownConfig.scrollStyle"
-                  :subfield="markDownConfig.subfield" :placeholder="markDownConfig.placeholder"
-                  :value="value" :editable="markDownConfig.editable"
-                  :boxShadow="markDownConfig.boxShadow" :ishljs="markDownConfig.ishljs"
-                  :shortCut="markDownConfig.shortCut" :defaultOpen="markDownConfig.defaultOpen"/>
+    <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
+                  :scrollStyle="markDownConfig.scrollStyle"
+                  :subfield="markDownConfig.subfield"
+                  :placeholder="markDownConfig.placeholder"
+                  :value="value"
+                  :editable="markDownConfig.editable"
+                  :boxShadow="markDownConfig.boxShadow"
+                  :ishljs="markDownConfig.ishljs"
+                  :shortCut="markDownConfig.shortCut"
+                  :defaultOpen="markDownConfig.defaultOpen" style="z-index: -1"/>
 
-    <van-tabs v-model="active">
-      <van-tab title="全部评论"/>
-    </van-tabs>
+    <div style="font-size: 14px;padding: 10px;font-weight: bold">
+      <div v-if="returnValue.commentList.length > 0">
+        <p style="text-align: center">全部评论</p>
+        <van-divider/>
+      </div>
+      <span v-else>
+        <van-empty description="这里还没有评论呢"/>
+      </span>
+    </div>
     <!--评论-->
-    <div class="commentArea"
-         v-for="(item,index) in returnValue.commentList"
-         v-if="returnValue.commentList!=null">
-      <van-skeleton title avatar :row="3" :loading="loading">
-        <van-cell/>
+    <div v-if="returnValue.commentList.length > 0"
+         class="commentArea"
+         v-for="(item,index) in returnValue.commentList">
+
+      <van-skeleton title
+                    avatar
+                    :row="3"
+                    :loading="loading">
         <van-card
             :price="item.content" :desc="item.createDate"
             :title="item.mbUser.nickname" :tag="'LV '+item.mbUser.level"
             :thumb="item.mbUser.userImg"
-            centered currency="" @click="reply(item.mbUser.nickname,item.mbUser.id,item.id)">
+            centered
+            currency=""
+            @click="reply(item.mbUser.nickname,item.mbUser.id,item.id)">
         </van-card>
         <!--回复-->
         <div class="replyArea">
           <van-collapse v-model="activeName">
-            <van-collapse-item title="查看回复" :name="index" v-if="item.replyList.length > 0">
-              <div v-for="(reply1,replyIndex) in item.replyList" :key="replyIndex"
+            <van-collapse-item v-if="item.replyList.length > 0"
+                               title="查看回复"
+                               :name="index">
+              <div v-for="(reply1,replyIndex) in item.replyList"
+                   :key="replyIndex"
                    @click="reply(reply1.mbUser.nickname,reply1.mbUser.id,item.id)">
                 <div>
                   <span style="color: deepskyblue">{{ reply1.mbUser.nickname }}</span>
-                  <span>
-                    <strong>&nbsp;回复&nbsp;</strong>
-                  </span>
+                  <strong>&nbsp;回复&nbsp;</strong>
                   {{ item.mbUser.nickname }}
-                  <strong>&nbsp;:&nbsp; </strong>
+                  <strong>&nbsp;</strong>
                   <span style="color: black">{{ reply1.replyContent }}</span>
-                  <small>&nbsp;{{ reply1.replyDate }}</small>
+                  <div>
+                    <small>&nbsp;{{ reply1.replyDate }}</small>
+                  </div>
                 </div>
                 <van-divider/>
               </div>
@@ -89,10 +112,15 @@
     <!--评论框-->
     <div class="commentField">
       <van-tabbar v-model="active">
-        <van-field
-            v-model="commentValue" center clearable placeholder="说点什么吧">
+        <van-field v-model="commentValue"
+                   center
+                   clearable
+                   placeholder="说点什么吧">
           <template #button>
-            <van-button size="small" type="primary" @click="publishComment">发表</van-button>
+            <van-button size="small"
+                        type="primary"
+                        @click="publishComment">发表
+            </van-button>
           </template>
         </van-field>
       </van-tabbar>
@@ -101,11 +129,20 @@
 
     <!--回复框-->
     <div>
-      <van-popup v-model="showReplyPop" position="bottom" :style="{width:'100%',height:'35%'}">
-        <van-field v-model="replyMessage" rows="2" type="textarea" maxlength="300"
-                   :placeholder="'回复 '+replyWho" show-word-limit>
+      <van-popup v-model="showReplyPop"
+                 position="bottom"
+                 :style="{width:'100%',height:'35%'}">
+        <van-field v-model="replyMessage"
+                   rows="2"
+                   type="textarea"
+                   maxlength="300"
+                   :placeholder="'回复 '+replyWho"
+                   show-word-limit>
           <template #button>
-            <van-button size="small" type="primary" @click="doReply">回复</van-button>
+            <van-button size="small"
+                        type="primary"
+                        @click="doReply">回复
+            </van-button>
           </template>
         </van-field>
       </van-popup>
@@ -117,7 +154,7 @@
 <script>
 import marked from 'marked';
 import Api from "@/api/api";
-import { Notify } from "vant";
+import utils from "@/api/utils";
 
 export default {
   name: "SinglePost",
@@ -187,14 +224,11 @@ export default {
       this.$http.get(Api.getPostDetail, {
         params: {id: this.id}
       }).then(res => {
-        console.log("详情=>", res)
         this.returnValue = res.data.data;
         this.value = this.returnValue.content;
         this.dataFlag = true;
         this.loading = false;
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      });
+      }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //返回上一个路由
     back() {
@@ -208,12 +242,11 @@ export default {
         content: this.commentValue,
         type: 'TC'
       }).then(res => {
-        Notify({type: "success", message: res.data.message});
+        if (res.data.code == 200)
+          this.$toast.success(res.data.message);
         this.commentValue = '';
         this.onLoad();
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      });
+      }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //回复弹出框
     reply(nickname, uid, cid) {
@@ -225,26 +258,24 @@ export default {
     //发表回复
     doReply() {
       if (this.replyMessage.length < 10) {
-        Notify({type: "warning", message: "内容最少10个字哦~"});
-        return;
+        this.$toast.fail("内容最少10个字哦~");
+      } else {
+        this.$http.post(Api.publishReply, {
+          type: "TR",
+          replyWho: this.replyUid,
+          replyInPost: Number(this.id),
+          replyContent: this.replyMessage,
+          replyInComment: this.commentCid,
+          replyUid: this.replyUid
+        }).then(resp => {
+          if (resp.data.code == 200) {
+            this.showReplyPop = false;
+            this.replyMessage = "";
+            this.$toast.success(resp.data.message);
+            this.onLoad();
+          }
+        }).catch(err => utils.errMessage(err));
       }
-      this.$http.post(Api.publishReply, {
-        type: "TR",
-        replyWho: this.replyUid,
-        replyInPost: Number(this.id),
-        replyContent: this.replyMessage,
-        replyInComment: this.commentCid,
-        replyUid: this.replyUid
-      }).then(resp => {
-        if (resp.data.code == 200) {
-          this.showReplyPop = false;
-          this.replyMessage = "";
-          Notify({type: "success", message: resp.data.message});
-          this.onLoad();
-        }
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      })
     }
   },
   mounted() {
@@ -268,20 +299,6 @@ export default {
     font-size: 20px;
     font-weight: bold;
     font-family: Menlo, "Ubuntu Mono", Consolas, "Courier New", "Microsoft Yahei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
-  }
-
-  .authorInfo {
-    width: 100%;
-    display: inline-block;
-
-    .authorImg {
-      float: left;
-      display: inline-block;
-    }
-
-    .authorNickName {
-      font-weight: bold;
-    }
   }
 
   .mainContent {

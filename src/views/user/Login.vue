@@ -23,10 +23,11 @@
       <!--输入验证码弹出层-->
       <van-popup v-model="showAuth" position="right" closeable :style="{ width: '100%',height:'100%' }">
         <div style="margin-top: 150px">
+
           <van-password-input :value="authCode" :mask="false" :focused="showKeyboard" @focus="showKeyboard = true"/>
 
-          <div class="btn">
-            <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="登录" block @click="login(authCode)"/>
+          <div style="width: 105px;margin: 20px auto">
+            <van-button type="info" text="登录" block @click="login(authCode)"/>
           </div>
 
           <van-number-keyboard v-model="authCode" :show="showKeyboard" @blur="showKeyboard = false"
@@ -38,9 +39,12 @@
     <!--输入框end-->
 
     <!--获取验证码按钮-->
-    <div class="btn">
-      <van-button color="linear-gradient(to right, #ff6034, #ee0a24)" text="获取验证码" block :disabled="disabled"
-                  @blur="checkAuth" @click="auth(input)"/>
+    <div style="width: 105px;margin: 20px auto">
+      <van-button type="info"
+                  text="获取验证码"
+                  :disabled="disabled"
+                  @blur="checkAuth"
+                  @click="auth"/>
     </div>
     <!--获取验证码按钮end-->
 
@@ -55,7 +59,7 @@
 <script>
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
-import { Notify } from "vant";
+import utils from "@/api/utils";
 
 export default {
   name: "Login",
@@ -81,21 +85,18 @@ export default {
   methods: {
     //校验验证码
     checkAuth() {
-      if (this.authCode.length == 6) {
+      if (this.authCode.length == 6)
         this.disabled = false;
-      }
+      else
+        this.$toast.fail("请填写完整验证码！");
     },
     //校验表单的值是否是邮箱
     validate() {
-      let pattern = "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$";
-      //校验是否匹配正则表达式，返回boolean
-      let v = new RegExp(pattern).test(this.input);
-
+      let v = utils.checkEmailFormat(this.input);
       if (!v) {
         this.errMsg = "邮箱格式不正确";
-        this.icon = "warning-o"
+        this.icon = "warning-o";
       }
-
       if (v) {
         this.errMsg = "";
         this.icon = "";
@@ -104,30 +105,26 @@ export default {
       return v;
     },
     //验证
-    auth(email) {
-      this.$http.post(Api.auth, {username: email})
-          .then(res => {
-            this.showAuth = true;
-            this.disabled = true;
-          }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      })
+    auth() {
+      this.showAuth = true;
+      this.$http.post(Api.auth, {username: this.input})
+          .then(res => this.disabled = true)
+          .catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //登陆
     login(authCode) {
       if (authCode.length < 6) {
-        Notify({type: "warning", message: "请输入6位数验证码"});
-        return;
+        this.$toast.fail("请输入6位数验证码");
+        return 0;
       }
-      if (this.input == null || this.input == "") {
-        Notify({type: "warning", message: "请输入邮箱"});
-        return;
+      if (utils.isNullOrEmpty(this.input)) {
+        this.$toast.fail("请输入邮箱");
+        return 0;
       }
       this.$http.post(Api.loginOrReg, {
         username: this.input,
         authCode: authCode
       }).then(resp => {
-        console.log("login -> ",resp);
         let code = resp.data.code;
         let msg = resp.data.message;
         if (code == 200) {
@@ -136,19 +133,18 @@ export default {
           this.$router.push("/");
         }
       }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
+        this.$toast.fail(utils.errMessage(err));
       }).finally(f => {
         this.showAuth = false;
         this.showKeyboard = false;
       })
     }
-  },mounted() {
-    console.log(navigator.userAgent);
   }
 }
 </script>
 
 <style scoped lang="less">
+
 .text {
   margin-top: 150px;
   font-size: 25px;
@@ -158,10 +154,6 @@ export default {
 
 .input-field {
   margin-top: 50px;
-}
-
-.btn {
-  margin-top: 30px;
 }
 
 .pwd-login {

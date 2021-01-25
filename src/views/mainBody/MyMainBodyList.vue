@@ -4,41 +4,66 @@
     <!--头部-->
     <MyHeader>
       <template #left>
-        <van-tabs v-model="active" swipeable animated color="black" line-width="20">
-          <van-tab title="推荐"/>
-        </van-tabs>
+        <span style="border-bottom: 1px solid black">推荐</span>
       </template>
       <template #right>
-        <van-icon name="add-o" size="18" color="black" style="margin-right: 20px" @click="showPop"/>
-        <van-icon name="search" size="18" color="black" @click="showSearch=true"/>
+        <van-icon name="add-o"
+                  size="18"
+                  color="black"
+                  style="margin-right: 20px"
+                  @click="showPop"/>
+        <van-icon name="search"
+                  size="18"
+                  color="black"
+                  @click="showSearch=true"/>
       </template>
     </MyHeader>
-
     <!--搜索框弹出层-->
-    <van-popup v-model="showSearch" position="right" :style="{ height: '100%',width:'100%' }">
+    <van-popup v-model="showSearch"
+               position="right"
+               :style="{ height: '100%',width:'100%' }">
       <MySearch @back="listenMySearch"></MySearch>
     </van-popup>
     <!--搜索框弹出层end-->
-
     <!--头部end-->
 
     <!--轮播图-->
     <div>
-      <van-pull-refresh v-model="loading" @refresh="onLoad" success-text="刷新成功">
+      <van-pull-refresh v-model="loading"
+                        @refresh="onLoad"
+                        success-text="刷新成功">
         <div style="margin-top: 50px">
-          <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white">
-            <van-swipe-item v-for="(item,index) in dataList" :key="index" v-if="index < 5">
-              <p class="swipe-text van-multi-ellipsis--l2">{{ item.title }}</p>
-              <van-image lazy-render=true width="100%" height="200" fit="cover" :src="item.coverImg"
-                         @click="toDetail(item.id)"/>
+          <van-swipe class="my-swipe"
+                     :autoplay="3000"
+                     indicator-color="white">
+            <van-swipe-item v-for="(item,index) in dataList"
+                            :key="index"
+                            v-if="index < 5">
+              <div style="position: relative;width: 100%">
+                <p class="swipe-text van-ellipsis">
+                  {{ item.title }}
+                </p>
+                <van-image lazy-render=true
+                           width="100%"
+                           height="200"
+                           fit="cover"
+                           :src="item.coverImg"
+                           @click="toDetail(item.id)"/>
+              </div>
             </van-swipe-item>
           </van-swipe>
         </div>
         <!--轮播图-->
         <!--帖子列表-->
-        <van-list v-model="loading" :finished="finished" finished-text="暂时没有更多了喵" @load="onLoad" :error.sync="error"
+        <van-list v-model="loading"
+                  :finished="finished"
+                  finished-text="暂时没有更多了喵"
+                  @load="onLoad"
+                  :error.sync="error"
                   error-text="加载失败，点击重试">
-          <div class="myContainer" v-for="(item,index) in dataList" :key="index">
+          <div class="myContainer"
+               v-for="(item,index) in dataList"
+               :key="index">
             <!--路由跳转方法，点击帖子跳转到帖子详情-->
             <div @click="toDetail(item.id)">
               <div class="mySingleGrid van-hairline--bottom">
@@ -57,13 +82,19 @@
                   </div>
                   <!--评论数-->
                   <div class="myComment">
-                    <van-icon name="chat-o" :badge="item.countComment == null ? 0 : item.countComment "
+                    <van-icon name="chat-o"
                               color="#808080"/>
+                    <span style="font-size: 8px;margin:3px 0 0 3px;color: #808080">
+                      {{ item.countComment == null ? 0 : item.countComment }}
+                    </span>
                   </div>
                 </div>
                 <!--帖子封面图-->
                 <div class="rightContain">
-                  <van-image width="100%" height="100%" fit="cover" :src="item.coverImg"/>
+                  <van-image width="100%"
+                             height="100%"
+                             fit="cover"
+                             :src="item.coverImg"/>
                 </div>
               </div>
             </div>
@@ -75,25 +106,40 @@
 
     <!--弹出层内容-->
     <div>
-      <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
+      <van-popup v-model="popPostBackground"
+                 position="bottom"
+                 :style="{ height: '100%'}"
+                 safe-area-inset-bottom>
         <!--导航栏-->
         <van-nav-bar
-            title="帖子" left-text="返回" right-text="发送"
-            @click-left="onClickLeft" @click-right="onClickRight"/>
+            title="帖子"
+            left-text="返回"
+            right-text="发送"
+            @click-left="onClickLeft"
+            @click-right="onClickRight"/>
         <!--选择社区和标题-->
         <van-cell-group>
           <van-cell>
-            <van-button type="default" icon="plus" size="small" @click="showBlock" style="margin-right: 10px">
+            <van-button type="default"
+                        icon="plus"
+                        size="small"
+                        @click="showBlock"
+                        style="margin-right: 10px">
               <span>添加社区</span>
             </van-button>
             <!--选中的社区-->
-            <van-button type="default" color="linear-gradient(to right, #ff6034, #ee0a24)"
-                        size="small" @click="showBlock" v-if="radio!=''">
+            <van-button v-if="radio!='' "
+                        type="default"
+                        color="linear-gradient(to right, #ff6034, #ee0a24)"
+                        size="small"
+                        @click="showBlock">
               {{ blockName }}
             </van-button>
           </van-cell>
           <van-cell>
-            <van-field v-model="popTitle" placeholder="标题" required/>
+            <van-field v-model="popTitle"
+                       placeholder="标题"
+                       required/>
           </van-cell>
           <!--MarkDown编辑区-->
           <van-cell>
@@ -108,33 +154,49 @@
                           :defaultOpen="markDownConfig.defaultOpen"
                           :toolbars="toolbars"
                           :autofocus="markDownConfig.autofocus"
-                          ref=md @imgAdd="$imgAdd" @imgDel="$imgDel"/>
+                          ref=md
+                          @imgAdd="$imgAdd"
+                          @imgDel="$imgDel"
+                          style="height: 100%;width: 100%"/>
           </van-cell>
         </van-cell-group>
       </van-popup>
 
       <!--展示版块（社区）的弹出层-->
-      <van-popup v-model="showBlockPop" position="bottom" :style="{height: '100%'}" safe-area-inset-bottom>
+      <van-popup v-model="showBlockPop"
+                 position="bottom"
+                 :style="{height: '100%'}"
+                 safe-area-inset-bottom>
         <!--导航栏-->
-        <van-nav-bar title="请选择社区" left-arrow @click-left="close"/>
+        <van-nav-bar title="请选择社区"
+                     left-arrow
+                     @click-left="close"/>
         <!--搜索框-->
-        <van-search v-model="blockSearch" placeholder="输入搜索内容"/>
-        <van-cell title="推荐" style="margin-bottom: 10px;font-weight: bold"/>
+        <van-search v-model="blockSearch"
+                    placeholder="输入搜索内容"/>
+        <van-cell title="推荐"
+                  style="margin-bottom: 10px;font-weight: bold"/>
         <!--版块信息-->
-        <van-grid :column-num="2" direction="horizontal" clickable>
-          <van-grid-item v-for="(item,index) in blockList" :key="index" @click="label(item.id,item.name)">
+        <van-grid :column-num="2"
+                  direction="horizontal"
+                  clickable>
+          <van-grid-item v-for="(item,index) in blockList"
+                         :key="index"
+                         @click="label(item.id,item.name)">
             <div style="width: 160px">
               <div class="inline-block"
                    style="height: 100%;width: 30px">
-                <van-image width="30" height="30"
-                           :src="item.mbGame != null ? item.mbGame.coverImg:defaultBlockImg"/>
+                <van-image width="30"
+                           height="30"
+                           :src="item.mbGame != null ? item.mbGame.coverImg:'https://img.yzcdn.cn/vant/cat.jpeg' "/>
               </div>
 
               <div class="inline-block van-ellipsis"
                    style="font-size: 12px;vertical-align: top;padding-top: 10px;margin-left: 10px">
                 {{ item.name }}
               </div>
-              <div class="inline-block" style="float: right;margin-top: 10px">
+              <div class="inline-block"
+                   style="float: right;margin-top: 10px">
                 <van-radio-group v-model="radio">
                   <van-radio :name="item.id"/>
                 </van-radio-group>
@@ -143,6 +205,9 @@
           </van-grid-item>
         </van-grid>
 
+        <div style="width: 70px;height: 50px;margin: 20px auto">
+          <van-button type="info" radius="20" @click="showBlockPop = false">完成</van-button>
+        </div>
       </van-popup>
       <!--展示版块（社区）的弹出层 end-->
     </div>
@@ -154,7 +219,7 @@
 import SinglePost from "../single/SinglePost";
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
-import { Notify } from "vant";
+import utils from "@/api/utils";
 import MySearch from "@/views/mainBody/search/MySearch";
 
 export default {
@@ -181,7 +246,7 @@ export default {
         //默认展开 edit:编辑 preview:渲染
         defaultOpen: 'edit',
         //自动对焦到编辑区
-        autofocus: false
+        autofocus: true
       },
       //MarkDown编辑器的工具栏
       toolbars: {
@@ -226,8 +291,6 @@ export default {
       showBlockPop: false,
       //版块列表
       blockList: [],
-      //默认版块图片
-      defaultBlockImg: "http://qlscbsxf3.hn-bkt.clouddn.com/f1015ca0b02e476f90a4c4b23616abde",
       //单选框
       radio: "",
       //选中的社区名字
@@ -240,21 +303,13 @@ export default {
   },
   methods: {
     async onLoad() {
-      // 异步更新数据
-      if (this.loading) {
-        this.dataList = [];
-        //调用帖子方法
-        this.getPostList();
-      }
+      this.loading = true;
+      this.dataList = [];
+      //调用帖子方法
+      this.getPostList();
       // 加载状态结束
       this.loading = false;
-      //将获取到的dataList传给list存放
-      this.list = this.dataList;
-      // 数据全部加载完成
-      if (this.list.length >= this.dataList.length) {
-        this.finished = true;
-        console.log(this.finished)
-      }
+      this.finished = true;
     },
     //去帖子详情，参数为帖子的id
     toDetail(id) {
@@ -277,9 +332,9 @@ export default {
     },
     //弹出层-发送
     onClickRight() {
-      if (this.radio == "" || this.radio == null || this.radio == undefined) {
-        Notify({type: "warning", message: "请选择社区"});
-        return;
+      if (utils.isNullOrEmptyOrUndefined(this.radio)) {
+        this.$toast.fail("请选择社区");
+        return 0;
       }
       this.$http.post(Api.publishPost, {
         //用户ID
@@ -294,7 +349,7 @@ export default {
         coverImg: this.coverImage
       }).then(res => {
         if (res.data.code == 200) {
-          Notify({type: "success", message: res.data.message});
+          this.$toast.success(res.data.message);
           this.popPostBackground = false;
           this.value = '';
           this.img_file = {};
@@ -303,13 +358,9 @@ export default {
           this.title = "";
           //调用帖子方法
           this.getPostList();
-          return;
+          return 0;
         }
-        this.$toast.fail(res.data.message);
-      }).catch(err => {
-        console.log(err);
-        Notify({type: "danger", message: err.response.data.message});
-      })
+      }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },
     // 绑定@imgAdd event
     //pos 编辑区内容，$file 文件
@@ -334,9 +385,7 @@ export default {
           this.$refs.md.$img2Url(pos, v);
           this.coverImage = v;
         })
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      })
+      }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },
     //MD里删除图片
     $imgDel(pos) {
@@ -344,31 +393,23 @@ export default {
     },
     //获取帖子列表
     async getPostList() {
-      await this.$http.get(Api.getPostList).then(res => {
-        console.log(res)
-        this.dataList = res.data.data;
-        this.code = res.data.code;
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      });
+      await this.$http.get(Api.getPostList)
+          .then(res => this.dataList = res.data.data)
+          .catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //在发表帖子的时候显示社区（版块）弹出层
     showBlock() {
       if (this.popPostBackground) {
         this.showBlockPop = true;
-        this.$http.get(Api.getBlockList).then(res => {
-          console.log("版块------>", res);
-          this.blockList = res.data.data;
-        }).catch(err => {
-          Notify({type: "danger", message: err.response.data.message});
-        })
+        this.$http.get(Api.getBlockList)
+            .then(res => this.blockList = res.data.data)
+            .catch(err => this.$toast.fail(utils.errMessage(err)))
       }
     },
     //在发表帖子的时候显示社区（版块）弹出层-关闭
     close() {
-      if (this.showBlockPop) {
+      if (this.showBlockPop)
         this.showBlockPop = false;
-      }
     },
     //点击宫格也能选中单选框
     label(bid, name) {
@@ -391,17 +432,14 @@ export default {
   display: inline-block;
 }
 
-.block {
-  display: block;
-}
-
-
 .swipe-text {
-  color: white;
-  bottom: 10px;
   position: absolute;
-  left: 30%;
+  width: 100%;
+  height: 40px;
   z-index: 10;
+  text-align: center;
+  bottom: 0;
+  color: white;
   font-size: 18px;
 }
 
@@ -441,8 +479,9 @@ export default {
       }
 
       .myComment {
-        display: inline-block;
         float: right;
+        display: flex;
+        flex-direction: row;
         margin-right: 5px;
         margin-top: 5px;
       }

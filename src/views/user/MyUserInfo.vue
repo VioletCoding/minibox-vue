@@ -5,7 +5,11 @@
       <!--用户头像-->
       <div class="user-left inline-block">
         <slot name="photo">
-          <van-image round fit="cover" width="80" height="80" :src="userInfo.userImg"
+          <van-image round
+                     fit="cover"
+                     width="80"
+                     height="80"
+                     :src="userInfo.userImg"
                      @click="show(userInfo.userImg)"/>
         </slot>
       </div>
@@ -48,6 +52,9 @@ export default {
     show(v) {
       ImagePreview({images: [v], showIndex: false});
     }
+  },
+  mounted() {
+    console.log(this.userInfo)
   }
 }
 </script>

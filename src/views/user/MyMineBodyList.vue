@@ -4,28 +4,7 @@
     <div>
       <van-tabs v-model="active" swipeable animated sticky lazy-render>
         <van-tab title="数据">
-          <MyUserInfo :userInfo="userInfo"></MyUserInfo>
-          <!--订阅信息 TODO 还没有实际功能-->
-<!--          <div>-->
-<!--            <van-grid :column-num="4" :border="false">-->
-<!--              <van-grid-item>-->
-<!--                <div>6</div>-->
-<!--                <div style="font-size: 10px">关注</div>-->
-<!--              </van-grid-item>-->
-<!--              <van-grid-item>-->
-<!--                <div>5</div>-->
-<!--                <div style="font-size: 10px">粉丝</div>-->
-<!--              </van-grid-item>-->
-<!--              <van-grid-item>-->
-<!--                <div>16</div>-->
-<!--                <div style="font-size: 10px">收藏</div>-->
-<!--              </van-grid-item>-->
-<!--              <van-grid-item>-->
-<!--                <div>9</div>-->
-<!--                <div style="font-size: 10px">最近浏览</div>-->
-<!--              </van-grid-item>-->
-<!--            </van-grid>-->
-<!--          </div>-->
+          <MyUserInfo :user-info="userInfo.mbUser"></MyUserInfo>
           <van-divider/>
           <!--订阅信息end-->
           <!--游戏统计信息-->
@@ -47,12 +26,14 @@
             <van-tab title="拥有游戏">
               <!--空状态-->
               <div v-if="userInfo.gameList.length == 0">
-                <van-empty description="你好像没有购买游戏哦" />
+                <van-empty description="你好像没有购买游戏哦"/>
               </div>
 
               <!--游戏列表-->
-              <div v-if="userInfo.gameList!=null && userInfo.gameList.length > 0" class="game-list"
-                   v-for="(item,index) in userInfo.gameList" :key="index">
+              <div v-if="userInfo.gameList!=undefined && userInfo.gameList.length > 0"
+                   class="game-list"
+                   v-for="(item,index) in userInfo.gameList"
+                   :key="index">
 
                 <div class="game-list-left inline-block">
                   <van-image width="120" height="70" fit="cover" :src="item.cover_img" radius="5px"/>
@@ -74,9 +55,9 @@
 
 
         <van-tab title="动态">
-          <MyUserInfo :userInfo="userInfo">
+          <MyUserInfo :userInfo="userInfo.mbUser">
             <template #photo>
-              <van-image round fit="cover" width="80" height="80" :src="userInfo.userImg"/>
+              <van-image round fit="cover" width="80" height="80" :src="userInfo.mbUser.userImg"/>
             </template>
           </MyUserInfo>
           <!--用户动态分类-->
@@ -93,7 +74,7 @@
         <!--用户动态分类end-->
 
         <van-tab title="设置">
-          <MySetting :userInfo="userInfo" @updateImg="updateImg"></MySetting>
+          <MySetting :userInfo="userInfo.mbUser" @updateImg="updateImg"></MySetting>
         </van-tab>
 
       </van-tabs>
@@ -145,11 +126,12 @@ export default {
           v.gameList.forEach(value => {
             gamePrice = gamePrice + value.price;
           })
-          v["gamePrice"] = gamePrice;
+          v.gamePrice = gamePrice;
         }
         this.userInfo = v;
         this.dataFlag = true;
       }).catch(err => {
+        console.log(err);
         Notify({type: "danger", message: "加载失败，请重试"});
       })
     },
