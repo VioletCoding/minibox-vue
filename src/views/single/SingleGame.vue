@@ -4,17 +4,12 @@
       <!--头部-->
       <MyHeader>
         <template #left>
-          <van-icon name="arrow-left" color="black" @click="back"/>
+          <van-icon name="arrow-left"
+                    color="black"
+                    @click="back"/>
         </template>
-
         <template #middle>
           <span style="font-weight: bold">{{ returnData.name }}</span>
-        </template>
-
-        <template #right>
-          <van-icon name="search" size="18" color="black" style="margin-right: 20px"/>
-          <van-icon name="envelop-o" size="18" color="black" style="margin-right: 20px"/>
-          <van-icon name="share-o" size="18" color="black"/>
         </template>
       </MyHeader>
       <!--头部end-->
@@ -22,9 +17,18 @@
 
     <!--轮播图-游戏图片展示区-->
     <div style="margin-top: 50px">
-      <van-swipe class="my-swipe" :autoplay="3000" indicator-color="white" style="background-color:#363A3F">
-        <van-swipe-item v-for="(item,index) in returnData.photoList" :key="index" v-if="index < 5">
-          <van-image lazy-render width="100%" height="200" fit="cover" :src="item.photoLink"/>
+      <van-swipe class="my-swipe"
+                 :autoplay="3000"
+                 indicator-color="white"
+                 style="background-color:#363A3F">
+        <van-swipe-item v-for="(item,index) in returnData.photoList"
+                        :key="index"
+                        v-if="index < 5">
+          <van-image lazy-render
+                     width="100%"
+                     height="200"
+                     fit="cover"
+                     :src="item.photoLink"/>
         </van-swipe-item>
       </van-swipe>
       <!--子展示区-->
@@ -36,7 +40,9 @@
         </template>
 
         <template #default>
-          <van-tag size="large" color="#474A4E">全区价格</van-tag>
+          <van-tag size="large"
+                   color="#474A4E">全区价格
+          </van-tag>
         </template>
       </van-cell>
       <!--子展示区end-->
@@ -52,7 +58,8 @@
           <!--游戏评分-->
           <span class="game-score">
             <span>
-              <van-tag color="#CF2CF6" size="large">评分：{{ returnData.score }}</van-tag>
+              <van-tag color="#CF2CF6"
+                       size="large">评分：{{ returnData.score }}</van-tag>
             </span>
           </span>
         </div>
@@ -64,8 +71,11 @@
       </div>
       <!--游戏标签-->
       <div>
-        <span v-for="(item,index) in returnData.tagList" :key="index" class="game-tag">
-          <van-tag color="#F3F4F5" text-color="black">{{ item.tagName }}</van-tag>
+        <span v-for="(item,index) in returnData.tagList"
+              :key="index"
+              class="game-tag">
+          <van-tag color="#F3F4F5"
+                   text-color="black">{{ item.tagName }}</van-tag>
         </span>
       </div>
       <!--分隔线-->
@@ -78,7 +88,6 @@
       <!--标头-->
       <div>
         <span class="desc-content">游戏简介</span>
-        <span class="desc-more">更多</span>
       </div>
       <!--简介内容-->
       <div class="desc">
@@ -100,10 +109,6 @@
             <span>发行商：</span>
             <span class="link-style">{{ returnData.publisher }}</span>
           </div>
-          <div class="inline-block">
-            <span>硬件配置：</span>
-            <span class="link-style">点击查看</span>
-          </div>
         </div>
       </div>
     </div>
@@ -115,17 +120,21 @@
       <!--标题-->
       <div class="game-rating-title">
         <div class="game-rating-title-left inline-block">游戏评分</div>
-        <div class="game-rating-title-right inline-block">评分规则</div>
       </div>
       <!--评分与点击评分-->
       <div class="game-rating-overall">
         <div class="game-rating-overall-left inline-block">
           <span class="span-text">{{ returnData.score }}</span>
         </div>
-        <div class="game-rating-overall-right inline-block" @click="toPublish">
-          <div class="inline-block"><span class="touch-score">轻点评分</span></div>
+        <div class="game-rating-overall-right inline-block"
+             @click="toPublish">
+          <div class="inline-block">
+            <span class="touch-score">轻点评分</span>
+          </div>
           <div>
-            <van-rate v-model="score" void-icon="star" void-color="#eee" size="30"/>
+            <van-rate v-model="score"
+                      void-icon="star"
+                      void-color="#eee" size="30"/>
           </div>
         </div>
       </div>
@@ -133,21 +142,25 @@
     <!--游戏评分end-->
     <!--分隔线-->
     <van-divider/>
-
-
     <!--评论列表-->
     <div class="comment-list">
       <!--标题-->
-      <div class="comment-list-title">
+      <div v-if="returnData.commentList.length > 0 " class="comment-list-title">
         <van-tabs>
           <van-tab title="最新">
-            <div class="comment-list-comment" v-for="(item,index) in returnData.commentList" :key="index">
+            <div class="comment-list-comment"
+                 v-for="(item,index) in returnData.commentList"
+                 :key="index">
               <!--评论区域-标题-包含用户信息-->
 
               <div class="comment-list-comment-title">
                 <!--评论区域-标题-用户头像-->
                 <div class="comment-list-comment-title-photo inline-block">
-                  <van-image round width="2.5rem" fit="cover" height="2.5rem" :src="item.mbUser.userImg"/>
+                  <van-image round
+                             width="2.5rem"
+                             fit="cover"
+                             height="2.5rem"
+                             :src="item.mbUser.userImg"/>
                 </div>
                 <!--评论区域-标题-用户昵称-->
                 <div class="comment-list-comment-title-info inline-block">
@@ -156,8 +169,12 @@
                   </div>
                   <!--用户的评分-->
                   <div class="comment-list-comment-title-info-score">
-                    <van-rate readonly allow-half size="10"
-                              color="#ffd21e" void-icon="star" void-color="#eee"
+                    <van-rate readonly
+                              allow-half
+                              size="10"
+                              color="#ffd21e"
+                              void-icon="star"
+                              void-color="#eee"
                               :value="item.score"/>
                   </div>
                 </div>
@@ -176,19 +193,27 @@
           </van-tab>
         </van-tabs>
       </div>
+      <div v-else>
+        <van-empty description="这个游戏还没有评论哦"/>
+      </div>
     </div>
 
     <div class="buy">
       <van-goods-action>
-        <van-goods-action-button type="warning" text="关注" @click="()=>{this.$toast.fail('功能正在开发中')}"/>
-        <van-goods-action-button type="danger" text="立即购买" @click="generateOrder"/>
+        <van-goods-action-button type="danger"
+                                 text="立即购买"
+                                 @click="generateOrder"/>
       </van-goods-action>
     </div>
 
     <!--评论列表end-->
     <!--弹出层-发表游戏评论-->
-    <van-popup v-model="popPostBackground" position="bottom" :style="{ height: '100%'}" safe-area-inset-bottom>
-      <MyGameCommentPublish @close="close" :v="toSon"/>
+    <van-popup v-model="popPostBackground"
+               position="bottom"
+               :style="{ height: '100%'}"
+               safe-area-inset-bottom>
+      <MyGameCommentPublish @close="close"
+                            :v="toSon"/>
     </van-popup>
 
   </div>
@@ -198,7 +223,7 @@
 import MyHeader from "@/views/header/MyHeader";
 import MyGameCommentPublish from "@/views/single/MyGameCommentPublish";
 import Api from "@/api/api";
-import { Notify } from "vant";
+import utils from "@/api/utils";
 
 export default {
   name: "SingleGame",
@@ -230,16 +255,10 @@ export default {
     },
     //显示游戏详情
     showGame() {
-      console.log("游戏id -> ", this.$route.query.id)
-      this.$http.get(Api.getGameDetail, {
-        params: {id: this.$route.query.id}
-      }).then(res => {
-        console.log("游戏详情 -> ", res);
-        this.returnData = res.data.data;
-        this.dataFlag = true;
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      })
+      this.$http.get(Api.getGameDetail, {params: {id: this.$route.query.id}})
+          .then(res => this.returnData = res.data.data)
+          .catch(err => utils.errMessage(err))
+          .finally(f => this.dataFlag = true)
     },
     //返回
     back() {
@@ -259,15 +278,11 @@ export default {
         orderCost: this.returnData.price,
         uid: localStorage.getItem("userId")
       }).then(resp => {
-        console.log("订单信息=>", resp);
-        if (resp.data.code == 200) {
+        if (resp.data.code == 200)
           this.$router.push({name: "MyGameOrder", params: resp.data.data});
-          return;
-        }
-        Notify({type: "warning", message: resp.data.message});
-      }).catch(err => {
-        Notify({type: "danger", message: err.response.data.message});
-      })
+        else
+          this.$toast.fail(resp.data.message);
+      }).catch(err => this.$toast.fail(utils.errMessage(err)));
     }
   },
   mounted() {

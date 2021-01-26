@@ -4,7 +4,9 @@
     <div>
       <MyHeader>
         <template #left>
-          <van-icon name="cross" color="black" size="30"/>
+          <van-icon name="cross"
+                    color="black"
+                    size="30"/>
         </template>
       </MyHeader>
     </div>
@@ -16,21 +18,37 @@
     <!--输入框-->
     <div class="input-field van-hairline--bottom">
       <van-form>
-        <van-field v-model="input" placeholder="输入邮箱" input-align="center"
-                   clearable :right-icon="icon" @blur="validate" :error-message="errMsg"
+        <van-field v-model="input"
+                   placeholder="输入邮箱"
+                   input-align="center"
+                   clearable
+                   :right-icon="icon"
+                   @blur="validate"
+                   :error-message="errMsg"
                    error-message-align="center"/>
       </van-form>
       <!--输入验证码弹出层-->
-      <van-popup v-model="showAuth" position="right" closeable :style="{ width: '100%',height:'100%' }">
+      <van-popup v-model="showAuth"
+                 position="right"
+                 closeable
+                 :style="{ width: '100%',height:'100%' }">
         <div style="margin-top: 150px">
 
-          <van-password-input :value="authCode" :mask="false" :focused="showKeyboard" @focus="showKeyboard = true"/>
+          <van-password-input :value="authCode"
+                              :mask="false"
+                              :focused="showKeyboard"
+                              @focus="showKeyboard = true"/>
 
           <div style="width: 105px;margin: 20px auto">
-            <van-button type="info" text="登录" block @click="login(authCode)"/>
+            <van-button type="info"
+                        text="登录"
+                        block
+                        @click="login(authCode)"/>
           </div>
 
-          <van-number-keyboard v-model="authCode" :show="showKeyboard" @blur="showKeyboard = false"
+          <van-number-keyboard v-model="authCode"
+                               :show="showKeyboard"
+                               @blur="showKeyboard = false"
                                safe-area-inset-bottom/>
         </div>
       </van-popup>
@@ -124,20 +142,19 @@ export default {
       this.$http.post(Api.loginOrReg, {
         username: this.input,
         authCode: authCode
-      }).then(resp => {
-        let code = resp.data.code;
-        let msg = resp.data.message;
-        if (code == 200) {
-          localStorage.setItem("accessToken", resp.data.data.token);
-          localStorage.setItem("userId", resp.data.data.id);
-          this.$router.push("/");
-        }
-      }).catch(err => {
-        this.$toast.fail(utils.errMessage(err));
-      }).finally(f => {
-        this.showAuth = false;
-        this.showKeyboard = false;
       })
+          .then(resp => {
+            let code = resp.data.code;
+            let msg = resp.data.message;
+            localStorage.setItem("accessToken", resp.data.data.token);
+            localStorage.setItem("userId", resp.data.data.id);
+            this.$router.push("/");
+          })
+          .catch(err => this.$toast.fail(utils.errMessage(err)))
+          .finally(f => {
+            this.showAuth = false;
+            this.showKeyboard = false;
+          })
     }
   }
 }

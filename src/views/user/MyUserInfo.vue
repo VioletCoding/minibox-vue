@@ -52,9 +52,6 @@ export default {
     show(v) {
       ImagePreview({images: [v], showIndex: false});
     }
-  },
-  mounted() {
-    console.log(this.userInfo)
   }
 }
 </script>

@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <div v-for="(item,index) in dataList" :key="index" class="news-post" @click="toPost(item.id)">
+    <div v-for="(item,index) in dataList"
+         :key="index"
+         class="news-post"
+         @click="toPost(item.id)">
       <div class="new-post-title">
         {{ item.title }}
       </div>
@@ -8,7 +11,10 @@
         {{ item.createDate }} - {{ item.mbBlock.name }}
       </div>
       <div>
-        <van-image :src="item.coverImg" width="150" height="100" fit="cover"/>
+        <van-image :src="item.coverImg"
+                   width="150"
+                   height="100"
+                   fit="cover"/>
       </div>
       <van-divider/>
     </div>
@@ -17,6 +23,7 @@
 
 <script>
 import Api from "@/api/api";
+import utils from "@/api/utils";
 
 export default {
   name: "UserNews",
@@ -33,12 +40,9 @@ export default {
         params: {
           uid: localStorage.getItem("userId")
         }
-      }).then(res => {
-        console.log("获取个人的帖子列表->",res);
-        this.dataList = res.data.data;
-      }).catch(err => {
-        this.$toast.fail('加载失败,请重试');
-      });
+      })
+          .then(res => this.dataList = res.data.data)
+          .catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //点击去帖子详情
     toPost(v) {

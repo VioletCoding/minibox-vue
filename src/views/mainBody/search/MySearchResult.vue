@@ -2,18 +2,27 @@
 <template>
   <div>
     <!--游戏结果-->
-    <div v-if="returnData.game.content.length > 0" class="game-result"
-         v-for="(item,gameIndex) in returnData.game.content" :key="gameIndex" @click="toGameDetail(item.id)">
+    <div v-if="returnData.game.content.length > 0"
+         class="game-result"
+         v-for="(item,gameIndex) in returnData.game.content"
+         :key="gameIndex"
+         @click="toGameDetail(item.id)">
       <p><strong>游戏</strong></p>
       <div>
         <div class="inline-block">
-          <van-image :src="item.coverImg" width="150" height="80" radius="5" fit="cover"/>
+          <van-image :src="item.coverImg"
+                     width="150"
+                     height="80"
+                     radius="5"
+                     fit="cover"/>
         </div>
 
         <div class="inline-block name-desc">
           <div>{{ item.name }}</div>
           <div>
-            <van-tag type="warning" radius="5">{{ item.price > 0 ? "￥" + item.price : "免费" }}</van-tag>
+            <van-tag type="warning"
+                     radius="5">{{ item.price > 0 ? "￥" + item.price : "免费" }}
+            </van-tag>
           </div>
         </div>
       </div>
@@ -25,15 +34,22 @@
     <!--分割线end-->
 
     <!-- 搜索提示 -->
-    <van-empty image="search" description="没有搜索结果"
+    <van-empty image="search"
+               description="没有搜索结果"
                v-if="returnData.post.content.length == 0 && returnData.game.content.length == 0"/>
     <!--帖子结果-->
-    <div v-if="returnData.post.length != 0" class="post-result"
-         v-for="(item,postIndex) in returnData.post.content" :key="postIndex + '^-^'"
-    @click="toPostDetail(item.id)">
+    <div v-if="returnData.post.length != 0"
+         class="post-result"
+         v-for="(item,postIndex) in returnData.post.content"
+         :key="postIndex + '^-^'"
+         @click="toPostDetail(item.id)">
       <p><strong>社区</strong></p>
       <div class="inline-block">
-        <van-image :src="item.mbUser.userImg" width="50" height="50" radius="5" fit="cover"/>
+        <van-image :src="item.mbUser.userImg"
+                   width="50"
+                   height="50"
+                   radius="5"
+                   fit="cover"/>
       </div>
       <div class="inline-block author-info">
         <div>
@@ -45,7 +61,8 @@
         <div class="small-text">{{ item.createDate }} {{ item.mbBlock.name }}</div>
       </div>
       <div class="inline-block comment-count">
-        <van-icon name="comment-o" color="#C9CDD1">
+        <van-icon name="comment-o"
+                  color="#C9CDD1">
           <span class="comment-number">{{ item.commentList.length }}</span>
         </van-icon>
       </div>
@@ -56,7 +73,11 @@
         <!--帖子正文 最多显示3行-->
         <p class="van-multi-ellipsis--l3">{{ item.content }}</p>
         <div>
-          <van-image :src="item.coverImg" width="80%" height="150" radius="5" fit="cover"/>
+          <van-image :src="item.coverImg"
+                     width="80%"
+                     height="150"
+                     radius="5"
+                     fit="cover"/>
         </div>
       </div>
 
@@ -72,25 +93,19 @@ import Api from "@/api/api";
 
 export default {
   name: "MySearchResult",
-  data() {
-    return {}
-  },
-  methods:{
+  methods: {
     //去游戏详情
-    toGameDetail(gameId){
-      this.$router.push({path:"/gameDetail", query:{id:gameId}});
+    toGameDetail(gameId) {
+      this.$router.push({path: "/gameDetail", query: {id: gameId}});
     },
     //去帖子详情
-    toPostDetail(postId){
-      this.$router.push({path:"/postDetail",query:{id:postId}})
+    toPostDetail(postId) {
+      this.$router.push({path: "/postDetail", query: {id: postId}})
     }
   },
   props: {
     returnData: {
-      type: Object,
-      default() {
-        return []
-      }
+      type: Object
     }
   }
 }

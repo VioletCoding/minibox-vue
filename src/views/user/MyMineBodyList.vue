@@ -2,7 +2,11 @@
   <div v-if="dataFlag">
     <!--头部-->
     <div>
-      <van-tabs v-model="active" swipeable animated sticky lazy-render>
+      <van-tabs v-model="active"
+                swipeable
+                animated
+                sticky
+                lazy-render>
         <van-tab title="数据">
           <MyUserInfo :user-info="userInfo.mbUser"></MyUserInfo>
           <van-divider/>
@@ -22,7 +26,9 @@
           </div>
           <!--游戏统计信息end-->
           <van-divider/>
-          <van-tabs animated swipeable lazy-render>
+          <van-tabs animated
+                    swipeable
+                    lazy-render>
             <van-tab title="拥有游戏">
               <!--空状态-->
               <div v-if="userInfo.gameList.length == 0">
@@ -30,13 +36,17 @@
               </div>
 
               <!--游戏列表-->
-              <div v-if="userInfo.gameList!=undefined && userInfo.gameList.length > 0"
+              <div v-if="userInfo.gameList.length > 0"
                    class="game-list"
                    v-for="(item,index) in userInfo.gameList"
                    :key="index">
 
                 <div class="game-list-left inline-block">
-                  <van-image width="120" height="70" fit="cover" :src="item.cover_img" radius="5px"/>
+                  <van-image width="120"
+                             height="70"
+                             fit="cover"
+                             :src="item.cover_img"
+                             radius="5px"/>
                 </div>
                 <div class="game-list-right inline-block">
                   <div class="game-list-right-game-name">
@@ -49,7 +59,6 @@
               </div>
               <!--游戏列表end-->
             </van-tab>
-            <van-tab title="关注游戏"/>
           </van-tabs>
         </van-tab>
 
@@ -57,11 +66,17 @@
         <van-tab title="动态">
           <MyUserInfo :userInfo="userInfo.mbUser">
             <template #photo>
-              <van-image round fit="cover" width="80" height="80" :src="userInfo.mbUser.userImg"/>
+              <van-image round
+                         fit="cover"
+                         width="80"
+                         height="80"
+                         :src="userInfo.mbUser.userImg"/>
             </template>
           </MyUserInfo>
           <!--用户动态分类-->
-          <van-tabs type="card" animated lazy-render>
+          <van-tabs type="card"
+                    animated
+                    lazy-render>
             <van-tab title="发帖">
               <UserNews></UserNews>
             </van-tab>
@@ -74,7 +89,8 @@
         <!--用户动态分类end-->
 
         <van-tab title="设置">
-          <MySetting :userInfo="userInfo.mbUser" @updateImg="updateImg"></MySetting>
+          <MySetting :userInfo="userInfo.mbUser"
+                     @updateImg="updateImg"></MySetting>
         </van-tab>
 
       </van-tabs>
@@ -89,7 +105,7 @@ import UserNews from "@/views/user/UserNewsPost";
 import MyNewsComment from "@/views/user/MyNewsComment";
 import MySetting from "@/views/user/MySetting";
 import MyUserInfo from "@/views/user/MyUserInfo";
-import { Notify } from "vant";
+import utils from "@/api/utils";
 
 export default {
   name: "MyMineBodyList",
@@ -114,11 +130,8 @@ export default {
     //显示用户信息
     async showUserInfo() {
       await this.$http.get(Api.showUserInfo, {
-        params: {
-          id: localStorage.getItem("userId")
-        }
+        params: {id: localStorage.getItem("userId")}
       }).then(resp => {
-        console.log("个人详情->", resp);
         let v = resp.data.data;
         let gamePrice = 0;
         //计算游戏总价格，并加到对象里
@@ -130,10 +143,7 @@ export default {
         }
         this.userInfo = v;
         this.dataFlag = true;
-      }).catch(err => {
-        console.log(err);
-        Notify({type: "danger", message: "加载失败，请重试"});
-      })
+      }).catch(err => utils.errMessage(err));
     },
     //更换头像以后，把其他引用了MyUserInfo组件的图片也更新
     updateImg(v) {

@@ -1,14 +1,22 @@
 <template>
-  <div class="container" v-if="dataFlag">
-    <div v-for="(item,index) in dataList" :key="index" @click="toPost(item.id)">
-      <div class="com-and-date" v-for="(com,cIndex) in item.commentList" :key="cIndex">
+  <div class="container"
+       v-if="dataFlag">
+    <div v-for="(item,index) in dataList"
+         :key="index"
+         @click="toPost(item.id)">
+      <div class="com-and-date"
+           v-for="(com,cIndex) in item.commentList"
+           :key="cIndex">
         <div>{{ com.content }}</div>
         <div>{{ com.createDate }}</div>
       </div>
 
       <div>
         <div class="inline-block pic">
-          <van-image :src="item.coverImg" fit="cover" width="50" height="50"/>
+          <van-image :src="item.coverImg"
+                     fit="cover"
+                     width="50"
+                     height="50"/>
         </div>
 
         <div class="inline-block nickname-and-title van-ellipsis">
@@ -27,7 +35,7 @@
 
 <script>
 import Api from "@/api/api";
-import { Notify } from "vant";
+import utils from "@/api/utils";
 
 export default {
   name: "MyNewsComment",
@@ -45,12 +53,9 @@ export default {
           uid: localStorage.getItem("userId")
         }
       }).then(resp => {
-        console.log("「个人信息」->「个人评论」->", resp);
         this.dataList = resp.data.data;
         this.dataFlag = true;
-      }).catch(err => {
-        Notify({type: "danger", message: "加载失败，请重试"});
-      })
+      }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },
     toPost(v) {
       this.$router.push({path: "/postDetail", query: {id: v}})

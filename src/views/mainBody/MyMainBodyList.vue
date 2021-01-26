@@ -156,8 +156,7 @@
                           :autofocus="markDownConfig.autofocus"
                           ref=md
                           @imgAdd="$imgAdd"
-                          @imgDel="$imgDel"
-                          style="height: 100%;width: 100%"/>
+                          @imgDel="$imgDel"/>
           </van-cell>
         </van-cell-group>
       </van-popup>
@@ -206,7 +205,10 @@
         </van-grid>
 
         <div style="width: 70px;height: 50px;margin: 20px auto">
-          <van-button type="info" radius="20" @click="showBlockPop = false">完成</van-button>
+          <van-button type="info"
+                      radius="20"
+                      @click="showBlockPop = false">完成
+          </van-button>
         </div>
       </van-popup>
       <!--展示版块（社区）的弹出层 end-->
@@ -216,7 +218,6 @@
 </template>
 
 <script>
-import SinglePost from "../single/SinglePost";
 import MyHeader from "@/views/header/MyHeader";
 import Api from "@/api/api";
 import utils from "@/api/utils";
@@ -224,7 +225,7 @@ import MySearch from "@/views/mainBody/search/MySearch";
 
 export default {
   name: "MyMainBodyList",
-  components: {MySearch, SinglePost, MyHeader},
+  components: {MySearch, MyHeader},
   data() {
     return {
       //MarkDown
@@ -358,7 +359,8 @@ export default {
           this.title = "";
           //调用帖子方法
           this.getPostList();
-          return 0;
+        } else {
+          this.$toast.fail(res.data.message);
         }
       }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },

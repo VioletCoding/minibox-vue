@@ -3,12 +3,12 @@
   <div class="myContainer" v-if="dataFlag">
     <!--顶部-->
     <div class="top">
-      <van-nav-bar safe-area-inset-top fixed>
+      <van-nav-bar safe-area-inset-top
+                   fixed>
         <template #left>
-          <van-icon name="arrow-left" color="black" @click="back"/>
-        </template>
-        <template #right>
-          <van-icon name="ellipsis" color="black"/>
+          <van-icon name="arrow-left"
+                    color="black"
+                    @click="back"/>
         </template>
         <template #title>
           <span>正文</span>
@@ -17,23 +17,31 @@
     </div>
     <!--顶部end-->
     <div class="headPhoto">
-      <van-image :src="returnValue.coverImg" fit="cover" height="200" width="100%"/>
+      <van-image :src="returnValue.coverImg"
+                 fit="cover"
+                 height="200"
+                 width="100%"/>
     </div>
 
     <!-- 标题 最多显示三行 -->
     <div class="title van-multi-ellipsis--l3">
-      <van-cell :value="returnValue.title" style="font-size: 22px" size="large"/>
+      <van-cell :value="returnValue.title"
+                style="font-size: 22px" size="large"/>
     </div>
     <!--作者信息-->
     <div style="padding: 20px">
 
       <div style="float: left;width: 30%">
-        <van-image round width="50" height="50" fit="cover" :src="returnValue.mbUser.userImg"/>
+        <van-image round
+                   width="50"
+                   height="50"
+                   fit="cover"
+                   :src="returnValue.mbUser.userImg"/>
       </div>
 
       <div style="float: right;width: 70%;margin:20px 0 5px 0">
         <span>{{ returnValue.mbUser.nickname }}</span>
-        <span style="margin-left: 10px;">
+        <span style="margin: 0 0 0 10px">
           <van-tag color="#7232dd">{{ 'Lv ' + returnValue.mbUser.level }}</van-tag>
         </span>
       </div>
@@ -74,7 +82,8 @@
                     :loading="loading">
         <van-card
             :price="item.content" :desc="item.createDate"
-            :title="item.mbUser.nickname" :tag="'LV '+item.mbUser.level"
+            :title="item.mbUser.nickname"
+            :tag="'LV '+item.mbUser.level"
             :thumb="item.mbUser.userImg"
             centered
             currency=""
@@ -242,10 +251,13 @@ export default {
         content: this.commentValue,
         type: 'TC'
       }).then(res => {
-        if (res.data.code == 200)
+        if (res.data.code == 200) {
           this.$toast.success(res.data.message);
-        this.commentValue = '';
-        this.onLoad();
+          this.commentValue = '';
+          this.onLoad();
+        } else {
+          this.$toast.fail(res.data.message);
+        }
       }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //回复弹出框
@@ -273,6 +285,8 @@ export default {
             this.replyMessage = "";
             this.$toast.success(resp.data.message);
             this.onLoad();
+          } else {
+            this.$toast.fail(resp.data.message);
           }
         }).catch(err => utils.errMessage(err));
       }

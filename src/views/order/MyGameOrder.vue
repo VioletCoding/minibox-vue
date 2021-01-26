@@ -2,22 +2,29 @@
   <div v-if="dataFlag">
 
     <div class="nav">
-      <van-nav-bar title="订单详情" right-text="取消订单" left-arrow safe-area-inset-top
-                   @click-left="()=>{this.$router.go(-1)}" @click-right="cancelOrder"></van-nav-bar>
+      <van-nav-bar title="订单详情"
+                   right-text="取消订单"
+                   left-arrow
+                   safe-area-inset-top
+                   @click-left="()=>{this.$router.go(-1)}"
+                   @click-right="cancelOrder"/>
     </div>
 
     <div class="text">
       <p>订单已生成，请在5分钟内支付</p>
-      <p>订单详情可在 我的-M币商城-我的订单 中查看</p>
+      <p>超过5分钟订单会被自动取消</p>
     </div>
 
     <van-cell-group>
-      <van-cell :title="'订单号：'+returnData.orderId" :value="returnData.createDate"></van-cell>
+      <van-cell :title="'订单号：'+returnData.orderId"
+                :value="returnData.createDate"/>
 
       <div class="game-info">
-
         <div class="inline-block">
-          <img :src="returnData.mbGame.coverImg" :alt="returnData.mbGame.coverImg" width="170" height="80"/>
+          <img :src="returnData.mbGame.coverImg"
+               :alt="returnData.mbGame.coverImg"
+               width="170"
+               height="80"/>
         </div>
 
         <div class="inline-block">
@@ -25,33 +32,37 @@
         </div>
       </div>
 
-      <van-cell title="价格" :value="returnData.mbGame.price + '元'"></van-cell>
+      <van-cell title="价格"
+                :value="returnData.mbGame.price + '元'"/>
 
     </van-cell-group>
 
-    <van-submit-bar :price="returnData.mbGame.price * 100" button-text="提交订单" text-align="left"
-                    safe-area-inset-bottom button-color="black" @submit="confirmOrder"></van-submit-bar>
+    <van-submit-bar :price="returnData.mbGame.price * 100"
+                    button-text="提交订单"
+                    text-align="left"
+                    safe-area-inset-bottom
+                    button-color="black"
+                    @submit="confirmOrder"/>
 
   </div>
 </template>
 
 <script>
 import Api from "@/api/api";
-import { Dialog, Notify } from "vant";
+import { Dialog } from "vant";
+import utils from "@/api/utils";
 
 export default {
   name: "MyGameOrder",
   data() {
     return {
-      returnData: {},
+      returnData: this.$route.params,
       dataFlag: false
     }
   },
   methods: {
     onLoad() {
-      this.returnData = this.$route.params;
       this.dataFlag = true;
-      console.log("/order路由=>", this.returnData);
     },
     //提交订单
     confirmOrder() {
@@ -60,9 +71,8 @@ export default {
         orderCost: this.returnData.mbGame.price,
         uid: localStorage.getItem("userId"),
         orderId: this.returnData.orderId,
-        id:this.returnData.id
+        id: this.returnData.id
       }).then(resp => {
-        console.log("提交订单=>", resp);
         if (resp.data.code == 200) {
           this.$toast({message: "感谢您的购买", icon: "success"});
           this.$router.go(-1);
@@ -80,17 +90,9 @@ export default {
           orderCost: this.returnData.mbGame.price,
           uid: localStorage.getItem("userId"),
           orderId: this.returnData.orderId
-        }).then(resp => {
-          console.log("取消订单=>", resp);
-          if (resp.data.code == 200) {
-            this.$router.go(-1);
-          }
-        }).catch(err => {
-          Notify({type: "danger", message: err.response.data.message});
-        })
-      }).catch(() => {
-        return;
-      })
+        }).then(resp => this.$router.go(-1)
+        ).catch(err => utils.errMessage(err));
+      }).catch(cancel => cancel)
     }
   },
   mounted() {
