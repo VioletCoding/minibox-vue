@@ -146,3 +146,11 @@ Axios.interceptors.response.use(
         return Promise.reject(error);
     }
 )
+//前置守卫
+router.beforeEach((to, from, next) => {
+    if (to.name != "Login" && !utils.isLoginUserTokenExist()) {
+        next({name: "Login"})
+    } else {
+        next();
+    }
+})

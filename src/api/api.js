@@ -1,7 +1,9 @@
 //登陆前校验接口
-const auth = "user/before";
+const auth = "authApi/authCode";
 //登陆注册复合接口
-const loginOrReg = "user/after";
+const loginOrReg = "authApi/auth";
+
+
 //查询「我」的个人信息查询接口
 const showUserInfo = "user/show"
 //更新用户个人信息
@@ -16,7 +18,7 @@ const logout = "user/logout";
 const doUpdatePassword = "user/modify";
 //--------------------------------------
 //获取帖子列表
-const getPostList = "post/all";
+const getPostList = "postApi/list";
 //获取帖子详情
 const getPostDetail = "post/detail";
 //帖子图片上传

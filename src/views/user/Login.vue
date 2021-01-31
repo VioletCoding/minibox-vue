@@ -125,7 +125,9 @@ export default {
     //验证
     auth() {
       this.showAuth = true;
-      this.$http.post(Api.auth, {username: this.input})
+      let formData = new FormData();
+      formData.append("username", this.input);
+      this.$http.post(Api.auth, formData)
           .then(res => this.disabled = true)
           .catch(err => this.$toast.fail(utils.errMessage(err)));
     },
@@ -139,10 +141,10 @@ export default {
         this.$toast.fail("请输入邮箱");
         return 0;
       }
-      this.$http.post(Api.loginOrReg, {
-        username: this.input,
-        authCode: authCode
-      })
+      let formData = new FormData();
+      formData.append("username", this.input);
+      formData.append("authCode", authCode);
+      this.$http.post(Api.loginOrReg, formData)
           .then(resp => {
             let code = resp.data.code;
             let msg = resp.data.message;

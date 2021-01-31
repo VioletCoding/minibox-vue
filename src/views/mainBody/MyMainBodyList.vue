@@ -47,7 +47,7 @@
                            width="100%"
                            height="200"
                            fit="cover"
-                           :src="item.coverImg"
+                           :src="item.photoLink"
                            @click="toDetail(item.id)"/>
               </div>
             </van-swipe-item>
@@ -65,37 +65,28 @@
                v-for="(item,index) in dataList"
                :key="index">
             <!--路由跳转方法，点击帖子跳转到帖子详情-->
-            <div @click="toDetail(item.id)">
-              <div class="mySingleGrid van-hairline--bottom">
-                <div class="leftContain">
-                  <!-- 帖子标题 最多显示两行 -->
-                  <div class="myTitle van-multi-ellipsis--l2">
-                    {{ item.title }}
-                  </div>
-                  <!-- 帖子发表时间 最多显示一行 -->
-                  <div class="myTime van-ellipsis">
-                    {{ item.createDate }}
-                  </div>
-                  <!--版块名称 最多显示一行-->
-                  <div class="myBlock van-ellipsis">
-                    {{ item.mbBlock.name }}
-                  </div>
-                  <!--评论数-->
-                  <div class="myComment">
-                    <van-icon name="chat-o"
-                              color="#808080"/>
-                    <span style="font-size: 8px;margin:3px 0 0 3px;color: #808080">
-                      {{ item.countComment == null ? 0 : item.countComment }}
-                    </span>
-                  </div>
+            <div @click="toDetail(item.id)"
+                 class="main-container">
+              <div class="left-text">
+                <!-- 帖子标题 最多显示两行 -->
+                <div>
+                  {{ item.title }}
                 </div>
-                <!--帖子封面图-->
-                <div class="rightContain">
-                  <van-image width="100%"
-                             height="100%"
-                             fit="cover"
-                             :src="item.coverImg"/>
+                <!-- 帖子发表时间 最多显示一行 -->
+                <div>
+                  {{ item.createDate }}
                 </div>
+                <!--版块名称 最多显示一行-->
+                <div>
+                  {{ item.blockName }}
+                </div>
+              </div>
+              <!--帖子封面图-->
+              <div class="right-image">
+                <van-image fit="cover"
+                           radius="5"
+                           height="100"
+                           :src="item.photoLink"/>
               </div>
             </div>
           </div>
@@ -395,8 +386,11 @@ export default {
     },
     //获取帖子列表
     async getPostList() {
-      await this.$http.get(Api.getPostList)
-          .then(res => this.dataList = res.data.data)
+      await this.$http.post(Api.getPostList)
+          .then(res => {
+            console.log("帖子列表回调=>", res);
+            this.dataList = res.data.data;
+          })
           .catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //在发表帖子的时候显示社区（版块）弹出层
@@ -430,9 +424,6 @@ export default {
 </script>
 
 <style scoped lang="less">
-.inline-block {
-  display: inline-block;
-}
 
 .swipe-text {
   position: absolute;
@@ -445,57 +436,20 @@ export default {
   font-size: 18px;
 }
 
-.myContainer {
-  margin-top: 5px;
-  width: 100%;
-  height: 100%;
-  display: inline-block;
+.main-container {
+  display: flex;
+  flex-direction: row;
+  background-color: #D52DF6;
+  padding: 10px;
 
-  .mySingleGrid {
-    width: 100%;
-    height: 70px;
-    padding: 2%;
-    cursor: pointer;
+  .left-text {
+    width: 60%;
+  }
 
-    .leftContain {
-      width: 65%;
-      display: inline-block;
-
-      .myTitle {
-        width: 100%;
-        text-decoration: none;
-      }
-
-      .myTime {
-        margin-top: 10px;
-        margin-right: 5px;
-        display: inline-block;
-        font-size: 10px;
-        color: #D4D7DB;
-      }
-
-      .myBlock {
-        display: inline-block;
-        font-size: 10px;
-        color: #D4D7DB;
-      }
-
-      .myComment {
-        float: right;
-        display: flex;
-        flex-direction: row;
-        margin-right: 5px;
-        margin-top: 5px;
-      }
-    }
-
-    .rightContain {
-      width: 33%;
-      height: 70px;
-      float: right;
-      display: inline-block;
-      z-index: 10;
-    }
+  .right-image {
+    width: 40%;
   }
 }
+
+
 </style>
