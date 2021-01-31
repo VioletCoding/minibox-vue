@@ -22,9 +22,9 @@ const getPostList = "postApi/list";
 //获取帖子详情
 const getPostDetail = "post/detail";
 //帖子图片上传
-const uploadImg = "post/upload";
+const uploadImg = "publicApi/upload";
 //发布帖子
-const publishPost = "post/publish";
+const publishPost = "postApi/add";
 //查询「我」的评论列表-包括帖子部分信息
 const showUserComment = "post/userCommentShow";
 //-----------------------------------------
@@ -40,7 +40,7 @@ const getGameDetail = "game/detail"
 
 //------------------------------------------
 //版块
-const getBlockList = "block/all";
+const getBlockList = "blockApi/list";
 
 //------------------------------------------
 //更新用户头像

@@ -69,23 +69,26 @@
                  class="main-container">
               <div class="left-text">
                 <!-- 帖子标题 最多显示两行 -->
-                <div>
+                <div class="van-multi-ellipsis--l2"
+                     style="font-size: 15px;font-weight: bold;margin-bottom: 12px">
                   {{ item.title }}
                 </div>
                 <!-- 帖子发表时间 最多显示一行 -->
-                <div>
+                <span class="van-ellipsis"
+                      style="font-size: 12px;color: #969799">
                   {{ item.createDate }}
-                </div>
+                </span>
                 <!--版块名称 最多显示一行-->
-                <div>
+                <span class="van-ellipsis"
+                      style="font-size: 12px;color: #969799">
                   {{ item.blockName }}
-                </div>
+                </span>
               </div>
               <!--帖子封面图-->
               <div class="right-image">
                 <van-image fit="cover"
-                           radius="5"
-                           height="100"
+                           radius="2"
+                           height="70"
                            :src="item.photoLink"/>
               </div>
             </div>
@@ -103,7 +106,7 @@
                  safe-area-inset-bottom>
         <!--导航栏-->
         <van-nav-bar
-            title="帖子"
+            title="发布帖子"
             left-text="返回"
             right-text="发送"
             @click-left="onClickLeft"
@@ -161,45 +164,25 @@
         <van-nav-bar title="请选择社区"
                      left-arrow
                      @click-left="close"/>
-        <!--搜索框-->
-        <van-search v-model="blockSearch"
-                    placeholder="输入搜索内容"/>
-        <van-cell title="推荐"
-                  style="margin-bottom: 10px;font-weight: bold"/>
         <!--版块信息-->
-        <van-grid :column-num="2"
-                  direction="horizontal"
-                  clickable>
-          <van-grid-item v-for="(item,index) in blockList"
-                         :key="index"
-                         @click="label(item.id,item.name)">
-            <div style="width: 160px">
-              <div class="inline-block"
-                   style="height: 100%;width: 30px">
-                <van-image width="30"
-                           height="30"
-                           :src="item.mbGame != null ? item.mbGame.coverImg:'https://img.yzcdn.cn/vant/cat.jpeg' "/>
-              </div>
-
-              <div class="inline-block van-ellipsis"
-                   style="font-size: 12px;vertical-align: top;padding-top: 10px;margin-left: 10px">
-                {{ item.name }}
-              </div>
-              <div class="inline-block"
-                   style="float: right;margin-top: 10px">
-                <van-radio-group v-model="radio">
-                  <van-radio :name="item.id"/>
-                </van-radio-group>
-              </div>
-            </div>
-          </van-grid-item>
-        </van-grid>
-
-        <div style="width: 70px;height: 50px;margin: 20px auto">
-          <van-button type="info"
-                      radius="20"
-                      @click="showBlockPop = false">完成
-          </van-button>
+        <div style="display: flex;flex-direction: row;padding: 10px;height: 60px"
+             v-for="(item,index) in blockList" :key="index"
+             @click="label(item.id,item.name)">
+          <div style="width: 40%">
+            <van-image width="100"
+                       height="60"
+                       fit="cover"
+                       radius="5"
+                       :src="item.photoLink"/>
+          </div>
+          <div style="width: 40%;line-height: 60px;font-size: 14px;font-weight: bold">
+            {{ item.name }}
+          </div>
+          <div style="margin-top: 20px">
+            <van-radio-group v-model="radio">
+              <van-radio :name="item.id"/>
+            </van-radio-group>
+          </div>
         </div>
       </van-popup>
       <!--展示版块（社区）的弹出层 end-->
@@ -328,17 +311,14 @@ export default {
         this.$toast.fail("请选择社区");
         return 0;
       }
+      //TODO 传参修正
       this.$http.post(Api.publishPost, {
-        //用户ID
-        uid: localStorage.getItem("userId"),
-        //版块ID
-        bid: this.radio,
-        //帖子标题
+        authorId: localStorage.getItem("userId"),
+        blockId: this.radio,
+        blockName: this.blockName,
         title: this.popTitle,
-        //帖子正文内容，是MD格式，图片的链接也包含在里面了，故上传图片接口无需再传tid字段
         content: this.value,
-        //封面图链接，由后端返回用于回显，但是要再次传给后台的另一个接口用于插入数据
-        coverImg: this.coverImage
+        photoLink: this.coverImage
       }).then(res => {
         if (res.data.code == 200) {
           this.$toast.success(res.data.message);
@@ -363,7 +343,7 @@ export default {
       //new 一个formdata用来存储文件
       var multipartFiles = new FormData();
       //把文件加入到formdata里
-      multipartFiles.append('multipartFiles', $file);
+      multipartFiles.append('multipartFile', $file);
       //发送请求，注意headers
       this.$http({
         url: Api.uploadImg,
@@ -371,6 +351,7 @@ export default {
         data: multipartFiles,
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(res => {
+        console.log("图片上传回调=>", res);
         let link = [];
         link = res.data.data.images;
         link.forEach(v => {
@@ -397,8 +378,11 @@ export default {
     showBlock() {
       if (this.popPostBackground) {
         this.showBlockPop = true;
-        this.$http.get(Api.getBlockList)
-            .then(res => this.blockList = res.data.data)
+        this.$http.post(Api.getBlockList)
+            .then(res => {
+              console.log("版块回调=>", res);
+              this.blockList = res.data.data;
+            })
             .catch(err => this.$toast.fail(utils.errMessage(err)))
       }
     },
@@ -408,8 +392,8 @@ export default {
         this.showBlockPop = false;
     },
     //点击宫格也能选中单选框
-    label(bid, name) {
-      this.radio = bid;
+    label(id, name) {
+      this.radio = id;
       this.blockName = name;
     },
     //搜索框监听事件
@@ -431,15 +415,14 @@ export default {
   height: 40px;
   z-index: 10;
   text-align: center;
+  font-size: 14px;
   bottom: 0;
   color: white;
-  font-size: 18px;
 }
 
 .main-container {
   display: flex;
   flex-direction: row;
-  background-color: #D52DF6;
   padding: 10px;
 
   .left-text {

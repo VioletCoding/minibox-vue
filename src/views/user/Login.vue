@@ -146,10 +146,11 @@ export default {
       formData.append("authCode", authCode);
       this.$http.post(Api.loginOrReg, formData)
           .then(resp => {
+            console.log("登陆回调=>",resp);
             let code = resp.data.code;
             let msg = resp.data.message;
             localStorage.setItem("accessToken", resp.data.data.token);
-            localStorage.setItem("userId", resp.data.data.id);
+            localStorage.setItem("userId", resp.data.data.userInfo.id);
             this.$router.push("/");
           })
           .catch(err => this.$toast.fail(utils.errMessage(err)))
