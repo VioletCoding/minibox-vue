@@ -20,7 +20,7 @@ const doUpdatePassword = "user/modify";
 //获取帖子列表
 const getPostList = "postApi/list";
 //获取帖子详情
-const getPostDetail = "post/detail";
+const getPostDetail = "postApi/detail";
 //帖子图片上传
 const uploadImg = "publicApi/upload";
 //发布帖子

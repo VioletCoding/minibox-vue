@@ -1,8 +1,8 @@
 <template>
 
-  <div class="myContainer" v-if="dataFlag">
+  <div v-if="dataFlag">
     <!--顶部-->
-    <div class="top">
+    <div>
       <van-nav-bar safe-area-inset-top
                    fixed>
         <template #left>
@@ -11,152 +11,146 @@
                     @click="back"/>
         </template>
         <template #title>
-          <span>正文</span>
+          <p class="nav-title">正文</p>
         </template>
       </van-nav-bar>
     </div>
     <!--顶部end-->
-    <div class="headPhoto">
-      <van-image :src="returnValue.coverImg"
-                 fit="cover"
-                 height="200"
-                 width="100%"/>
+    <div class="top-image">
+      <van-image :src="returnValue.photoLink"
+                 fit="cover"/>
     </div>
 
     <!-- 标题 最多显示三行 -->
-    <div class="title van-multi-ellipsis--l3">
-      <van-cell :value="returnValue.title"
-                style="font-size: 22px" size="large"/>
-    </div>
-    <!--作者信息-->
-    <div style="padding: 20px">
-
-      <div style="float: left;width: 30%">
-        <van-image round
-                   width="50"
-                   height="50"
-                   fit="cover"
-                   :src="returnValue.mbUser.userImg"/>
+    <div class="container">
+      <div class="van-multi-ellipsis--l3 post-title">
+        <p>{{ returnValue.title }}</p>
       </div>
-
-      <div style="float: right;width: 70%;margin:20px 0 5px 0">
-        <span>{{ returnValue.mbUser.nickname }}</span>
-        <span style="margin: 0 0 0 10px">
-          <van-tag color="#7232dd">{{ 'Lv ' + returnValue.mbUser.level }}</van-tag>
-        </span>
-      </div>
-
-      <p style="font-size: 10px;color: #808080">
-        {{ returnValue.createDate }}
-      </p>
-    </div>
-    <!--正文 MarkDown渲染，包括图片的链接，必须符合MarkDown的语法才能被正确渲染-->
-    <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
-                  :scrollStyle="markDownConfig.scrollStyle"
-                  :subfield="markDownConfig.subfield"
-                  :placeholder="markDownConfig.placeholder"
-                  :value="value"
-                  :editable="markDownConfig.editable"
-                  :boxShadow="markDownConfig.boxShadow"
-                  :ishljs="markDownConfig.ishljs"
-                  :shortCut="markDownConfig.shortCut"
-                  :defaultOpen="markDownConfig.defaultOpen" style="z-index: -1"/>
-
-    <div style="font-size: 14px;padding: 10px;font-weight: bold">
-      <div v-if="returnValue.commentList.length > 0">
-        <p style="text-align: center">全部评论</p>
-        <van-divider/>
-      </div>
-      <span v-else>
-        <van-empty description="这里还没有评论呢"/>
-      </span>
-    </div>
-    <!--评论-->
-    <div v-if="returnValue.commentList.length > 0"
-         class="commentArea"
-         v-for="(item,index) in returnValue.commentList">
-
-      <van-skeleton title
-                    avatar
-                    :row="3"
-                    :loading="loading">
-        <van-card
-            :price="item.content" :desc="item.createDate"
-            :title="item.mbUser.nickname"
-            :tag="'LV '+item.mbUser.level"
-            :thumb="item.mbUser.userImg"
-            centered
-            currency=""
-            @click="reply(item.mbUser.nickname,item.mbUser.id,item.id)">
-        </van-card>
-        <!--回复-->
-        <div class="replyArea">
-          <van-collapse v-model="activeName">
-            <van-collapse-item v-if="item.replyList.length > 0"
-                               title="查看回复"
-                               :name="index">
-              <div v-for="(reply1,replyIndex) in item.replyList"
-                   :key="replyIndex"
-                   @click="reply(reply1.mbUser.nickname,reply1.mbUser.id,item.id)">
-                <div>
-                  <span style="color: deepskyblue">{{ reply1.mbUser.nickname }}</span>
-                  <strong>&nbsp;回复&nbsp;</strong>
-                  {{ item.mbUser.nickname }}
-                  <strong>&nbsp;</strong>
-                  <span style="color: black">{{ reply1.replyContent }}</span>
-                  <div>
-                    <small>&nbsp;{{ reply1.replyDate }}</small>
-                  </div>
-                </div>
-                <van-divider/>
-              </div>
-
-            </van-collapse-item>
-          </van-collapse>
+      <!--作者信息-->
+      <div class="author-info">
+        <div>
+          <van-image round
+                     width="40"
+                     height="40"
+                     fit="cover"
+                     :src="returnValue.authorPhotoLink"/>
         </div>
-        <!--回复 end-->
-      </van-skeleton>
-    </div>
-    <!--评论end-->
-    <!--评论框-->
-    <div class="commentField">
-      <van-tabbar v-model="active">
-        <van-field v-model="commentValue"
-                   center
-                   clearable
-                   placeholder="说点什么吧">
-          <template #button>
-            <van-button size="small"
-                        type="primary"
-                        @click="publishComment">发表
-            </van-button>
-          </template>
-        </van-field>
-      </van-tabbar>
-    </div>
-    <!--评论框end-->
+        <div>
+          <p>{{ returnValue.authorNickname }}</p>
+          <p>{{ returnValue.createDate }}</p>
+        </div>
+      </div>
 
-    <!--回复框-->
-    <div>
-      <van-popup v-model="showReplyPop"
-                 position="bottom"
-                 :style="{width:'100%',height:'35%'}">
-        <van-field v-model="replyMessage"
-                   rows="2"
-                   type="textarea"
-                   maxlength="300"
-                   :placeholder="'回复 '+replyWho"
-                   show-word-limit>
-          <template #button>
-            <van-button size="small"
-                        type="primary"
-                        @click="doReply">回复
-            </van-button>
-          </template>
-        </van-field>
-      </van-popup>
+      <div class="markdown-body">
+        <!--正文 MarkDown渲染，包括图片的链接，必须符合MarkDown的语法才能被正确渲染-->
+        <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
+                      :scrollStyle="markDownConfig.scrollStyle"
+                      :subfield="markDownConfig.subfield"
+                      :placeholder="markDownConfig.placeholder"
+                      :value="value"
+                      :editable="markDownConfig.editable"
+                      :boxShadow="markDownConfig.boxShadow"
+                      :ishljs="markDownConfig.ishljs"
+                      :shortCut="markDownConfig.shortCut"
+                      :defaultOpen="markDownConfig.defaultOpen"
+                      style="z-index: -1"/>
+      </div>
+      <!--    <div style="font-size: 14px;padding: 10px;font-weight: bold">-->
+      <!--      <div v-if="returnValue.commentList.length > 0">-->
+      <!--        <p style="text-align: center">全部评论</p>-->
+      <!--        <van-divider/>-->
+      <!--      </div>-->
+      <!--      <span v-else>-->
+      <!--        <van-empty description="这里还没有评论呢"/>-->
+      <!--      </span>-->
+      <!--    </div>-->
+      <!--评论-->
+      <!--    <div v-if="returnValue.commentList.length > 0"-->
+      <!--         class="commentArea"-->
+      <!--         v-for="(item,index) in returnValue.commentList">-->
+
+      <!--      <van-skeleton title-->
+      <!--                    avatar-->
+      <!--                    :row="3"-->
+      <!--                    :loading="loading">-->
+      <!--        <van-card-->
+      <!--            :price="item.content" :desc="item.createDate"-->
+      <!--            :title="item.mbUser.nickname"-->
+      <!--            :tag="'LV '+item.mbUser.level"-->
+      <!--            :thumb="item.mbUser.userImg"-->
+      <!--            centered-->
+      <!--            currency=""-->
+      <!--            @click="reply(item.mbUser.nickname,item.mbUser.id,item.id)">-->
+      <!--        </van-card>-->
+      <!--回复-->
+      <!--        <div class="replyArea">-->
+      <!--          <van-collapse v-model="activeName">-->
+      <!--            <van-collapse-item v-if="item.replyList.length > 0"-->
+      <!--                               title="查看回复"-->
+      <!--                               :name="index">-->
+      <!--              <div v-for="(reply1,replyIndex) in item.replyList"-->
+      <!--                   :key="replyIndex"-->
+      <!--                   @click="reply(reply1.mbUser.nickname,reply1.mbUser.id,item.id)">-->
+      <!--                <div>-->
+      <!--                  <span style="color: deepskyblue">{{ reply1.mbUser.nickname }}</span>-->
+      <!--                  <strong>&nbsp;回复&nbsp;</strong>-->
+      <!--                  {{ item.mbUser.nickname }}-->
+      <!--                  <strong>&nbsp;</strong>-->
+      <!--                  <span style="color: black">{{ reply1.replyContent }}</span>-->
+      <!--                  <div>-->
+      <!--                    <small>&nbsp;{{ reply1.replyDate }}</small>-->
+      <!--                  </div>-->
+      <!--                </div>-->
+      <!--                <van-divider/>-->
+      <!--              </div>-->
+
+      <!--            </van-collapse-item>-->
+      <!--          </van-collapse>-->
+      <!--        </div>-->
+      <!--        &lt;!&ndash;回复 end&ndash;&gt;-->
+      <!--      </van-skeleton>-->
+      <!--    </div>-->
+      <!--评论end-->
+      <!--评论框-->
+      <!--    <div class="commentField">-->
+      <!--      <van-tabbar v-model="active">-->
+      <!--        <van-field v-model="commentValue"-->
+      <!--                   center-->
+      <!--                   clearable-->
+      <!--                   placeholder="说点什么吧">-->
+      <!--          <template #button>-->
+      <!--            <van-button size="small"-->
+      <!--                        type="primary"-->
+      <!--                        @click="publishComment">发表-->
+      <!--            </van-button>-->
+      <!--          </template>-->
+      <!--        </van-field>-->
+      <!--      </van-tabbar>-->
+      <!--    </div>-->
+      <!--评论框end-->
+
+      <!--回复框-->
+      <!--    <div>-->
+      <!--      <van-popup v-model="showReplyPop"-->
+      <!--                 position="bottom"-->
+      <!--                 :style="{width:'100%',height:'35%'}">-->
+      <!--        <van-field v-model="replyMessage"-->
+      <!--                   rows="2"-->
+      <!--                   type="textarea"-->
+      <!--                   maxlength="300"-->
+      <!--                   :placeholder="'回复 '+replyWho"-->
+      <!--                   show-word-limit>-->
+      <!--          <template #button>-->
+      <!--            <van-button size="small"-->
+      <!--                        type="primary"-->
+      <!--                        @click="doReply">回复-->
+      <!--            </van-button>-->
+      <!--          </template>-->
+      <!--        </van-field>-->
+      <!--      </van-popup>-->
+      <!--    </div>-->
+      <!--回复框end-->
     </div>
-    <!--回复框end-->
   </div>
 </template>
 
@@ -235,6 +229,7 @@ export default {
       }).then(res => {
         this.returnValue = res.data.data;
         this.value = this.returnValue.content;
+        console.log("帖子详情=>", this.returnValue);
         this.dataFlag = true;
         this.loading = false;
       }).catch(err => this.$toast.fail(utils.errMessage(err)));
@@ -302,25 +297,65 @@ export default {
 
 <style scoped lang="less">
 
-.myContainer {
+.container {
+  padding: 10px;
+}
 
-  .top {
-    height: 50px;
+.nav-title {
+  font-size: 12px;
+  font-weight: bold;
+  border-bottom: 2px solid black;
+}
+
+.top-image {
+  width: 100%;
+  height: 200px;
+}
+
+.post-title {
+  width: 100%;
+  height: 50px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.author-info {
+  display: flex;;
+  flex-direction: row;
+
+  div:first-child {
+    width: 40px;
+    height: 40px;
+  }
+
+  div:nth-child(2) {
     width: 100%;
-  }
+    height: 40px;
+    margin-left: 10px;
+    position: relative;
 
-  .title {
-    font-size: 20px;
-    font-weight: bold;
-    font-family: Menlo, "Ubuntu Mono", Consolas, "Courier New", "Microsoft Yahei", "Hiragino Sans GB", "WenQuanYi Micro Hei", sans-serif;
-  }
+    p {
+      margin: 0;
+      padding: 0;
+    }
 
-  .mainContent {
-    width: 100%;
-  }
+    p:first-child {
+      width: 70%;
+      height: 20px;
+      font-size: 16px;
+      text-overflow: ellipsis;
+    }
 
-  .commentField {
-    height: 50px;
+    p:nth-child(2) {
+      position: absolute;
+      bottom: 0;
+      font-size: 10px;
+      color: #969799;
+    }
   }
+}
+
+.markdown-body {
+  margin-top: 20px;
 }
 </style>
