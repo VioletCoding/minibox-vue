@@ -29,7 +29,7 @@ export default {
       active: 0,
       //按钮菜单信息
       tabBarMenu: [
-        {path: "/", chineseName: "首页", icon: "home-o"},
+        {path: "/", chineseName: "首页", icon: "circle"},
         {path: "/game", chineseName: "游戏库", icon: "cross"},
         {path: "/mine", chineseName: "我", icon: "user-o"}
       ]

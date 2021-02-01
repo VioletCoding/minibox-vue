@@ -33,22 +33,17 @@
                         @refresh="onLoad"
                         success-text="刷新成功">
         <div style="margin-top: 50px">
-          <van-swipe class="my-swipe"
-                     :autoplay="3000"
+          <van-swipe :autoplay="3000"
                      indicator-color="white">
             <van-swipe-item v-for="(item,index) in dataList"
                             :key="index"
                             v-if="index < 5">
-              <div style="position: relative;width: 100%">
-                <p class="swipe-text van-ellipsis">
-                  {{ item.title }}
-                </p>
+              <div class="swipe-image van-multi-ellipsis--l2">
                 <van-image lazy-render=true
-                           width="100%"
-                           height="200"
                            fit="cover"
                            :src="item.photoLink"
                            @click="toDetail(item.id)"/>
+                <p>{{ item.title }}</p>
               </div>
             </van-swipe-item>
           </van-swipe>
@@ -60,27 +55,23 @@
                   finished-text="暂时没有更多了喵"
                   @load="onLoad"
                   :error.sync="error"
-                  error-text="加载失败，点击重试">
-          <div class="myContainer"
-               v-for="(item,index) in dataList"
+                  error-text="加载失败">
+          <div v-for="(item,index) in dataList"
                :key="index">
             <!--路由跳转方法，点击帖子跳转到帖子详情-->
             <div @click="toDetail(item.id)"
                  class="main-container">
               <div class="left-text">
                 <!-- 帖子标题 最多显示两行 -->
-                <div class="van-multi-ellipsis--l2"
-                     style="font-size: 15px;font-weight: bold;margin-bottom: 12px">
+                <div class="van-multi-ellipsis--l2">
                   {{ item.title }}
                 </div>
                 <!-- 帖子发表时间 最多显示一行 -->
-                <span class="van-ellipsis"
-                      style="font-size: 12px;color: #969799">
+                <span class="van-ellipsis">
                   {{ item.createDate }}
                 </span>
                 <!--版块名称 最多显示一行-->
-                <span class="van-ellipsis"
-                      style="font-size: 12px;color: #969799">
+                <span class="van-ellipsis">
                   {{ item.blockName }}
                 </span>
               </div>
@@ -119,12 +110,11 @@
                         size="small"
                         @click="showBlock"
                         style="margin-right: 10px">
-              <span>添加社区</span>
+              <span style="color: #969799">添加社区</span>
             </van-button>
             <!--选中的社区-->
             <van-button v-if="radio!='' "
                         type="default"
-                        color="linear-gradient(to right, #ff6034, #ee0a24)"
                         size="small"
                         @click="showBlock">
               {{ blockName }}
@@ -133,10 +123,10 @@
           <van-cell>
             <van-field v-model="popTitle"
                        placeholder="标题"
-                       required/>
+                       ref="title"/>
           </van-cell>
           <!--MarkDown编辑区-->
-          <van-cell>
+          <div style="height: 100%">
             <mavon-editor :toolbarsFlag="markDownConfig.toolbarsFlag"
                           :subfield="markDownConfig.subfield"
                           :placeholder="markDownConfig.placeholder"
@@ -150,8 +140,9 @@
                           :autofocus="markDownConfig.autofocus"
                           ref=md
                           @imgAdd="$imgAdd"
-                          @imgDel="$imgDel"/>
-          </van-cell>
+                          @imgDel="$imgDel"
+                          style="min-height: 80vh"/>
+          </div>
         </van-cell-group>
       </van-popup>
 
@@ -175,7 +166,7 @@
                        radius="5"
                        :src="item.photoLink"/>
           </div>
-          <div style="width: 40%;line-height: 60px;font-size: 14px;font-weight: bold">
+          <div style="width: 40%;line-height: 60px;font-size: 14px;font-weight: bold;">
             {{ item.name }}
           </div>
           <div style="margin-top: 20px">
@@ -183,6 +174,12 @@
               <van-radio :name="item.id"/>
             </van-radio-group>
           </div>
+        </div>
+        <div style="padding: 20px"
+             @click="showBlockPop=false">
+          <van-button color="black"
+                      block>完成
+          </van-button>
         </div>
       </van-popup>
       <!--展示版块（社区）的弹出层 end-->
@@ -209,11 +206,11 @@ export default {
         //true： 双栏(编辑预览同屏)， false： 单栏(编辑预览分屏)
         subfield: false,
         //内容为空时的提示内容
-        placeholder: '发帖时注意选择相应的内容分类哦！',
+        placeholder: '在这里输入内容',
         //是否允许编辑
         editable: true,
         //边框阴影
-        boxShadow: true,
+        boxShadow: false,
         //代码高亮
         ishljs: true,
         //快捷键
@@ -258,8 +255,6 @@ export default {
       popTitle: '',
       //封面图
       coverImage: '',
-      //激活的tab
-      active: 0,
       //帖子列表
       dataList: [],
       //展示版块（社区）的弹出层
@@ -311,7 +306,15 @@ export default {
         this.$toast.fail("请选择社区");
         return 0;
       }
-      //TODO 传参修正
+      if (utils.isNullOrEmptyOrUndefined(this.popTitle)) {
+        this.$toast.fail("请输入标题");
+        this.$refs.title.focus();
+        return 0;
+      }
+      if (utils.isNullOrEmptyOrUndefined(this.value)) {
+        this.$toast.fail("请输入正文");
+        return 0;
+      }
       this.$http.post(Api.publishPost, {
         authorId: localStorage.getItem("userId"),
         blockId: this.radio,
@@ -333,7 +336,7 @@ export default {
         } else {
           this.$toast.fail(res.data.message);
         }
-      }).catch(err => this.$toast.fail(utils.errMessage(err)))
+      }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     // 绑定@imgAdd event
     //pos 编辑区内容，$file 文件
@@ -341,7 +344,7 @@ export default {
       // 缓存图片信息
       this.img_file[pos] = $file;
       //new 一个formdata用来存储文件
-      var multipartFiles = new FormData();
+      let multipartFiles = new FormData();
       //把文件加入到formdata里
       multipartFiles.append('multipartFile', $file);
       //发送请求，注意headers
@@ -351,14 +354,13 @@ export default {
         data: multipartFiles,
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(res => {
-        console.log("图片上传回调=>", res);
         let link = [];
         link = res.data.data.images;
         link.forEach(v => {
           //将回调的图片链接替换文本编辑器原来的链接
           this.$refs.md.$img2Url(pos, v);
           this.coverImage = v;
-        })
+        });
       }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },
     //MD里删除图片
@@ -379,11 +381,8 @@ export default {
       if (this.popPostBackground) {
         this.showBlockPop = true;
         this.$http.post(Api.getBlockList)
-            .then(res => {
-              console.log("版块回调=>", res);
-              this.blockList = res.data.data;
-            })
-            .catch(err => this.$toast.fail(utils.errMessage(err)))
+            .then(res => this.blockList = res.data.data)
+            .catch(err => this.$toast.fail(utils.errMessage(err)));
       }
     },
     //在发表帖子的时候显示社区（版块）弹出层-关闭
@@ -409,15 +408,18 @@ export default {
 
 <style scoped lang="less">
 
-.swipe-text {
-  position: absolute;
+.swipe-image {
   width: 100%;
-  height: 40px;
-  z-index: 10;
-  text-align: center;
-  font-size: 14px;
-  bottom: 0;
-  color: white;
+  height: 200px;
+
+  p {
+    width: 100%;
+    position: absolute;
+    bottom: 15px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+  }
 }
 
 .main-container {
@@ -427,6 +429,18 @@ export default {
 
   .left-text {
     width: 60%;
+    height: 100%;
+
+    div:first-child {
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 12px;
+    }
+
+    span {
+      font-size: 10px;
+      color: #969799;
+    }
   }
 
   .right-image {
