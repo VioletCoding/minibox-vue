@@ -1,5 +1,4 @@
 <template>
-
   <div v-if="dataFlag">
     <!--顶部-->
     <div>
@@ -17,14 +16,16 @@
     </div>
     <!--顶部end-->
     <div class="top-image">
-      <van-image :src="returnValue.photoLink"
+      <van-image :src="returnValue.postInfo.photoLink"
+                 height="200"
+                 width="100%"
                  fit="cover"/>
     </div>
 
     <!-- 标题 最多显示三行 -->
     <div class="container">
       <div class="van-multi-ellipsis--l3 post-title">
-        <p>{{ returnValue.title }}</p>
+        <p>{{ returnValue.postInfo.title }}</p>
       </div>
       <!--作者信息-->
       <div class="author-info">
@@ -33,11 +34,11 @@
                      width="40"
                      height="40"
                      fit="cover"
-                     :src="returnValue.authorPhotoLink"/>
+                     :src="returnValue.authorInfo.photoLink"/>
         </div>
         <div>
-          <p>{{ returnValue.authorNickname }}</p>
-          <p>{{ returnValue.createDate }}</p>
+          <p>{{ returnValue.authorInfo.nickname }}</p>
+          <p>{{ returnValue.postInfo.createDate }}</p>
         </div>
       </div>
 
@@ -55,100 +56,89 @@
                       :defaultOpen="markDownConfig.defaultOpen"
                       style="z-index: -1"/>
       </div>
-      <!--    <div style="font-size: 14px;padding: 10px;font-weight: bold">-->
-      <!--      <div v-if="returnValue.commentList.length > 0">-->
-      <!--        <p style="text-align: center">全部评论</p>-->
-      <!--        <van-divider/>-->
-      <!--      </div>-->
-      <!--      <span v-else>-->
-      <!--        <van-empty description="这里还没有评论呢"/>-->
-      <!--      </span>-->
-      <!--    </div>-->
+
       <!--评论-->
-      <!--    <div v-if="returnValue.commentList.length > 0"-->
-      <!--         class="commentArea"-->
-      <!--         v-for="(item,index) in returnValue.commentList">-->
+      <div class="comment-area">
+        <div v-if="returnValue.commentInfo.length > 0">
+          <van-divider>全部评论</van-divider>
+          <div v-for="comment in returnValue.commentInfo"
+               style="margin-bottom: 20px"
+               @click="reply(comment.userModel.nickname,comment.userModel.id,comment.id)">
+            <div class="user-info">
+              <!--头像-->
+              <div>
+                <van-image :src="comment.userModel.photoLink"
+                           fit="cover"
+                           round/>
+              </div>
+              <!-- 昵称 | 评论时间-->
+              <div>
+                <p>{{ comment.userModel.nickname }}</p>
+                <p>{{ comment.createDate }}</p>
+              </div>
+            </div>
+            <!--评论内容-->
+            <div class="content">
+              <p>{{ comment.content }}</p>
+            </div>
+            <!--回复-->
+            <div class="reply"
+                 v-for="reply in comment.replyModel">
+              <div>
+                <span>{{ reply.userModel.nickname }}：</span>
+                <span>回复&nbsp;{{ comment.userModel.nickname }}：</span>
+                <p>{{ reply.content }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <!--      <van-skeleton title-->
-      <!--                    avatar-->
-      <!--                    :row="3"-->
-      <!--                    :loading="loading">-->
-      <!--        <van-card-->
-      <!--            :price="item.content" :desc="item.createDate"-->
-      <!--            :title="item.mbUser.nickname"-->
-      <!--            :tag="'LV '+item.mbUser.level"-->
-      <!--            :thumb="item.mbUser.userImg"-->
-      <!--            centered-->
-      <!--            currency=""-->
-      <!--            @click="reply(item.mbUser.nickname,item.mbUser.id,item.id)">-->
-      <!--        </van-card>-->
-      <!--回复-->
-      <!--        <div class="replyArea">-->
-      <!--          <van-collapse v-model="activeName">-->
-      <!--            <van-collapse-item v-if="item.replyList.length > 0"-->
-      <!--                               title="查看回复"-->
-      <!--                               :name="index">-->
-      <!--              <div v-for="(reply1,replyIndex) in item.replyList"-->
-      <!--                   :key="replyIndex"-->
-      <!--                   @click="reply(reply1.mbUser.nickname,reply1.mbUser.id,item.id)">-->
-      <!--                <div>-->
-      <!--                  <span style="color: deepskyblue">{{ reply1.mbUser.nickname }}</span>-->
-      <!--                  <strong>&nbsp;回复&nbsp;</strong>-->
-      <!--                  {{ item.mbUser.nickname }}-->
-      <!--                  <strong>&nbsp;</strong>-->
-      <!--                  <span style="color: black">{{ reply1.replyContent }}</span>-->
-      <!--                  <div>-->
-      <!--                    <small>&nbsp;{{ reply1.replyDate }}</small>-->
-      <!--                  </div>-->
-      <!--                </div>-->
-      <!--                <van-divider/>-->
-      <!--              </div>-->
+        <div v-else>
+          <van-empty description="这里还没有评论呢"/>
+        </div>
+      </div>
 
-      <!--            </van-collapse-item>-->
-      <!--          </van-collapse>-->
-      <!--        </div>-->
-      <!--        &lt;!&ndash;回复 end&ndash;&gt;-->
-      <!--      </van-skeleton>-->
-      <!--    </div>-->
+      <div></div>
       <!--评论end-->
       <!--评论框-->
-      <!--    <div class="commentField">-->
-      <!--      <van-tabbar v-model="active">-->
-      <!--        <van-field v-model="commentValue"-->
-      <!--                   center-->
-      <!--                   clearable-->
-      <!--                   placeholder="说点什么吧">-->
-      <!--          <template #button>-->
-      <!--            <van-button size="small"-->
-      <!--                        type="primary"-->
-      <!--                        @click="publishComment">发表-->
-      <!--            </van-button>-->
-      <!--          </template>-->
-      <!--        </van-field>-->
-      <!--      </van-tabbar>-->
-      <!--    </div>-->
+      <div class="commentField">
+        <van-tabbar v-model="active">
+          <van-field v-model="commentValue"
+                     center
+                     clearable
+                     placeholder="说点什么吧">
+            <template #button>
+              <van-button size="small"
+                          type="default"
+                          @click="publishComment">发表
+              </van-button>
+            </template>
+          </van-field>
+        </van-tabbar>
+      </div>
       <!--评论框end-->
 
       <!--回复框-->
-      <!--    <div>-->
-      <!--      <van-popup v-model="showReplyPop"-->
-      <!--                 position="bottom"-->
-      <!--                 :style="{width:'100%',height:'35%'}">-->
-      <!--        <van-field v-model="replyMessage"-->
-      <!--                   rows="2"-->
-      <!--                   type="textarea"-->
-      <!--                   maxlength="300"-->
-      <!--                   :placeholder="'回复 '+replyWho"-->
-      <!--                   show-word-limit>-->
-      <!--          <template #button>-->
-      <!--            <van-button size="small"-->
-      <!--                        type="primary"-->
-      <!--                        @click="doReply">回复-->
-      <!--            </van-button>-->
-      <!--          </template>-->
-      <!--        </van-field>-->
-      <!--      </van-popup>-->
-      <!--    </div>-->
+      <div>
+        <van-popup v-model="showReplyPop"
+                   position="bottom"
+                   :style="{width:'100%',height:'35%'}">
+          <van-field v-model="replyMessage"
+                     rows="2"
+                     ref="replyField"
+                     type="textarea"
+                     maxlength="300"
+                     :placeholder="'回复 '+ replyWho"
+                     show-word-limit>
+            <template #button>
+              <van-button size="small"
+                          type="default"
+                          @click="doReply">回复
+              </van-button>
+            </template>
+          </van-field>
+        </van-popup>
+      </div>
       <!--回复框end-->
     </div>
   </div>
@@ -161,12 +151,6 @@ import utils from "@/api/utils";
 
 export default {
   name: "SinglePost",
-  props: {
-    postData: {
-      type: Object,
-      require: true
-    }
-  },
   data() {
     return {
       //MarkDown
@@ -228,7 +212,7 @@ export default {
         params: {id: this.id}
       }).then(res => {
         this.returnValue = res.data.data;
-        this.value = this.returnValue.content;
+        this.value = this.returnValue.postInfo.content;
         console.log("帖子详情=>", this.returnValue);
         this.dataFlag = true;
         this.loading = false;
@@ -241,14 +225,13 @@ export default {
     //发表评论
     async publishComment() {
       await this.$http.post(Api.publishComment, {
-        tid: this.id,
-        uid: localStorage.getItem("userId"),
-        content: this.commentValue,
-        type: 'TC'
+        postId: this.id,
+        userId: localStorage.getItem("userId"),
+        content: this.commentValue
       }).then(res => {
         if (res.data.code == 200) {
           this.$toast.success(res.data.message);
-          this.commentValue = '';
+          this.commentValue = "";
           this.onLoad();
         } else {
           this.$toast.fail(res.data.message);
@@ -264,16 +247,15 @@ export default {
     },
     //发表回复
     doReply() {
-      if (this.replyMessage.length < 10) {
-        this.$toast.fail("内容最少10个字哦~");
+      if (utils.isNullOrEmptyOrUndefined(this.replyMessage)) {
+        this.$toast.fail("请填写回复内容");
+        this.$refs.replyField.focus();
       } else {
         this.$http.post(Api.publishReply, {
-          type: "TR",
-          replyWho: this.replyUid,
-          replyInPost: Number(this.id),
-          replyContent: this.replyMessage,
-          replyInComment: this.commentCid,
-          replyUid: this.replyUid
+          replyTargetId: this.replyUid,
+          content: this.replyMessage,
+          commentId: this.commentCid,
+          userId: utils.getLoginUserId()
         }).then(resp => {
           if (resp.data.code == 200) {
             this.showReplyPop = false;
@@ -296,6 +278,11 @@ export default {
 </script>
 
 <style scoped lang="less">
+p {
+  margin: 0;
+  padding: 0;
+  word-wrap: break-word;
+}
 
 .container {
   padding: 10px;
@@ -315,6 +302,7 @@ export default {
 .post-title {
   width: 100%;
   height: 50px;
+  line-height: 50px;
   font-size: 18px;
   font-weight: bold;
 }
@@ -334,11 +322,6 @@ export default {
     margin-left: 10px;
     position: relative;
 
-    p {
-      margin: 0;
-      padding: 0;
-    }
-
     p:first-child {
       width: 70%;
       height: 20px;
@@ -357,5 +340,61 @@ export default {
 
 .markdown-body {
   margin-top: 20px;
+}
+
+.comment-area {
+  margin-bottom: 70px;
+  width: 100%;
+
+  .user-info {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 40px;
+
+    div:first-child {
+      width: 40px;
+      height: 40px;
+    }
+
+    div:nth-child(2) {
+      width: 90%;
+      height: 50px;
+      margin: 5px 0 0 10px;
+
+      p:first-child {
+        font-size: 14px;
+      }
+
+      p:nth-child(2) {
+        font-size: 10px;
+        color: #969799;
+      }
+    }
+  }
+
+  .content {
+    margin-left: 50px;
+    font-size: 12px;
+  }
+
+  .reply {
+    margin: 15px 0 0 50px;
+    background-color: #FCFCFC;
+
+    div {
+      font-size: 12px;
+      line-height: 18px;
+
+      span:first-child {
+        color: #519BE5;
+      }
+
+      span:nth-child(2) {
+        color: #969799;
+      }
+    }
+  }
+
 }
 </style>

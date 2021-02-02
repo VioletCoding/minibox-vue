@@ -1,16 +1,5 @@
 <template>
   <div style="overflow: hidden">
-    <!--头部-->
-    <div>
-      <MyHeader>
-        <template #left>
-          <van-icon name="cross"
-                    color="black"
-                    size="30"/>
-        </template>
-      </MyHeader>
-    </div>
-    <!--头部end-->
     <!--文字提示-->
     <div class="text">验证码登陆</div>
     <!--文字提示end-->
@@ -58,8 +47,8 @@
 
     <!--获取验证码按钮-->
     <div style="width: 105px;margin: 20px auto">
-      <van-button type="info"
-                  text="获取验证码"
+      <van-button text="获取验证码"
+                  color="black"
                   :disabled="disabled"
                   @blur="checkAuth"
                   @click="auth"/>
@@ -146,12 +135,12 @@ export default {
       formData.append("authCode", authCode);
       this.$http.post(Api.loginOrReg, formData)
           .then(resp => {
-            console.log("登陆回调=>",resp);
+            console.log("登陆回调=>", resp);
             let code = resp.data.code;
             let msg = resp.data.message;
             localStorage.setItem("accessToken", resp.data.data.token);
             localStorage.setItem("userId", resp.data.data.userInfo.id);
-            this.$router.push("/");
+            this.$router.replace("/");
           })
           .catch(err => this.$toast.fail(utils.errMessage(err)))
           .finally(f => {

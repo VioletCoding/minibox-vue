@@ -20,7 +20,7 @@
         <van-swipe class="my-swipe"
                    :autoplay="3000"
                    indicator-color="white">
-          <van-swipe-item v-for="(item,index) in imgList"
+          <van-swipe-item v-for="(item,index) in gameList"
                           :key="index"
                           v-if="index < 5">
             <p class="swipe-text van-multi-ellipsis--l2">{{ item.name }}</p>
@@ -28,7 +28,7 @@
                        width="100%"
                        height="200"
                        fit="cover"
-                       :src="item.coverImg"
+                       :src="item.photoLink"
                        @click="showGameDetail(item.id)"/>
           </van-swipe-item>
         </van-swipe>
@@ -47,7 +47,7 @@
             :price="item.price"
             :desc="item.description"
             :title="item.name"
-            :thumb="item.coverImg"
+            :thumb="item.photoLink"
             :origin-price="item.originPrice"
             @click="showGameDetail(item.id)"/>
       </div>
@@ -81,8 +81,9 @@ export default {
   methods: {
     //展示游戏列表
     showGameList() {
-      this.$http.get(Api.getAllGame)
+      this.$http.post(Api.getAllGame)
           .then(res => {
+            console.log("游戏list=>", res);
             if (res.data.code === 200) {
               res.data.data.forEach(v => {
                 //将BigDecimal转成2位小数，不知道为什么本来后台是带.00的，传上来就不带.00了
@@ -95,8 +96,6 @@ export default {
               });
               //游戏列表
               this.gameList = res.data.data;
-              //给轮播图赋值
-              this.imgList = res.data.data;
             } else
               this.$toast.fail(res.data.message);
           })

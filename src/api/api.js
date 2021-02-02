@@ -29,14 +29,14 @@ const publishPost = "postApi/add";
 const showUserComment = "post/userCommentShow";
 //-----------------------------------------
 //发表评论
-const publishComment = "comment/post";
+const publishComment = "commentApi/add";
 //发表回复
-const publishReply = "comment/reply"
+const publishReply = "commentApi/reply"
 //-----------------------------------------
 //游戏列表
-const getAllGame = "game/all";
+const getAllGame = "gameApi/list";
 //游戏详情
-const getGameDetail = "game/detail"
+const getGameDetail = "gameApi/detail"
 
 //------------------------------------------
 //版块

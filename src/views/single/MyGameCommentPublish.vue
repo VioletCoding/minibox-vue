@@ -9,7 +9,7 @@
                   @click="close"/>
       </template>
       <template #middle>
-        <span>添加评价</span>
+        <span style="font-size: 14px">添加评价</span>
       </template>
       <template #right>
         <span @click="publish">发表</span>
@@ -18,14 +18,13 @@
     <!--头部end-->
     <!--标题-->
     <div style="margin-top: 50px">
-      <van-cell :title="v.name"/>
+      <p style="text-align: center;font-size: 14px">{{ v.name }}</p>
     </div>
     <!--标题end-->
     <!--评分星星-->
     <div>
-      <van-rate v-model="v.score"
+      <van-rate v-model="score"
                 :size="25"
-                color="#ffd21e"
                 style="margin-left: 120px"
                 void-icon="star"
                 void-color="#eee"
@@ -69,18 +68,18 @@ export default {
       //游戏评分下的文字-小字
       subText: "",
       //游戏评论内容
-      message: ""
+      message: "",
+      //评分
+      score: 5
     }
   },
   props: {
     //用于父子传值
     v: {
       //游戏gid
-      id: 0,
+      id: undefined,
       //游戏名
-      name: "",
-      //评分
-      score: undefined
+      name: ""
     }
   },
   methods: {
@@ -91,19 +90,16 @@ export default {
         return 0;
       }
       this.$http.post(Api.publishComment, {
-        uid: localStorage.getItem("userId"),
-        gid: this.v.id,
+        userId: localStorage.getItem("userId"),
+        gameId: this.v.id,
         content: this.message,
-        type: "GC",
-        score: this.v.score
-      })
-          .then(res => {
-            //关闭弹出层
-            this.message = "";
-            this.close();
-            this.$toast.success(res.data.message);
-          })
-          .catch(err => this.$toast.fail(utils.errMessage(err)))
+        score: this.score
+      }).then(res => {
+        //关闭弹出层
+        this.message = "";
+        this.close();
+        this.$toast.success(res.data.message);
+      }).catch(err => this.$toast.fail(utils.errMessage(err)))
           .finally(() => this.close())
     },
     //关闭弹出层
@@ -112,23 +108,23 @@ export default {
     },
     //评分下面的文字
     showText() {
-      if (this.v.score == 1) {
+      if (this.score == 1) {
         this.text = "不好玩";
         this.subText = "游戏有致命的缺陷，很难找到亮点";
       }
-      if (this.v.score == 2) {
+      if (this.score == 2) {
         this.text = "非常一般";
         this.subText = "缺点大过优点，游戏内容扔需大幅调整";
       }
-      if (this.v.score == 3) {
+      if (this.score == 3) {
         this.text = "中规中矩";
         this.subText = "游戏有亮点，同时缺点也很明显";
       }
-      if (this.v.score == 4) {
+      if (this.score == 4) {
         this.text = "优秀之作";
         this.subText = "虽然有小瑕疵，但游戏整体非常棒";
       }
-      if (this.v.score == 5) {
+      if (this.score == 5) {
         this.text = "旷世神作";
         this.subText = "游戏无可挑剔，基本没有缺点";
       }

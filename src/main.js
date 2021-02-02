@@ -133,24 +133,11 @@ Axios.interceptors.response.use(
         let status = error.response.status;
         let message = error.response.data.message;
         //如果请求状态是401，那么去掉存储的token和userId，并且跳转到登录页
-        if (status == 401) {
+        if (status === 401) {
             localStorage.removeItem("accessToken");
             localStorage.removeItem("userId");
-            this.$toast.fail(message);
-            router.replace("/login");
+            router.replace("/login").catch(err => err);
         }
-        if (status == 500) {
-            this.$toast.fail("服务器繁忙，请稍后再试");
-        }
-        this.$toast.fail("服务器繁忙，请稍后再试");
         return Promise.reject(error);
     }
 )
-//前置守卫
-router.beforeEach((to, from, next) => {
-    if (to.name != "Login" && !utils.isLoginUserTokenExist()) {
-        next({name: "Login"})
-    } else {
-        next();
-    }
-})
