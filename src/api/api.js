@@ -51,11 +51,11 @@ const simpleSearch = "search/simple";
 
 //--------------------------------------
 //生成订单
-const order_generate = "order/generateOrder";
+const order_generate = "orderApi/add";
 //确认订单
-const order_confirm = "order/confirm";
+const order_confirm = "orderApi/confirm";
 //取消订单
-const order_cancel = "order/cancel";
+const order_cancel = "orderApi/cancel";
 
 export default {
     loginOrReg,

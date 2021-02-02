@@ -16,28 +16,29 @@
     </div>
 
     <van-cell-group>
-      <van-cell :title="'订单号：'+returnData.orderId"
-                :value="returnData.createDate"/>
+      <van-cell :title="'订单号：'+returnData.orderInfo.orderId"
+                :value="returnData.orderInfo.createDate"/>
 
       <div class="game-info">
         <div class="inline-block">
-          <img :src="returnData.mbGame.coverImg"
-               :alt="returnData.mbGame.coverImg"
+          <img :src="returnData.gameInfo.photoLink"
+               alt="游戏图片"
                width="170"
-               height="80"/>
+               height="80"
+               style="object-fit: cover"/>
         </div>
 
         <div class="inline-block">
-          <p>{{ returnData.mbGame.name }}</p>
+          <p>{{ returnData.gameInfo.name }}</p>
         </div>
       </div>
 
       <van-cell title="价格"
-                :value="returnData.mbGame.price + '元'"/>
+                :value="returnData.gameInfo.price + '元'"/>
 
     </van-cell-group>
 
-    <van-submit-bar :price="returnData.mbGame.price * 100"
+    <van-submit-bar :price="returnData.gameInfo.price * 100"
                     button-text="提交订单"
                     text-align="left"
                     safe-area-inset-bottom
@@ -67,11 +68,10 @@ export default {
     //提交订单
     confirmOrder() {
       this.$http.post(Api.order_confirm, {
-        orderGameId: this.returnData.mbGame.id,
-        orderCost: this.returnData.mbGame.price,
-        uid: localStorage.getItem("userId"),
-        orderId: this.returnData.orderId,
-        id: this.returnData.id
+        gameId: this.returnData.gameInfo.id,
+        orderCost: this.returnData.gameInfo.price,
+        userId: localStorage.getItem("userId"),
+        orderId: this.returnData.orderInfo.orderId
       }).then(resp => {
         if (resp.data.code == 200) {
           this.$toast({message: "感谢您的购买", icon: "success"});
@@ -86,10 +86,10 @@ export default {
         message: "确定取消订单吗？"
       }).then(() => {
         this.$http.post(Api.order_cancel, {
-          orderGameId: this.returnData.mbGame.id,
-          orderCost: this.returnData.mbGame.price,
-          uid: localStorage.getItem("userId"),
-          orderId: this.returnData.orderId
+          gameId: this.returnData.gameInfo.id,
+          orderCost: this.returnData.gameInfo.price,
+          userId: localStorage.getItem("userId"),
+          orderId: this.returnData.orderInfo.orderId
         }).then(resp => this.$router.go(-1)
         ).catch(err => utils.errMessage(err));
       }).catch(cancel => cancel)
@@ -97,6 +97,7 @@ export default {
   },
   mounted() {
     this.onLoad();
+    console.log(this.returnData);
   }
 }
 </script>

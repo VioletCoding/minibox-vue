@@ -130,6 +130,6 @@ export default {
   text-align: center;
   bottom: 0;
   color: white;
-  font-size: 18px;
+  font-size: 12px;
 }
 </style>

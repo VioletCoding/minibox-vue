@@ -220,14 +220,15 @@ export default {
     //生成订单
     generateOrder() {
       this.$http.post(Api.order_generate, {
-        orderGameId: this.$route.query.id,
-        orderCost: this.returnData.price,
-        uid: localStorage.getItem("userId")
+        gameId: this.$route.query.id,
+        orderCost: this.returnData.gameInfo.price,
+        userId: localStorage.getItem("userId")
       }).then(resp => {
-        if (resp.data.code == 200)
+        if (resp.data.code == 200) {
           this.$router.push({name: "MyGameOrder", params: resp.data.data});
-        else
+        } else {
           this.$toast.fail(resp.data.message);
+        }
       }).catch(err => this.$toast.fail(utils.errMessage(err)));
     }
   },
