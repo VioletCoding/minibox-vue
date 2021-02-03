@@ -4,11 +4,15 @@ const auth = "authApi/authCode";
 const loginOrReg = "authApi/auth";
 //-----------------------------
 //查询「我」的个人信息查询接口
-const showUserInfo = "userApi/userInfo"
+const showUserInfo = "userApi/userInfo";
 //查询某个用户发布的所有帖子
-const userPosts = "userApi/userPosts"
+const userPosts = "userApi/userPosts";
 //查询某个用户发布的所有评论
-const userComments = "userApi/userComments"
+const userComments = "userApi/userComments";
+//更新用户信息
+const userModify = "userApi/userModify";
+//更新密码
+const userPwdModify = "userApi/userPwdModify";
 //--------------------------------------
 //获取帖子列表
 const getPostList = "postApi/list";
@@ -22,13 +26,12 @@ const publishPost = "postApi/add";
 //发表评论
 const publishComment = "commentApi/add";
 //发表回复
-const publishReply = "commentApi/reply"
+const publishReply = "commentApi/reply";
 //-----------------------------------------
 //游戏列表
 const getAllGame = "gameApi/list";
 //游戏详情
-const getGameDetail = "gameApi/detail"
-
+const getGameDetail = "gameApi/detail";
 //------------------------------------------
 //版块
 const getBlockList = "blockApi/list";
@@ -47,6 +50,6 @@ export default {
     publishComment,publishReply,
     getBlockList,
     getAllGame, getGameDetail,
-    showUserInfo, userPosts, userComments,
+    showUserInfo, userPosts, userComments,userModify,userPwdModify,
     order_generate, order_confirm, order_cancel,
 }

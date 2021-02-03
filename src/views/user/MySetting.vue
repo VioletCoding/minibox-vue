@@ -5,7 +5,6 @@
       <!--头像大图-->
       <div class="photo">
         <MyUserInfo :userInfo="userInfo">
-
           <template #photo>
             <van-uploader :after-read="afterRead">
               <van-image :src="userInfo.photoLink"
@@ -40,7 +39,7 @@
           <van-button type="primary"
                       text="保存"
                       block
-                      @click="save"/>
+                      @click="userModify({id:id,description:userInfo.description,nickname:userInfo.nickname})"/>
         </van-form>
       </div>
     </div>
@@ -85,19 +84,6 @@ export default {
     }
   },
   methods: {
-    //保存更新的个人信息
-    save() {
-      this.$http.post(Api.updateUserInfo, {
-        id: this.id,
-        description: this.userInfo.description,
-        nickname: this.userInfo.nickname
-      }).then(resp => {
-        let v = resp.data.data;
-        this.userInfo.nickname = v.nickname;
-        this.userInfo.description = v.description;
-        this.$toast.success(resp.data.message);
-      }).catch(err => this.$toast.fail(utils.errMessage(err)));
-    },
     //初始化页面数据
     onLoad() {
       this.returnData = this.userInfo;
@@ -106,32 +92,44 @@ export default {
     //修改头像
     afterRead(file) {
       let formData = new FormData();
-      formData.append("userImg", file.file);
-      formData.append("uid", localStorage.getItem("userId"));
+      formData.append("multipartFile", file.file);
       this.$http({
-        url: Api.modifyUserImg,
+        url: Api.uploadImg,
         data: formData,
         method: 'post',
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(resp => {
-        this.returnData = resp.data.data;
-        this.$toast.success(resp.data.message);
-        //发射事件，通知父组件更新数据（图片链接）
-        this.$emit("updateImg", this.returnData);
+        if (resp.data.code === 200) {
+          let image = resp.data.data.images[0];
+          let user = {};
+          user.id = utils.getLoginUserId();
+          user.photoLink = image;
+          this.userModify(user);
+        } else {
+          this.$toast.fail(resp.data.message);
+        }
       }).catch(err => err => this.$toast.fail(utils.errMessage(err)))
+    },
+    //修改用户信息
+    userModify(user) {
+      this.$http.post(Api.userModify, user)
+          .then(resp => {
+            if (resp.data.code === 200) {
+              this.$toast.success(resp.data.message);
+              this.returnData = resp.data.data;
+              this.$emit("updateImg", this.returnData);
+            } else {
+              this.$toast.fail(resp.data.message);
+            }
+          }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //修改密码
     toUpdatePassword() {
       Dialog.confirm({
         title: "修改密码",
         message: "确定要修改密码吗？"
-      }).then(() => {
-        this.$http.get(Api.beforeUpdatePassword)
-            .then(resp => {
-              this.$toast.success(resp.data.message);
-              this.$router.push("/modifyPassword");
-            }).catch(err => this.$toast.fail(utils.errMessage(err)))
-      }).catch(() => null);
+      }).then(() => this.$router.push("/modifyPassword"))
+          .catch(() => null);
     },
     //退出登录
     logout() {
