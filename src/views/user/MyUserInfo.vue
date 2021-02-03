@@ -9,8 +9,8 @@
                      fit="cover"
                      width="80"
                      height="80"
-                     :src="userInfo.userImg"
-                     @click="show(userInfo.userImg)"/>
+                     :src="userInfo.photoLink"
+                     @click="show(userInfo.photoLink)"/>
         </slot>
       </div>
 
@@ -23,16 +23,6 @@
           <div class="user-right-desc">{{ userInfo.description }}</div>
         </slot>
       </div>
-
-      <!--等级-->
-      <div class="user-level inline-block">
-        <slot name="level">
-          <van-tag color="#7232dd">
-            {{ 'Lv ' + userInfo.level }}
-          </van-tag>
-        </slot>
-      </div>
-      <!--等级end-->
       <!--用户昵称和签名end-->
     </div>
     <!--用户信息end-->
@@ -83,12 +73,6 @@ export default {
       height: 20px;
       font-size: 12px;
     }
-  }
-
-  .user-level {
-    margin-top: 19px;
-    padding: 10px;
-    vertical-align: top;
   }
 
 }

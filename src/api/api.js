@@ -1,32 +1,23 @@
-//登陆前校验接口
+//发送验证码
 const auth = "authApi/authCode";
-//登陆注册复合接口
+//登陆校验
 const loginOrReg = "authApi/auth";
-
-
+//-----------------------------
 //查询「我」的个人信息查询接口
-const showUserInfo = "user/show"
-//更新用户个人信息
-const updateUserInfo = "user/update";
-//发送验证码邮件
-const beforeUpdatePassword = "user/beforeModify";
-//校验验证码
-const check = "user/check";
-//登出
-const logout = "user/logout";
-//更新密码
-const doUpdatePassword = "user/modify";
+const showUserInfo = "userApi/userInfo"
+//查询某个用户发布的所有帖子
+const userPosts = "userApi/userPosts"
+//查询某个用户发布的所有评论
+const userComments = "userApi/userComments"
 //--------------------------------------
 //获取帖子列表
 const getPostList = "postApi/list";
 //获取帖子详情
 const getPostDetail = "postApi/detail";
-//帖子图片上传
+//图片上传
 const uploadImg = "publicApi/upload";
 //发布帖子
 const publishPost = "postApi/add";
-//查询「我」的评论列表-包括帖子部分信息
-const showUserComment = "post/userCommentShow";
 //-----------------------------------------
 //发表评论
 const publishComment = "commentApi/add";
@@ -41,14 +32,6 @@ const getGameDetail = "gameApi/detail"
 //------------------------------------------
 //版块
 const getBlockList = "blockApi/list";
-
-//------------------------------------------
-//更新用户头像
-const modifyUserImg = "user/updateImg";
-
-//搜索模块
-const simpleSearch = "search/simple";
-
 //--------------------------------------
 //生成订单
 const order_generate = "orderApi/add";
@@ -58,27 +41,12 @@ const order_confirm = "orderApi/confirm";
 const order_cancel = "orderApi/cancel";
 
 export default {
-    loginOrReg,
-    getPostList,
-    getPostDetail,
+    loginOrReg,auth,
+    getPostList, getPostDetail,publishPost,
     uploadImg,
-    publishComment,
+    publishComment,publishReply,
     getBlockList,
-    publishPost,
-    getAllGame,
-    getGameDetail,
-    showUserInfo,
-    auth,
-    showUserComment,
-    modifyUserImg,
-    updateUserInfo,
-    beforeUpdatePassword,
-    doUpdatePassword,
-    check,
-    logout,
-    publishReply,
-    order_generate,
-    order_confirm,
-    order_cancel,
-    simpleSearch
+    getAllGame, getGameDetail,
+    showUserInfo, userPosts, userComments,
+    order_generate, order_confirm, order_cancel,
 }

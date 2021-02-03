@@ -8,69 +8,62 @@
                 sticky
                 lazy-render>
         <van-tab title="数据">
-          <MyUserInfo :user-info="userInfo.mbUser"></MyUserInfo>
+          <MyUserInfo :user-info="userInfo"></MyUserInfo>
           <van-divider/>
           <!--订阅信息end-->
           <!--游戏统计信息-->
           <div>
             <van-grid :column-num="2">
               <van-grid-item>
-                <div>{{ userInfo.gamePrice == null ? 0 : userInfo.gamePrice }}</div>
+                <div>{{ userInfo.totalPrice == null ? 0 : userInfo.totalPrice }}</div>
                 <div>账号价值￥</div>
               </van-grid-item>
               <van-grid-item>
-                <div>{{ userInfo.gameList.length > 0 ? userInfo.gameList[0].game_num : 0 }}</div>
+                <div>{{ userInfo.gameModelList.length > 0 ? userInfo.gameModelList.length : 0 }}</div>
                 <div>游戏数量</div>
               </van-grid-item>
             </van-grid>
           </div>
           <!--游戏统计信息end-->
-          <van-divider/>
-          <van-tabs animated
-                    swipeable
-                    lazy-render>
-            <van-tab title="拥有游戏">
-              <!--空状态-->
-              <div v-if="userInfo.gameList.length == 0">
-                <van-empty description="你好像没有购买游戏哦"/>
-              </div>
+          <van-divider>拥有游戏</van-divider>
+          <!--空状态-->
+          <div v-if="userInfo.gameModelList.length == 0">
+            <van-empty description="你好像没有购买游戏哦"/>
+          </div>
 
-              <!--游戏列表-->
-              <div v-if="userInfo.gameList.length > 0"
-                   class="game-list"
-                   v-for="(item,index) in userInfo.gameList"
-                   :key="index">
+          <!--游戏列表-->
+          <div v-else
+               class="game-list"
+               v-for="(item,index) in userInfo.gameModelList"
+               :key="index">
 
-                <div class="game-list-left inline-block">
-                  <van-image width="120"
-                             height="70"
-                             fit="cover"
-                             :src="item.cover_img"
-                             radius="5px"/>
-                </div>
-                <div class="game-list-right inline-block">
-                  <div class="game-list-right-game-name">
-                    {{ item.name }}
-                  </div>
-                  <div class="game-list-right-game-desc van-ellipsis">
-                    {{ item.description }}
-                  </div>
-                </div>
+            <div class="game-list-left inline-block">
+              <van-image width="120"
+                         height="70"
+                         fit="cover"
+                         :src="item.photoLink"
+                         radius="5px"/>
+            </div>
+            <div class="game-list-right inline-block">
+              <div class="game-list-right-game-name">
+                {{ item.name }}
               </div>
-              <!--游戏列表end-->
-            </van-tab>
-          </van-tabs>
+              <div class="game-list-right-game-desc van-ellipsis">
+                {{ item.description }}
+              </div>
+            </div>
+          </div>
+          <!--游戏列表end-->
         </van-tab>
 
-
         <van-tab title="动态">
-          <MyUserInfo :userInfo="userInfo.mbUser">
+          <MyUserInfo :userInfo="userInfo">
             <template #photo>
               <van-image round
                          fit="cover"
                          width="80"
                          height="80"
-                         :src="userInfo.mbUser.userImg"/>
+                         :src="userInfo.photoLink"/>
             </template>
           </MyUserInfo>
           <!--用户动态分类-->
@@ -89,7 +82,7 @@
         <!--用户动态分类end-->
 
         <van-tab title="设置">
-          <MySetting :userInfo="userInfo.mbUser"
+          <MySetting :userInfo="userInfo"
                      @updateImg="updateImg"></MySetting>
         </van-tab>
 
@@ -132,16 +125,19 @@ export default {
       await this.$http.get(Api.showUserInfo, {
         params: {id: localStorage.getItem("userId")}
       }).then(resp => {
-        let v = resp.data.data;
-        let gamePrice = 0;
-        //计算游戏总价格，并加到对象里
-        if (v.gameList.length > 0) {
-          v.gameList.forEach(value => {
-            gamePrice = gamePrice + value.price;
+        console.log("个人信息=>", resp);
+        //计算下游戏总价格
+        if (resp.data.data.gameModelList.length > 0) {
+          let v = resp.data.data.gameModelList;
+          let totalPrice = 0;
+          v.forEach(game => {
+            totalPrice = totalPrice + game.price;
           })
-          v.gamePrice = gamePrice;
+          resp.data.data.totalPrice = totalPrice;
+          this.userInfo = resp.data.data;
+        } else {
+          this.userInfo = resp.data.data;
         }
-        this.userInfo = v;
         this.dataFlag = true;
       }).catch(err => utils.errMessage(err));
     },

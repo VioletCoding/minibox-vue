@@ -8,8 +8,8 @@
 
           <template #photo>
             <van-uploader :after-read="afterRead">
-              <van-image :src="userInfo.userImg"
-                         :alt="userInfo.userImg"
+              <van-image :src="userInfo.photoLink"
+                         alt="头像加载失败"
                          height="200"
                          fit="cover"/>
             </van-uploader>
@@ -17,7 +17,6 @@
           <!--留空插槽，这个页面不显示这些信息在这个位置-->
           <template #nickname><span></span></template>
           <template #desc><span></span></template>
-          <template #level><span></span></template>
         </MyUserInfo>
       </div>
 
@@ -72,9 +71,7 @@ import utils from "@/api/utils";
 export default {
   name: "MySetting",
   props: {
-    userInfo: {
-      type: Object
-    }
+    userInfo: Object
   },
   components: {MyUserInfo},
   data() {
@@ -133,8 +130,7 @@ export default {
             .then(resp => {
               this.$toast.success(resp.data.message);
               this.$router.push("/modifyPassword");
-            })
-            .catch(err => this.$toast.fail(utils.errMessage(err)))
+            }).catch(err => this.$toast.fail(utils.errMessage(err)))
       }).catch(() => null);
     },
     //退出登录
@@ -169,14 +165,6 @@ export default {
 
   .information {
     margin-top: 20px;
-  }
-
-  .modify-password {
-    margin-top: 70px;
-  }
-
-  .logout {
-
   }
 }
 

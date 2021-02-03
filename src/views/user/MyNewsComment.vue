@@ -1,35 +1,40 @@
 <template>
-  <div class="container"
-       v-if="dataFlag">
+  <div v-if="dataFlag" style="margin-bottom: 70px">
     <div v-for="(item,index) in dataList"
          :key="index"
-         @click="toPost(item.id)">
-      <div class="com-and-date"
-           v-for="(com,cIndex) in item.commentList"
-           :key="cIndex">
-        <div>{{ com.content }}</div>
-        <div>{{ com.createDate }}</div>
-      </div>
+         class="container">
 
-      <div>
-        <div class="inline-block pic">
-          <van-image :src="item.coverImg"
+      <p>{{ item.content }}</p>
+      <p>{{ item.createDate }}</p>
+
+      <div v-if="item.postModel != null"
+           class="parent"
+           @click="postDetail(item.postModel.id)">
+        <div>
+          <van-image :src="item.postModel.photoLink"
+                     width="40"
+                     height="40"
                      fit="cover"
-                     width="50"
-                     height="50"/>
+                     radius="5"/>
         </div>
 
-        <div class="inline-block nickname-and-title van-ellipsis">
-          <div class="van-ellipsis">
-            {{ item.mbUser.nickname + ' :' }}
-          </div>
-          <div class="van-ellipsis">{{ item.title }}</div>
-        </div>
-
+        <p>{{ item.postModel.title }}</p>
       </div>
-      <van-divider/>
-    </div>
 
+      <div v-else
+           class="parent"
+           @click="gameDetail(item.gameModel.id)">
+        <div>
+          <van-image :src="item.gameModel.photoLink"
+                     width="150"
+                     height="100"
+                     fit="cover"
+                     radius="5"/>
+        </div>
+        <p>{{ item.gameModel.name }}</p>
+      </div>
+      <van-divider></van-divider>
+    </div>
   </div>
 </template>
 
@@ -48,18 +53,28 @@ export default {
   methods: {
     //显示用户的评论
     showComments() {
-      this.$http.get(Api.showUserComment, {
+      this.$http.get(Api.userComments, {
         params: {
-          uid: localStorage.getItem("userId")
+          id: localStorage.getItem("userId")
         }
       }).then(resp => {
         this.dataList = resp.data.data;
         this.dataFlag = true;
       }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },
-    toPost(v) {
-      this.$router.push({path: "/postDetail", query: {id: v}})
+    gameDetail(gameId) {
+      this.$router.push({
+        path: "/gameDetail",
+        query: {id: gameId}
+      }).catch(err => err);
+    },
+    postDetail(postId) {
+      this.$router.push({
+        path: "/postDetail",
+        query: {id: postId}
+      }).catch(err => err);
     }
+
   },
   mounted() {
     this.showComments();
@@ -68,47 +83,44 @@ export default {
 </script>
 
 <style scoped lang="less">
-.inline-block {
-  display: inline-block;
-}
-
 .container {
-  width: 90%;
-  margin: 20px auto 0;
+  width: 99%;
 
-  .com-and-date {
-    margin-bottom: 10px;
+  p:first-child {
+    padding: 0 15px 0 15px;
+    font-size: 14px;
+  }
 
-    div:nth-child(1) {
-      font-size: 14px;
+  p:nth-child(2) {
+    font-size: 10px;
+    padding-left: 15px;
+    color: #969799;
+  }
+
+  .parent {
+    display: flex;
+    flex-direction: row;
+    padding: 0 15px 0 15px;
+    background-color: #FCFCFC;
+
+    p {
+      padding: 0;
+      margin: 0;
     }
 
-    div:nth-child(2) {
+    :nth-child(1) {
+      width: 40px;
+      height: 40px;
+    }
+
+    :nth-child(2) {
       font-size: 12px;
-      margin-top: 10px;
-      color: #969799;
+      height: 40px;
+      line-height: 40px;
+      text-overflow: ellipsis;
+      margin: 0 0 0 20px;
     }
   }
 
-  .pic {
-    width: 50px;
-    height: 50px;
-  }
-
-  .nickname-and-title {
-    width: 80%;
-    vertical-align: top;
-    margin-left: 10px;
-    background-color: #FAFBFC;
-
-    div:nth-child(1) {
-      font-size: 12px;
-    }
-
-    div:nth-child(2) {
-      margin-top: 5px;
-      font-size: 14px;
-    }
-  }
 }
 </style>

@@ -7,13 +7,11 @@
       <div class="new-post-title">
         {{ item.title }}
       </div>
-      <div class="new-post-date">
-        {{ item.createDate }} - {{ item.mbBlock.name }}
-      </div>
-      <div>
-        <van-image :src="item.coverImg"
+      <div style="margin-top: 10px">
+        <van-image :src="item.photoLink"
                    width="150"
                    height="100"
+                   radius="5"
                    fit="cover"/>
       </div>
       <van-divider/>
@@ -36,13 +34,14 @@ export default {
   methods: {
     //获取帖子列表
     async getPostList() {
-      await this.$http.get(Api.getPostList, {
+      await this.$http.get(Api.userPosts, {
         params: {
-          uid: localStorage.getItem("userId")
+          id: localStorage.getItem("userId")
         }
-      })
-          .then(res => this.dataList = res.data.data)
-          .catch(err => this.$toast.fail(utils.errMessage(err)));
+      }).then(res => {
+        console.log(res.data.data);
+        this.dataList = res.data.data;
+      }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //点击去帖子详情
     toPost(v) {
@@ -61,11 +60,11 @@ export default {
   margin: 0 auto;
 
   .news-post {
-    margin-top: 20px;
+    margin: 20px 0 70px 0;
 
     .new-post-title {
       text-align: left;
-      font-size: 18px;
+      font-size: 14px;
       font-weight: bold;
     }
 
