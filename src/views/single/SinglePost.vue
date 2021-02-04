@@ -224,6 +224,10 @@ export default {
     },
     //发表评论
     async publishComment() {
+      if (this.commentValue == "") {
+        this.$toast.fail("评论内容不能为空");
+        return 0;
+      }
       await this.$http.post(Api.publishComment, {
         postId: this.id,
         userId: localStorage.getItem("userId"),

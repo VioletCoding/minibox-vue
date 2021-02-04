@@ -2,6 +2,10 @@
 const auth = "authApi/authCode";
 //登陆校验
 const loginOrReg = "authApi/auth";
+//密码登陆
+const passwordLogin = "authApi/passwordLogin";
+//登出
+const logout = "authApi/logout";
 //-----------------------------
 //查询「我」的个人信息查询接口
 const showUserInfo = "userApi/userInfo";
@@ -44,7 +48,7 @@ const order_confirm = "orderApi/confirm";
 const order_cancel = "orderApi/cancel";
 
 export default {
-    loginOrReg,auth,
+    loginOrReg,auth,logout,passwordLogin,
     getPostList, getPostDetail,publishPost,
     uploadImg,
     publishComment,publishReply,

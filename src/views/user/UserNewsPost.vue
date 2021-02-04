@@ -60,7 +60,7 @@ export default {
   margin: 0 auto;
 
   .news-post {
-    margin: 20px 0 70px 0;
+    margin: 20px 0 40px 0;
 
     .new-post-title {
       text-align: left;

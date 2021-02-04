@@ -17,17 +17,19 @@
 
     <!--轮播图-游戏图片展示区-->
     <div>
-      <div style="background-color: #464A4F">
+      <div style="background-color: #464A4F;margin-top: 50px">
         <van-swipe :autoplay="3000"
                    indicator-color="white">
           <van-swipe-item v-for="(item,index) in returnData.gamePhotos"
                           :key="index"
                           v-if="index < 10">
-            <van-image lazy-render
-                       width="100%"
-                       height="200"
-                       fit="cover"
-                       :src="item.photoLink"/>
+            <div>
+              <van-image lazy-render
+                         width="100%"
+                         height="200"
+                         fit="cover"
+                         :src="item.photoLink"/>
+            </div>
           </van-swipe-item>
         </van-swipe>
       </div>

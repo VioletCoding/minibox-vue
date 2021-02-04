@@ -218,7 +218,7 @@ export default {
         //默认展开 edit:编辑 preview:渲染
         defaultOpen: 'edit',
         //自动对焦到编辑区
-        autofocus: true
+        autofocus: false
       },
       //MarkDown编辑器的工具栏
       toolbars: {

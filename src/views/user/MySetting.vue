@@ -9,13 +9,12 @@
             <van-uploader :after-read="afterRead">
               <van-image :src="userInfo.photoLink"
                          alt="头像加载失败"
-                         height="200"
+                         width="80"
+                         height="80"
+                         round
                          fit="cover"/>
             </van-uploader>
           </template>
-          <!--留空插槽，这个页面不显示这些信息在这个位置-->
-          <template #nickname><span></span></template>
-          <template #desc><span></span></template>
         </MyUserInfo>
       </div>
 
@@ -36,7 +35,7 @@
                      label="签名"
                      :placeholder="userInfo.description"/>
 
-          <van-button type="primary"
+          <van-button color="linear-gradient(to right, #464A4F, #16191E)"
                       text="保存"
                       block
                       @click="userModify({id:id,description:userInfo.description,nickname:userInfo.nickname})"/>
@@ -157,10 +156,6 @@ export default {
 }
 
 .container {
-  .photo {
-    height: 200px;
-  }
-
   .information {
     margin-top: 20px;
   }
