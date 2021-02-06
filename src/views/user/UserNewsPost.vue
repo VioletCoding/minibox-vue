@@ -39,13 +39,16 @@ export default {
           id: localStorage.getItem("userId")
         }
       }).then(res => {
-        console.log(res.data.data);
-        this.dataList = res.data.data;
+        if (res.data.code == 200) {
+          this.dataList = res.data.data;
+        } else {
+          this.$toast.fail(res.data.message);
+        }
       }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //点击去帖子详情
     toPost(v) {
-      this.$router.push({path: "/postDetail", query: {id: v}})
+      this.$router.push({path: "/postDetail", query: {id: v}}).catch(err => err);
     }
   },
   mounted() {

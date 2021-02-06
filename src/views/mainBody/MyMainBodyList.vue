@@ -286,7 +286,7 @@ export default {
       this.$router.push({
         path: '/postDetail',
         query: {id: id},
-      })
+      }).catch(err => err);
     },
     //显示弹出层
     showPop() {
@@ -354,13 +354,17 @@ export default {
         data: multipartFiles,
         headers: {'Content-Type': 'multipart/form-data'}
       }).then(res => {
-        let link = [];
-        link = res.data.data.images;
-        link.forEach(v => {
-          //将回调的图片链接替换文本编辑器原来的链接
-          this.$refs.md.$img2Url(pos, v);
-          this.coverImage = v;
-        });
+        if (res.data.code == 200) {
+          let link = [];
+          link = res.data.data.images;
+          link.forEach(v => {
+            //将回调的图片链接替换文本编辑器原来的链接
+            this.$refs.md.$img2Url(pos, v);
+            this.coverImage = v;
+          });
+        } else {
+          this.$toast.fail(res.data.message);
+        }
       }).catch(err => this.$toast.fail(utils.errMessage(err)))
     },
     //MD里删除图片
@@ -371,18 +375,25 @@ export default {
     async getPostList() {
       await this.$http.post(Api.getPostList)
           .then(res => {
-            console.log("帖子列表回调=>", res);
-            this.dataList = res.data.data;
-          })
-          .catch(err => this.$toast.fail(utils.errMessage(err)));
+            if (res.data.code == 200) {
+              this.dataList = res.data.data;
+            } else {
+              this.$toast.fail(res.data.message);
+            }
+          }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //在发表帖子的时候显示社区（版块）弹出层
     showBlock() {
       if (this.popPostBackground) {
         this.showBlockPop = true;
         this.$http.post(Api.getBlockList)
-            .then(res => this.blockList = res.data.data)
-            .catch(err => this.$toast.fail(utils.errMessage(err)));
+            .then(res => {
+              if (res.data.code == 200) {
+                this.blockList = res.data.data;
+              } else {
+                this.$toast.fail(res.data.message);
+              }
+            }).catch(err => this.$toast.fail(utils.errMessage(err)));
       }
     },
     //在发表帖子的时候显示社区（版块）弹出层-关闭

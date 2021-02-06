@@ -211,11 +211,14 @@ export default {
       this.$http.get(Api.getPostDetail, {
         params: {id: this.id}
       }).then(res => {
-        this.returnValue = res.data.data;
-        this.value = this.returnValue.postInfo.content;
-        console.log("帖子详情=>", this.returnValue);
-        this.dataFlag = true;
-        this.loading = false;
+        if (res.data.code == 200) {
+          this.returnValue = res.data.data;
+          this.value = this.returnValue.postInfo.content;
+          this.dataFlag = true;
+          this.loading = false;
+        } else {
+          this.$toast.fail(res.data.message);
+        }
       }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //返回上一个路由

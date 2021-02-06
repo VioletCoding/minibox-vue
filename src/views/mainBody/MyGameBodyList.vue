@@ -96,10 +96,10 @@ export default {
               });
               //游戏列表
               this.gameList = res.data.data;
-            } else
+            } else {
               this.$toast.fail(res.data.message);
-          })
-          .catch(err => this.$toast.fail(utils.errMessage(err)))
+            }
+          }).catch(err => this.$toast.fail(utils.errMessage(err)))
           .finally(f => {
             this.isLoading = false;
             this.dataFlag = true;
@@ -107,7 +107,7 @@ export default {
     },
     //显示游戏详情
     showGameDetail(v) {
-      this.$router.push({path: '/gameDetail', query: {id: v}})
+      this.$router.push({path: '/gameDetail', query: {id: v}}).catch(err => err);
     },
     //正在开发中提示
     developing() {

@@ -3,10 +3,8 @@
     <div v-for="(item,index) in dataList"
          :key="index"
          class="container">
-
       <p>{{ item.content }}</p>
       <p>{{ item.createDate }}</p>
-
       <div v-if="item.postModel != null"
            class="parent"
            @click="postDetail(item.postModel.id)">
@@ -17,10 +15,8 @@
                      fit="cover"
                      radius="5"/>
         </div>
-
         <p>{{ item.postModel.title }}</p>
       </div>
-
       <div v-else
            class="parent"
            @click="gameDetail(item.gameModel.id)">
@@ -33,7 +29,7 @@
         </div>
         <p>{{ item.gameModel.name }}</p>
       </div>
-      <van-divider></van-divider>
+      <van-divider/>
     </div>
   </div>
 </template>
@@ -58,9 +54,13 @@ export default {
           id: localStorage.getItem("userId")
         }
       }).then(resp => {
-        this.dataList = resp.data.data;
-        this.dataFlag = true;
-      }).catch(err => this.$toast.fail(utils.errMessage(err)))
+        if (resp.data.code == 200) {
+          this.dataList = resp.data.data;
+          this.dataFlag = true;
+        } else {
+          this.$toast.fail(resp.data.message);
+        }
+      }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     gameDetail(gameId) {
       this.$router.push({

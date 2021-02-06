@@ -13,14 +13,9 @@
         </template>
       </van-search>
     </div>
-
-    <!--分割线-->
     <div class="divider"></div>
-    <!--分割线end-->
-
     <MySearchResult v-if="showResult"
                     :returnData="returnData"/>
-
   </div>
 </template>
 
@@ -45,8 +40,9 @@ export default {
   methods: {
     //获取搜索结果
     getSearchResult() {
-      this.$http.get(Api.simpleSearch, {params: {title: this.searchContent}}
+      this.$http.get(Api.search, {params: {title: this.searchContent}}
       ).then(resp => {
+        console.log("搜索结果=>",resp);
         this.returnData = resp.data.data;
         this.showResult = true;
       }).catch(err => this.$toast.fail(utils.errMessage(err)));

@@ -23,19 +23,16 @@
                    closeable
                    :style="{ width: '100%',height:'100%' }">
           <div style="margin-top: 150px">
-
             <van-password-input :value="authCode"
                                 :mask="false"
                                 :focused="showKeyboard"
                                 @focus="showKeyboard = true"/>
-
             <div style="width: 105px;margin: 20px auto">
               <van-button color="linear-gradient(to right, #464A4F, #16191E)"
                           text="登录"
                           block
                           @click="login(authCode)"/>
             </div>
-
             <van-number-keyboard v-model="authCode"
                                  :show="showKeyboard"
                                  @blur="showKeyboard = false"
@@ -136,6 +133,7 @@ export default {
     loginWayChange() {
       this.loginFlag = !this.loginFlag;
     },
+    //密码登陆
     usingPassword() {
       if (!utils.checkEmailFormat(this.username)) {
         this.$refs.username.focus();
@@ -159,10 +157,11 @@ export default {
     },
     //校验验证码
     checkAuth() {
-      if (this.authCode.length == 6)
+      if (this.authCode.length == 6) {
         this.disabled = false;
-      else
+      } else {
         this.$toast.fail("请填写完整验证码！");
+      }
     },
     //校验表单的值是否是邮箱
     validate() {
@@ -184,8 +183,12 @@ export default {
       let formData = new FormData();
       formData.append("username", this.username);
       this.$http.post(Api.auth, formData)
-          .then(res => this.disabled = true)
-          .catch(err => this.$toast.fail(utils.errMessage(err)));
+          .then(res => {
+            this.disabled = true;
+            if (res.data.code != 200) {
+              this.$toast.fail(res.data.message);
+            }
+          }).catch(err => this.$toast.fail(utils.errMessage(err)));
     },
     //登陆
     login(authCode) {
@@ -202,15 +205,17 @@ export default {
       formData.append("authCode", authCode);
       this.$http.post(Api.loginOrReg, formData)
           .then(resp => {
-            console.log("登陆回调=>", resp);
-            let code = resp.data.code;
-            let msg = resp.data.message;
-            localStorage.setItem("accessToken", resp.data.data.token);
-            localStorage.setItem("userId", resp.data.data.userInfo.id);
-            this.$router.replace("/");
-          })
-          .catch(err => this.$toast.fail(utils.errMessage(err)))
-          .finally(f => {
+            if (resp.data.code == 200) {
+              let code = resp.data.code;
+              let msg = resp.data.message;
+              localStorage.setItem("accessToken", resp.data.data.token);
+              localStorage.setItem("userId", resp.data.data.userInfo.id);
+              this.$router.replace("/");
+            } else {
+              this.$toast.fail(resp.data.message);
+            }
+          }).catch(err => this.$toast.fail(utils.errMessage(err)))
+          .finally(() => {
             this.showAuth = false;
             this.showKeyboard = false;
           })

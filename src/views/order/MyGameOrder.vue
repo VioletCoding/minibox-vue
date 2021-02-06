@@ -76,8 +76,10 @@ export default {
         if (resp.data.code == 200) {
           this.$toast({message: "感谢您的购买", icon: "success"});
           this.$router.go(-1);
+        } else {
+          this.$toast.fail(resp.data.message);
         }
-      })
+      }).catch(err => utils.errMessage(err));
     },
     //取消订单
     cancelOrder() {
@@ -90,8 +92,13 @@ export default {
           orderCost: this.returnData.gameInfo.price,
           userId: localStorage.getItem("userId"),
           orderId: this.returnData.orderInfo.orderId
-        }).then(resp => this.$router.go(-1)
-        ).catch(err => utils.errMessage(err));
+        }).then(resp => {
+          if (resp.data.code == 200) {
+            this.$router.go(-1);
+          } else {
+            this.$toast.fail(resp.data.message);
+          }
+        }).catch(err => utils.errMessage(err));
       }).catch(cancel => cancel)
     }
   },

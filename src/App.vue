@@ -3,7 +3,6 @@
     <transition name="slide-fade">
       <router-view/>
     </transition>
-
     <!-- 如果在 A 页面和 B 页面都渲染了一个 Tabbar 组件，这两个 Tabbar 的状态是不共享的，单页面应用可以把 Tabbar 放到 router-view 外面-->
     <div v-if="$route.meta.showFooter">
       <van-tabbar v-model="active" route>
@@ -16,10 +15,8 @@
         </van-tabbar-item>
       </van-tabbar>
     </div>
-
   </div>
 </template>
-
 <script>
 
 

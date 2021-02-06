@@ -125,20 +125,23 @@ export default {
       await this.$http.get(Api.showUserInfo, {
         params: {id: localStorage.getItem("userId")}
       }).then(resp => {
-        console.log("个人信息=>", resp);
-        //计算下游戏总价格
-        if (resp.data.data.gameModelList.length > 0) {
-          let v = resp.data.data.gameModelList;
-          let totalPrice = 0;
-          v.forEach(game => {
-            totalPrice = totalPrice + game.price;
-          })
-          resp.data.data.totalPrice = totalPrice;
-          this.userInfo = resp.data.data;
+        if (resp.data.code == 200) {
+          //计算下游戏总价格
+          if (resp.data.data.gameModelList.length > 0) {
+            let v = resp.data.data.gameModelList;
+            let totalPrice = 0;
+            v.forEach(game => {
+              totalPrice = totalPrice + game.price;
+            })
+            resp.data.data.totalPrice = totalPrice;
+            this.userInfo = resp.data.data;
+          } else {
+            this.userInfo = resp.data.data;
+          }
+          this.dataFlag = true;
         } else {
-          this.userInfo = resp.data.data;
+          this.$toast.fail(resp.data.message);
         }
-        this.dataFlag = true;
       }).catch(err => utils.errMessage(err));
     },
     //更换头像以后，把其他引用了MyUserInfo组件的图片也更新

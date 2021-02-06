@@ -138,13 +138,11 @@
             </div>
           </div>
         </div>
-
         <div v-else>
           <van-empty description="这里还没有评论呢"/>
         </div>
       </div>
     </div>
-
 
     <div style="width: 100%;height: 40px">
       <van-goods-action>
@@ -204,11 +202,13 @@ export default {
     showGame() {
       this.$http.get(Api.getGameDetail, {params: {id: this.$route.query.id}})
           .then(res => {
-            console.log("游戏详情=>", res);
-            this.returnData = res.data.data;
-          })
-          .catch(err => utils.errMessage(err))
-          .finally(f => this.dataFlag = true)
+            if (res.data.code == 200) {
+              this.returnData = res.data.data;
+            } else {
+              this.$toast.fail(res.data.message);
+            }
+          }).catch(err => utils.errMessage(err))
+          .finally(() => this.dataFlag = true)
     },
     //返回
     back() {

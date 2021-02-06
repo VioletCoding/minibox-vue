@@ -46,6 +46,9 @@ const order_generate = "orderApi/add";
 const order_confirm = "orderApi/confirm";
 //取消订单
 const order_cancel = "orderApi/cancel";
+//--------------------------------------
+//搜索
+const search = "searchApi/search";
 
 export default {
     loginOrReg,auth,logout,passwordLogin,
@@ -56,4 +59,5 @@ export default {
     getAllGame, getGameDetail,
     showUserInfo, userPosts, userComments,userModify,userPwdModify,
     order_generate, order_confirm, order_cancel,
+    search
 }

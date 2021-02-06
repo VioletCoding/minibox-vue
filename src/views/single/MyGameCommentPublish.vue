@@ -95,10 +95,14 @@ export default {
         content: this.message,
         score: this.score
       }).then(res => {
-        //关闭弹出层
-        this.message = "";
-        this.close();
-        this.$toast.success(res.data.message);
+        if (res.data.code == 200) {
+          //关闭弹出层
+          this.message = "";
+          this.close();
+          this.$toast.success(res.data.message);
+        } else {
+          this.$toast.fail(res.data.message);
+        }
       }).catch(err => this.$toast.fail(utils.errMessage(err)))
           .finally(() => this.close())
     },
