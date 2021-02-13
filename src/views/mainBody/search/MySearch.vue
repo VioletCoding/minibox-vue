@@ -40,7 +40,7 @@ export default {
   methods: {
     //获取搜索结果
     getSearchResult() {
-      this.$http.get(Api.search, {params: {title: this.searchContent}}
+      this.$http.get(Api.search, {params: {keyword: this.searchContent}}
       ).then(resp => {
         console.log("搜索结果=>",resp);
         this.returnData = resp.data.data;

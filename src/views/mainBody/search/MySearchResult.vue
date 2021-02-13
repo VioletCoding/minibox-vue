@@ -1,10 +1,10 @@
 <!--搜索结果页-->
 <template>
   <div style="padding: 0 10px 0 10px">
-    <div v-if="returnData.post.content.length > 0 || returnData.game.content.length > 0">
-      <div v-if="returnData.post.content.length > 0 ">
+    <div v-if="returnData.post.length > 0 || returnData.game.length > 0">
+      <div v-if="returnData.post.length > 0 ">
         <p style="font-weight: bold;">社区</p>
-        <div v-for="(item,index) in returnData.post.content"
+        <div v-for="(item,index) in returnData.post"
              :key="index">
           <p style="font-size: 14px;font-weight: bold">{{ item.title }}</p>
           <van-image :src="item.photoLink"
@@ -15,8 +15,8 @@
           <van-divider/>
         </div>
       </div>
-      <div v-if="returnData.game.content.length > 0">
-
+      <div v-if="returnData.game.length > 0">
+        <!--     // TODO 游戏搜索展示-->
       </div>
     </div>
   </div>
