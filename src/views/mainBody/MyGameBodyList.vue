@@ -83,7 +83,6 @@ export default {
     showGameList() {
       this.$http.post(Api.getAllGame)
           .then(res => {
-            console.log("游戏list=>", res);
             if (res.data.code === 200) {
               res.data.data.forEach(v => {
                 //将BigDecimal转成2位小数，不知道为什么本来后台是带.00的，传上来就不带.00了
@@ -109,10 +108,6 @@ export default {
     showGameDetail(v) {
       this.$router.push({path: '/gameDetail', query: {id: v}}).catch(err => err);
     },
-    //正在开发中提示
-    developing() {
-      this.$toast.fail("该功能正在开发中~");
-    }
   },
   mounted() {
     this.dataFlag = false;
@@ -121,7 +116,7 @@ export default {
   }
 }
 </script>
-<style scoped lang="less">
+<style scoped>
 .swipe-text {
   position: absolute;
   width: 100%;

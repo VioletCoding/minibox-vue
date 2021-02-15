@@ -5,7 +5,7 @@
     <div>
       <van-search v-model="searchContent"
                   placeholder="输入搜索内容"
-                  @input="getSearchResult">
+                  @search="getSearchResult">
         <template #left>
           <van-icon name="arrow-left"
                     size="25"
@@ -40,9 +40,13 @@ export default {
   methods: {
     //获取搜索结果
     getSearchResult() {
+      let check = utils.isBlank(this.searchContent);
+      if (check) {
+        this.$toast.fail("请输入搜索内容");
+        return 0;
+      }
       this.$http.get(Api.search, {params: {keyword: this.searchContent}}
       ).then(resp => {
-        console.log("搜索结果=>",resp);
         this.returnData = resp.data.data;
         this.showResult = true;
       }).catch(err => this.$toast.fail(utils.errMessage(err)));

@@ -302,16 +302,16 @@ export default {
     },
     //弹出层-发送
     onClickRight() {
-      if (utils.isNullOrEmptyOrUndefined(this.radio)) {
+      if (utils.isBlank(this.radio)) {
         this.$toast.fail("请选择社区");
         return 0;
       }
-      if (utils.isNullOrEmptyOrUndefined(this.popTitle)) {
+      if (utils.isBlank(this.popTitle)) {
         this.$toast.fail("请输入标题");
         this.$refs.title.focus();
         return 0;
       }
-      if (utils.isNullOrEmptyOrUndefined(this.value)) {
+      if (utils.isBlank(this.value)) {
         this.$toast.fail("请输入正文");
         return 0;
       }
@@ -330,7 +330,7 @@ export default {
           this.img_file = {};
           this.radio = "";
           this.blockName = "";
-          this.title = "";
+          this.popTitle = "";
           //调用帖子方法
           this.getPostList();
         } else {

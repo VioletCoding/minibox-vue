@@ -1,10 +1,10 @@
 //判断值是否为空或者空字符串
-function isNullOrEmpty(value) {
+function isEmpty(value) {
     return value == "" || value == null;
 }
 
 //判断值是否为空或者空字符串或者undefined
-function isNullOrEmptyOrUndefined(value) {
+function isBlank(value) {
     return value == "" || value == null || value == undefined;
 }
 
@@ -77,8 +77,8 @@ function removeAllAuthenticate() {
 }
 
 export default {
-    isNullOrEmpty,
-    isNullOrEmptyOrUndefined,
+    isEmpty,
+    isBlank,
     checkEmailFormat,
     errMessage,
     isLoginUserIdExist,

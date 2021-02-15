@@ -3,6 +3,7 @@
     <!--头部-->
     <div>
       <van-tabs v-model="active"
+                color="black"
                 swipeable
                 animated
                 sticky
@@ -68,6 +69,7 @@
           </MyUserInfo>
           <!--用户动态分类-->
           <van-tabs type="card"
+                    color="black"
                     animated
                     lazy-render>
             <van-tab title="发帖">

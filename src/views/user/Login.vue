@@ -140,7 +140,7 @@ export default {
         this.$toast.fail("邮箱格式不正确");
         return 0;
       }
-      if (utils.isNullOrEmptyOrUndefined(this.password)) {
+      if (utils.isBlank(this.password)) {
         this.$refs.password.focus();
         return 0;
       }
@@ -196,7 +196,7 @@ export default {
         this.$toast.fail("请输入6位数验证码");
         return 0;
       }
-      if (utils.isNullOrEmpty(this.username)) {
+      if (utils.isBlank(this.username)) {
         this.$toast.fail("请输入邮箱");
         return 0;
       }

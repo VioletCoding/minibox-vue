@@ -85,7 +85,7 @@ export default {
   methods: {
     //发表评论
     publish() {
-      if (utils.isNullOrEmpty(this.message)) {
+      if (utils.isBlank(this.message)) {
         this.$toast.fail("说点什么吧");
         return 0;
       }

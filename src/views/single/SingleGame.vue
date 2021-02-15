@@ -286,7 +286,8 @@ p {
 
     div:nth-child(2) {
       width: 60px;
-      height: 25px;
+      height: 35px;
+      line-height: 35px;
       font-size: 28px;
       color: white;
       text-align: center;

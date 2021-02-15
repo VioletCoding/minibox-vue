@@ -254,7 +254,7 @@ export default {
     },
     //发表回复
     doReply() {
-      if (utils.isNullOrEmptyOrUndefined(this.replyMessage)) {
+      if (utils.isBlank(this.replyMessage)) {
         this.$toast.fail("请填写回复内容");
         this.$refs.replyField.focus();
       } else {
