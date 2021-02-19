@@ -175,11 +175,12 @@
             </van-radio-group>
           </div>
         </div>
-        <div style="padding: 20px"
-             @click="showBlockPop=false">
-          <van-button color="black"
-                      block>完成
-          </van-button>
+        <div style="padding: 20px">
+          <van-goods-action>
+            <van-goods-action-button color="linear-gradient(to right, #464A4F, #16191E)"
+                                     text="完成"
+                                     @click="showBlockPop=false"/>
+          </van-goods-action>
         </div>
       </van-popup>
       <!--展示版块（社区）的弹出层 end-->

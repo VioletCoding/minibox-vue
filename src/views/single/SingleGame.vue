@@ -19,6 +19,7 @@
     <div>
       <div style="background-color: #464A4F;margin-top: 50px">
         <van-swipe :autoplay="3000"
+                   :lazy-render="true"
                    indicator-color="white">
           <van-swipe-item v-for="(item,index) in returnData.gamePhotos"
                           :key="index"
@@ -147,7 +148,6 @@
     <div style="width: 100%;height: 40px">
       <van-goods-action>
         <van-goods-action-button color="linear-gradient(to right, #464A4F, #16191E)"
-                                 type="danger"
                                  text="立即购买"
                                  @click="generateOrder"/>
       </van-goods-action>

@@ -59,8 +59,8 @@
 
       <!--评论-->
       <div class="comment-area">
+        <van-divider>全部评论</van-divider>
         <div v-if="returnValue.commentInfo.length > 0">
-          <van-divider>全部评论</van-divider>
           <div v-for="comment in returnValue.commentInfo"
                style="margin-bottom: 20px"
                @click="reply(comment.userModel.nickname,comment.userModel.id,comment.id)">

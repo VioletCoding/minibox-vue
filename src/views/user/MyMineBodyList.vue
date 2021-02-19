@@ -36,7 +36,8 @@
           <div v-else
                class="game-list"
                v-for="(item,index) in userInfo.gameModelList"
-               :key="index">
+               :key="index"
+               @click="toDetail(item.id)">
 
             <div class="game-list-left inline-block">
               <van-image width="120"
@@ -149,6 +150,12 @@ export default {
     //更换头像以后，把其他引用了MyUserInfo组件的图片也更新
     updateImg(v) {
       this.showUserInfo();
+    },
+    toDetail(id) {
+      this.$router.push({
+        path: "/gameDetail",
+        query: {id: id}
+      }).catch(err => err);
     }
   },
   mounted() {

@@ -16,6 +16,9 @@
     <div class="divider"></div>
     <MySearchResult v-if="showResult"
                     :returnData="returnData"/>
+    <div v-if="loading" style="text-align: center;margin-top: 20px">
+      <van-loading size="24px">加载中...</van-loading>
+    </div>
   </div>
 </template>
 
@@ -29,6 +32,7 @@ export default {
   components: {MySearchResult},
   data() {
     return {
+      loading: false,
       //搜索内容
       searchContent: "",
       //是否显示结果页
@@ -45,11 +49,17 @@ export default {
         this.$toast.fail("请输入搜索内容");
         return 0;
       }
+      this.loading = true;
       this.$http.get(Api.search, {params: {keyword: this.searchContent}}
       ).then(resp => {
-        this.returnData = resp.data.data;
+        if (resp.data.code == 200) {
+          this.returnData = resp.data.data;
+        } else {
+          this.$toast.fail(resp.data.message);
+        }
         this.showResult = true;
-      }).catch(err => this.$toast.fail(utils.errMessage(err)));
+      }).catch(err => this.$toast.fail(utils.errMessage(err)))
+          .finally(() => this.loading = false);
     },
     //返回
     back() {

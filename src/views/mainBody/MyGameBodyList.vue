@@ -89,9 +89,13 @@ export default {
                 v.price = v.price.toFixed(2);
                 v.originPrice = v.originPrice.toFixed(2);
                 //计算折扣
-                let i = ((v.price / v.originPrice) * 10).toFixed(1) + "折";
-                //动态往对象里添加一个属性，也就是把计算完的折扣值放到对象里
-                v.discount = i;
+                if (v.price != 0 && v.price != v.originPrice) {
+                  let i = ((v.price / v.originPrice) * 10).toFixed(1) + "折";
+                  //动态往对象里添加一个属性，也就是把计算完的折扣值放到对象里
+                  v.discount = i;
+                } else if (v.price == 0) {
+                  v.discount = "免费";
+                }
               });
               //游戏列表
               this.gameList = res.data.data;

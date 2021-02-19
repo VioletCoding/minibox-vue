@@ -180,9 +180,7 @@ export default {
     //验证
     auth() {
       this.showAuth = true;
-      let formData = new FormData();
-      formData.append("username", this.username);
-      this.$http.post(Api.auth, formData)
+      this.$http.post(Api.auth, {username: this.username})
           .then(res => {
             this.disabled = true;
             if (res.data.code != 200) {
@@ -200,19 +198,16 @@ export default {
         this.$toast.fail("请输入邮箱");
         return 0;
       }
-      let formData = new FormData();
-      formData.append("username", this.username);
-      formData.append("authCode", authCode);
-      this.$http.post(Api.loginOrReg, formData)
+      this.$http.post(Api.loginOrReg, {username: this.username, authCode: authCode})
           .then(resp => {
-            if (resp.data.code == 200) {
-              let code = resp.data.code;
-              let msg = resp.data.message;
+            let code = resp.data.code;
+            let msg = resp.data.message;
+            if (code == 200) {
               localStorage.setItem("accessToken", resp.data.data.token);
               localStorage.setItem("userId", resp.data.data.userInfo.id);
               this.$router.replace("/");
             } else {
-              this.$toast.fail(resp.data.message);
+              this.$toast.fail(msg);
             }
           }).catch(err => this.$toast.fail(utils.errMessage(err)))
           .finally(() => {
