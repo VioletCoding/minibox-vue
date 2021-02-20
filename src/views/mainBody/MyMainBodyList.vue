@@ -41,6 +41,8 @@
               <div class="swipe-image van-multi-ellipsis--l2">
                 <van-image lazy-render=true
                            fit="cover"
+                           width="100%"
+                           height="200"
                            :src="item.photoLink"
                            @click="toDetail(item.id)"/>
                 <p>{{ item.title }}</p>

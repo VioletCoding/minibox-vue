@@ -1,5 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+
 Vue.use(VueRouter);
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -86,6 +87,14 @@ const routes = [
             showFooter: false
         },
         component: () => import("@/views/order/MyGameOrder")
+    },
+    {
+        path: "/userDetail",
+        name: "MyUserDetail",
+        meta: {
+            showFooter: false
+        },
+        component: () => import("@/component/MyUserDetailView")
     }
 ]
 

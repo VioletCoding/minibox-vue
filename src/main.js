@@ -112,8 +112,8 @@ Vue.config.productionTip = false;
 new Vue({router, render: h => h(App)}).$mount('#app');
 
 //设置URL，这样具体的接口地址就能写post/all这样的相对路径了，会自动在前面加baseURL
-Axios.defaults.baseURL = "http://192.168.0.105:20001/";
-//Axios.defaults.baseURL = "http://violetevergardenback.cn1.utools.club";
+//Axios.defaults.baseURL = "http://192.168.0.105:20001/";
+Axios.defaults.baseURL = "http://violetevergardenback.cn1.utools.club";
 //请求超时时间30秒钟
 Axios.defaults.timeout = 30000;
 //请求拦截器，自动加请求头

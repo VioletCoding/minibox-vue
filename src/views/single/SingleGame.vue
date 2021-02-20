@@ -94,6 +94,7 @@
             <van-rate v-model="score"
                       void-icon="star"
                       void-color="#eee"
+                      :disabled="commentFlag"
                       size="20"/>
           </div>
         </div>
@@ -111,6 +112,7 @@
               <div>
                 <van-image :src="comment.userModel.photoLink"
                            fit="cover"
+                           @click="seeUserDetail(comment.userModel.id)"
                            round/>
               </div>
               <!-- 昵称 | 评论时间-->
@@ -128,15 +130,6 @@
             <div class="content">
               <p>{{ comment.content }}</p>
             </div>
-            <!--回复-->
-            <div class="reply"
-                 v-for="reply in comment.replyModel">
-              <div>
-                <span>{{ reply.userModel.nickname }}：</span>
-                <span>回复&nbsp;{{ comment.userModel.nickname }}：</span>
-                <p>{{ reply.content }}</p>
-              </div>
-            </div>
           </div>
         </div>
         <div v-else>
@@ -148,7 +141,8 @@
     <div style="width: 100%;height: 40px">
       <van-goods-action>
         <van-goods-action-button color="linear-gradient(to right, #464A4F, #16191E)"
-                                 text="立即购买"
+                                 :text="buyFlag?'已在库中':'立即购买'"
+                                 :disabled="buyFlag"
                                  @click="generateOrder"/>
       </van-goods-action>
     </div>
@@ -182,6 +176,8 @@ export default {
       score: 0,
       //激活的标签页
       active: 0,
+      buyFlag: false,
+      commentFlag: false,
       //是否弹出弹出层
       popPostBackground: false,
       dataFlag: false,
@@ -204,6 +200,8 @@ export default {
           .then(res => {
             if (res.data.code == 200) {
               this.returnData = res.data.data;
+              this.buyFlag = this.returnData.buyFlag;
+              this.commentFlag = this.returnData.commentFlag;
             } else {
               this.$toast.fail(res.data.message);
             }
@@ -216,8 +214,18 @@ export default {
     },
     //去游戏评分
     toPublish() {
-      this.toSon.name = this.returnData.gameInfo.name;
-      this.popPostBackground = true;
+      if (this.returnData.commentFlag) {
+        this.$toast.fail("你已经发表过评价了");
+      } else {
+        this.toSon.name = this.returnData.gameInfo.name;
+        this.popPostBackground = true;
+      }
+    },
+    seeUserDetail(id) {
+      this.$router.push({
+        path: "/userDetail",
+        query: {id: id}
+      }).catch(err => err);
     },
     //生成订单
     generateOrder() {
@@ -341,24 +349,6 @@ p {
   .content {
     margin-left: 50px;
     font-size: 12px;
-  }
-
-  .reply {
-    margin: 15px 0 0 50px;
-    background-color: #FCFCFC;
-
-    div {
-      font-size: 12px;
-      line-height: 18px;
-
-      span:first-child {
-        color: #519BE5;
-      }
-
-      span:nth-child(2) {
-        color: #969799;
-      }
-    }
   }
 
 }

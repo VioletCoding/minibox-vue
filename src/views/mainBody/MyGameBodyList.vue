@@ -14,6 +14,7 @@
                       loosing-text="松手刷新..."
                       loading-text="加载中..."
                       success-text="加载成功"
+                      @load="showGameList"
                       style="min-height: 100vh;">
 
       <div style="margin-top: 50px">
@@ -75,13 +76,14 @@ export default {
       //游戏列表
       gameList: [],
       //激活的tab
-      active: 0
+      active: 0,
+      pageNum: 1
     }
   },
   methods: {
     //展示游戏列表
     showGameList() {
-      this.$http.post(Api.getAllGame)
+      this.$http.post(Api.getAllGame,{})
           .then(res => {
             if (res.data.code === 200) {
               res.data.data.forEach(v => {

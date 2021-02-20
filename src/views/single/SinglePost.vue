@@ -29,7 +29,7 @@
       </div>
       <!--作者信息-->
       <div class="author-info">
-        <div>
+        <div @click="seeUserDetail(returnValue.authorInfo.id)">
           <van-image round
                      width="40"
                      height="40"
@@ -62,13 +62,13 @@
         <van-divider>全部评论</van-divider>
         <div v-if="returnValue.commentInfo.length > 0">
           <div v-for="comment in returnValue.commentInfo"
-               style="margin-bottom: 20px"
-               @click="reply(comment.userModel.nickname,comment.userModel.id,comment.id)">
+               style="margin-bottom: 20px">
             <div class="user-info">
               <!--头像-->
               <div>
                 <van-image :src="comment.userModel.photoLink"
                            fit="cover"
+                           @click="seeUserDetail(comment.userModel.id)"
                            round/>
               </div>
               <!-- 昵称 | 评论时间-->
@@ -78,7 +78,7 @@
               </div>
             </div>
             <!--评论内容-->
-            <div class="content">
+            <div class="content" @click="reply(comment.userModel.nickname,comment.userModel.id,comment.id)">
               <p>{{ comment.content }}</p>
             </div>
             <!--回复-->
@@ -110,6 +110,7 @@
             <template #button>
               <van-button size="small"
                           type="default"
+                          color="linear-gradient(to right, #464A4F, #16191E)"
                           @click="publishComment">发表
               </van-button>
             </template>
@@ -133,6 +134,7 @@
             <template #button>
               <van-button size="small"
                           type="default"
+                          color="linear-gradient(to right, #464A4F, #16191E)"
                           @click="doReply">回复
               </van-button>
             </template>
@@ -274,6 +276,12 @@ export default {
           }
         }).catch(err => utils.errMessage(err));
       }
+    },
+    seeUserDetail(id) {
+      this.$router.push({
+        path: "/userDetail",
+        query: {id: id}
+      }).catch(err => err);
     }
   },
   mounted() {

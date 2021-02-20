@@ -83,12 +83,10 @@
           </van-tabs>
         </van-tab>
         <!--用户动态分类end-->
-
         <van-tab title="设置">
           <MySetting :userInfo="userInfo"
                      @updateImg="updateImg"></MySetting>
         </van-tab>
-
       </van-tabs>
     </div>
     <!--头部end-->
