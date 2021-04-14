@@ -54,6 +54,7 @@
                         <van-image :src="post.photoLink"
                                    alt="加载失败"
                                    height="200px"
+                                   width="100%"
                                    fit="cover"
                                    radius="5"/>
                       </div>

@@ -90,6 +90,7 @@ export default {
     },
     //修改头像
     afterRead(file) {
+      console.log(file);
       let formData = new FormData();
       formData.append("multipartFile", file.file);
       this.$http({

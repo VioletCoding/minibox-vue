@@ -1,7 +1,7 @@
 <template>
   <div style="overflow: hidden">
     <!--文字提示-->
-    <div class="text">{{ loginFlag ? "验证码登陆" : "密码登陆" }}</div>
+    <div class="text">{{ loginFlag ? "验证码登陆或注册" : "密码登陆" }}</div>
     <!--文字提示end-->
 
     <div v-if="loginFlag">
